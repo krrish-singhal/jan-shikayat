@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Modal } from './Modal.jsx';
 import { AlertTriangle, AlertCircle } from 'lucide-react';
 
@@ -6,15 +7,20 @@ export const ConfirmDialog = ({
   isOpen,
   onClose,
   onConfirm,
-  title = 'Confirm Action',
+  title,
   message,
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
+  confirmText,
+  cancelText,
   isDanger = false,
   loading = false,
 }) => {
+  const { t } = useTranslation('common');
+  const resolvedTitle = title || t('confirmAction', 'Confirm Action');
+  const resolvedConfirmText = confirmText || t('confirm', 'Confirm');
+  const resolvedCancelText = cancelText || t('cancel', 'Cancel');
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="max-w-md">
+    <Modal isOpen={isOpen} onClose={onClose} title={resolvedTitle} maxWidth="max-w-md">
       <div className="flex items-start gap-4 mb-6">
         <div
           className={`p-3 rounded-full shrink-0 ${
@@ -34,7 +40,7 @@ export const ConfirmDialog = ({
           disabled={loading}
           className="civic-btn-secondary"
         >
-          {cancelText}
+          {resolvedCancelText}
         </button>
         <button
           type="button"
@@ -42,7 +48,7 @@ export const ConfirmDialog = ({
           disabled={loading}
           className={isDanger ? 'civic-btn-danger' : 'civic-btn-primary'}
         >
-          {loading ? 'Processing...' : confirmText}
+          {loading ? t('processing', 'Processing...') : resolvedConfirmText}
         </button>
       </div>
     </Modal>

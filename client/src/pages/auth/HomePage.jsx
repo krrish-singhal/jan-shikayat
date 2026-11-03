@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Search,
   PlusCircle,
@@ -24,6 +25,7 @@ import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
 
 export const HomePage = () => {
+  const { t } = useTranslation(['common', 'auth', 'citizen', 'operator', 'engineer', 'admin']);
   const { user, defaultDashboard } = useAuth();
   const navigate = useNavigate();
 
@@ -57,50 +59,50 @@ export const HomePage = () => {
 
   const portalCards = [
     {
-      role: 'Citizen Grievance Portal',
-      desc: 'Lodge civic grievances with photograph evidence and GPS location. Monitor resolution milestones on a real-time vertical timeline.',
+      role: t('auth:citizenLoginTitle', 'Citizen Grievance Portal'),
+      desc: t('citizen:dashboardSubtitle', 'Lodge civic grievances with photograph evidence and GPS location. Monitor resolution milestones on a real-time vertical timeline.'),
       icon: PlusCircle,
       link: user?.role === 'CITIZEN' ? '/citizen/dashboard' : '/login',
       accentColor: 'border-l-4 border-l-blue-600',
-      badgeText: 'Resident Redressal',
-      actionText: 'Enter Citizen Portal',
+      badgeText: t('common:roles.CITIZEN', 'Citizen'),
+      actionText: t('auth:loginButton', 'Enter Citizen Portal'),
     },
     {
-      role: 'Department Operator Desk',
-      desc: 'Process incoming departmental queues (FIFO oldest first), inspect citizen evidence, reject invalid complaints, or accept for field inspection.',
+      role: t('operator:dashboardTitle', 'Department Operator Desk'),
+      desc: t('operator:dashboardSubtitle', 'Process incoming departmental queues (FIFO oldest first), inspect citizen evidence, reject invalid complaints, or accept for field inspection.'),
       icon: Building2,
       link: user?.role === 'OPERATOR' ? '/operator/dashboard' : '/staff/login',
       accentColor: 'border-l-4 border-l-amber-500',
-      badgeText: 'Intake Desk',
-      actionText: 'Access Desk Queue',
+      badgeText: t('common:roles.OPERATOR', 'Operator'),
+      actionText: t('operator:incomingQueueCount', 'Access Desk Queue'),
     },
     {
-      role: 'Joint Engineer Field Console',
-      desc: 'Pick up complaints with atomic capacity controls, perform on-site verification, start repair work, and submit completion photographs.',
+      role: t('engineer:dashboardTitle', 'Joint Engineer Field Console'),
+      desc: t('engineer:dashboardSubtitle', 'Pick up complaints with atomic capacity controls, perform on-site verification, start repair work, and submit completion photographs.'),
       icon: Wrench,
       link: user?.role === 'ENGINEER' ? '/engineer/dashboard' : '/staff/login',
       accentColor: 'border-l-4 border-l-emerald-600',
-      badgeText: 'Field Engineering',
-      actionText: 'Open Field Console',
+      badgeText: t('common:roles.ENGINEER', 'Field Engineer'),
+      actionText: t('engineer:queueTitle', 'Open Field Console'),
     },
     {
-      role: 'Municipal Admin Command Center',
-      desc: 'Platform-wide governance, real-time analytics, staff provisioning with auto-generated IDs, department management, and immutable audit logs.',
+      role: t('admin:dashboardTitle', 'Municipal Admin Command Center'),
+      desc: t('admin:dashboardSubtitle', 'Platform-wide governance, real-time analytics, staff provisioning with auto-generated IDs, department management, and immutable audit logs.'),
       icon: Shield,
       link: user?.role === 'ADMIN' ? '/admin/dashboard' : '/staff/login',
       accentColor: 'border-l-4 border-l-purple-600',
-      badgeText: 'Executive Authority',
-      actionText: 'Launch Admin Console',
+      badgeText: t('common:roles.ADMIN', 'Administrator'),
+      actionText: t('admin:dashboardTitle', 'Launch Admin Console'),
     },
   ];
 
   const civicDepartments = [
-    { name: 'Roads & Potholes', icon: Layers, desc: 'Pavement restoration, potholes repair, asphalt overlay' },
-    { name: 'Water Supply', icon: Droplets, desc: 'Pipeline leakage, potable water distribution, pressure drop' },
-    { name: 'Sanitation & Solid Waste', icon: Truck, desc: 'Garbage clearance, community bin maintenance, segregation' },
-    { name: 'Street Lighting', icon: Lightbulb, desc: 'Defective street lamps, timer switches, pole maintenance' },
-    { name: 'Electricity & Utilities', icon: Zap, desc: 'Cable hazard mitigation, transformer clearing, feeder issues' },
-    { name: 'Public Health & Hygiene', icon: HeartPulse, desc: 'Vector control, fogging, open drain disinfestation' },
+    { name: t('common:deptRoads', 'Roads & Potholes'), icon: Layers, desc: 'Pavement restoration, potholes repair, asphalt overlay' },
+    { name: t('common:deptWater', 'Water Supply'), icon: Droplets, desc: 'Pipeline leakage, potable water distribution, pressure drop' },
+    { name: t('common:deptSanitation', 'Sanitation & Solid Waste'), icon: Truck, desc: 'Garbage clearance, community bin maintenance, segregation' },
+    { name: t('common:deptLighting', 'Street Lighting'), icon: Lightbulb, desc: 'Defective street lamps, timer switches, pole maintenance' },
+    { name: t('common:deptElectricity', 'Electricity & Utilities'), icon: Zap, desc: 'Cable hazard mitigation, transformer clearing, feeder issues' },
+    { name: t('common:deptHealth', 'Public Health & Hygiene'), icon: HeartPulse, desc: 'Vector control, fogging, open drain disinfestation' },
   ];
 
   return (
@@ -110,22 +112,22 @@ export const HomePage = () => {
         <div className="max-w-7xl mx-auto text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#0f3b68]/10 border border-[#0f3b68]/20 text-[#0f3b68] text-xs font-semibold">
             <Shield className="w-3.5 h-3.5 text-[#0f3b68]" />
-            <span>सत्यमेव जयते • Official Municipal Citizen Grievance Portal</span>
+            <span>सत्यमेव जयते • {t('common:officialPortal', 'Official Municipal Citizen Grievance Portal')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f3b68] tracking-tight max-w-4xl mx-auto leading-tight">
-            Transparent, Time-Bound Redressal of Municipal Grievances
+            {t('auth:homeHeroTitle', 'Transparent, Time-Bound Redressal of Municipal Grievances')}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Directly connect with your local Municipal Corporation. Register grievances, track departmental ground verification, and inspect completed civic maintenance.
+            {t('auth:homeHeroSubtitle', 'Directly connect with your local Municipal Corporation. Register grievances, track departmental ground verification, and inspect completed civic maintenance.')}
           </p>
 
           {/* Quick Track Grievance Box */}
           <div className="pt-4 max-w-2xl mx-auto">
             <div className="bg-white p-4 sm:p-5 rounded-lg border-2 border-[#0f3b68] shadow-md text-left space-y-3">
               <label className="block text-xs font-bold uppercase tracking-wider text-[#0f3b68]">
-                Quick Grievance Status Tracker
+                {t('common:ticketNo', 'Ticket')} Status Tracker
               </label>
 
               <form onSubmit={handleTrackComplaint} className="flex flex-col sm:flex-row gap-2">
@@ -134,7 +136,7 @@ export const HomePage = () => {
                   <input
                     type="text"
                     required
-                    placeholder="Enter Ticket Number (e.g. CMP-2026-000001)..."
+                    placeholder={t('citizen:searchPlaceholder', 'Enter Ticket Number (e.g. CMP-2026-000001)...')}
                     value={ticketSearch}
                     onChange={(e) => setTicketSearch(e.target.value)}
                     className="civic-input pl-9 text-xs sm:text-sm font-mono"
@@ -145,7 +147,7 @@ export const HomePage = () => {
                   disabled={searching}
                   className="civic-btn-primary text-xs sm:text-sm whitespace-nowrap"
                 >
-                  {searching ? 'Checking Records...' : 'Track Ticket'}
+                  {searching ? t('common:loading', 'Checking Records...') : t('common:search', 'Track Ticket')}
                 </button>
               </form>
 

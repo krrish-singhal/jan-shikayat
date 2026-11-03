@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { ROLES, ALL_ROLES } from '../constants/roles.js';
+import { SUPPORTED_LANGUAGE_CODES, DEFAULT_LANGUAGE } from '../constants/languages.js';
 
 const userSchema = new mongoose.Schema(
   {
@@ -71,6 +72,12 @@ const userSchema = new mongoose.Schema(
     mustChangePassword: {
       type: Boolean,
       default: false,
+    },
+    preferredLanguage: {
+      type: String,
+      enum: SUPPORTED_LANGUAGE_CODES,
+      default: DEFAULT_LANGUAGE,
+      trim: true,
     },
     isActive: {
       type: Boolean,

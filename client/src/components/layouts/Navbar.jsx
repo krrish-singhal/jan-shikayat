@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, Bell, User, LogOut, CheckCheck, Shield, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { LanguageSwitcher } from '../common/LanguageSwitcher.jsx';
 import api from '../../services/api.js';
 
 export const Navbar = ({ onOpenSidebar }) => {
+  const { t } = useTranslation('common');
   const { user, unreadNotifications, refreshNotifications, logout } = useAuth();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notificationsList, setNotificationsList] = useState([]);
@@ -82,23 +85,26 @@ export const Navbar = ({ onOpenSidebar }) => {
 
           <div className="flex items-center gap-2">
             <span className="text-xs sm:text-sm font-bold text-[#0f3b68] tracking-tight hidden sm:inline-block">
-              Municipal Corporation of India
+              {t('officialPortal', 'Municipal Corporation of India')}
             </span>
             <span className="text-slate-300 hidden sm:inline-block">•</span>
             <span className="text-xs text-slate-600 font-medium truncate max-w-[200px] sm:max-w-none">
-              Grievance Redressal Workspace
+              {t('portalTitle', 'Grievance Redressal Workspace')}
             </span>
           </div>
         </div>
 
-        {/* Right Controls: Notifications & Authority Profile */}
-        <div className="flex items-center gap-3">
+        {/* Right Controls: Language Selector, Notifications & Authority Profile */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Global Language Selector */}
+          <LanguageSwitcher variant="default" />
+
           {/* Notification Bell */}
           <div className="relative" ref={notifRef}>
             <button
               onClick={handleToggleNotifications}
               className="relative p-2 text-slate-600 hover:text-[#0f3b68] hover:bg-slate-100 rounded-md transition-colors border border-slate-200"
-              title="Official Notifications"
+              title={t('systemNotifications', 'Official Notifications')}
             >
               <Bell className="w-4 h-4" />
               {unreadNotifications > 0 && (
@@ -113,7 +119,7 @@ export const Navbar = ({ onOpenSidebar }) => {
               <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden z-50 animate-in fade-in-50 duration-150">
                 <div className="p-3 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                   <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
-                    System Notifications
+                    {t('systemNotifications', 'System Notifications')}
                   </span>
                   {unreadNotifications > 0 && (
                     <button
@@ -121,16 +127,16 @@ export const Navbar = ({ onOpenSidebar }) => {
                       className="text-[11px] font-semibold text-[#0f3b68] hover:underline flex items-center gap-1"
                     >
                       <CheckCheck className="w-3.5 h-3.5" />
-                      Mark all read
+                      {t('markAllRead', 'Mark all read')}
                     </button>
                   )}
                 </div>
 
                 <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
                   {loadingNotifications ? (
-                    <div className="p-6 text-center text-xs text-slate-500">Checking dispatches...</div>
+                    <div className="p-6 text-center text-xs text-slate-500">{t('checkingDispatches', 'Checking dispatches...')}</div>
                   ) : notificationsList.length === 0 ? (
-                    <div className="p-6 text-center text-xs text-slate-500">No new notifications recorded.</div>
+                    <div className="p-6 text-center text-xs text-slate-500">{t('noNotifications', 'No new notifications recorded.')}</div>
                   ) : (
                     notificationsList.map((item) => (
                       <div

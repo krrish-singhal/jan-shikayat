@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   PlusCircle,
   FileText,
@@ -15,8 +16,10 @@ import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
 import { StatCard } from '../../components/common/StatCard.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
+import { formatNumber, formatDate } from '../../utils/formatters.js';
 
 export const CitizenDashboard = () => {
+  const { t, i18n } = useTranslation(['citizen', 'common']);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -54,13 +57,13 @@ export const CitizenDashboard = () => {
       <div className="civic-card p-6 sm:p-8 bg-gradient-to-r from-brand-900 via-brand-800 to-indigo-950 text-white rounded-2xl shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wider text-brand-300">
-            Citizen Grievance Portal
+            {t('common:roles.CITIZEN', 'Citizen')} • {t('dashboardTitle', 'Grievance Redressal Portal')}
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1">
-            Welcome, {user?.name || 'Citizen'}
+            {t('common:welcome', 'Welcome')}, {user?.name || t('common:citizen', 'Citizen')}
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-xl leading-relaxed">
-            Report civic infrastructure issues directly to your municipal corporation. Track ground inspection, field work, and final photo evidence in real time.
+            {t('dashboardSubtitle', 'Report civic infrastructure issues directly to your municipal corporation. Track ground inspection, field work, and final photo evidence in real time.')}
           </p>
         </div>
 
@@ -69,56 +72,56 @@ export const CitizenDashboard = () => {
           className="civic-btn-primary bg-white text-brand-800 hover:bg-slate-100 font-semibold px-5 py-3 text-sm shrink-0 shadow-lg shadow-black/10 self-start md:self-auto"
         >
           <PlusCircle className="w-5 h-5 text-brand-700" />
-          <span>Register New Complaint</span>
+          <span>{t('registerNewComplaint', 'Register New Complaint')}</span>
         </Link>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
         <StatCard
-          title="Total Filed"
-          value={loading ? '—' : stats.total}
-          subtitle="All complaints"
+          title={t('totalComplaints', 'Total Complaints')}
+          value={loading ? '—' : formatNumber(stats.total, i18n.language)}
+          subtitle={t('common:all', 'All complaints')}
           icon={FileText}
           color="blue"
           onClick={() => navigate('/citizen/complaints')}
         />
         <StatCard
-          title="Pending"
-          value={loading ? '—' : stats.pending}
-          subtitle="Under review"
+          title={t('pendingReview', 'Pending Review')}
+          value={loading ? '—' : formatNumber(stats.pending, i18n.language)}
+          subtitle={t('common:statusMap.PENDING', 'Under review')}
           icon={Clock}
           color="amber"
           onClick={() => navigate('/citizen/complaints?status=Pending')}
         />
         <StatCard
-          title="Approved"
-          value={loading ? '—' : stats.approved}
-          subtitle="Site verified"
+          title={t('common:statusMap.APPROVED', 'Approved')}
+          value={loading ? '—' : formatNumber(stats.approved, i18n.language)}
+          subtitle={t('common:statusMap.APPROVED', 'Site verified')}
           icon={CheckCircle2}
           color="purple"
           onClick={() => navigate('/citizen/complaints?status=Approved')}
         />
         <StatCard
-          title="In Progress"
-          value={loading ? '—' : stats.inProgress}
-          subtitle="Crew working"
+          title={t('workInProgress', 'Work in Progress')}
+          value={loading ? '—' : formatNumber(stats.inProgress, i18n.language)}
+          subtitle={t('common:statusMap.WORK_IN_PROGRESS', 'Crew working')}
           icon={Wrench}
           color="blue"
           onClick={() => navigate('/citizen/complaints?status=Work in Progress')}
         />
         <StatCard
-          title="Completed"
-          value={loading ? '—' : stats.completed}
-          subtitle="Resolution verified"
+          title={t('resolvedComplaints', 'Completed')}
+          value={loading ? '—' : formatNumber(stats.completed, i18n.language)}
+          subtitle={t('common:statusMap.COMPLETED', 'Resolution verified')}
           icon={Award}
           color="emerald"
           onClick={() => navigate('/citizen/complaints?status=Completed')}
         />
         <StatCard
-          title="Rejected"
-          value={loading ? '—' : stats.rejected}
-          subtitle="Outside jurisdiction"
+          title={t('common:statusMap.REJECTED', 'Rejected')}
+          value={loading ? '—' : formatNumber(stats.rejected, i18n.language)}
+          subtitle={t('common:statusMap.REJECTED', 'Outside jurisdiction')}
           icon={XCircle}
           color="red"
           onClick={() => navigate('/citizen/complaints?status=Rejected')}
@@ -129,14 +132,14 @@ export const CitizenDashboard = () => {
       <div className="civic-card p-6">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Recent Complaints</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Your most recently submitted municipal issues</p>
+            <h3 className="text-base font-bold text-slate-900">{t('myComplaintsTitle', 'Recent Complaints')}</h3>
+            <p className="text-xs text-slate-500 mt-0.5">{t('myComplaintsSubtitle', 'Your most recently submitted municipal issues')}</p>
           </div>
           <Link
             to="/citizen/complaints"
             className="text-xs font-semibold text-brand-600 hover:text-brand-700 inline-flex items-center gap-1"
           >
-            <span>View All</span>
+            <span>{t('common:viewDetails', 'View All')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -149,9 +152,9 @@ export const CitizenDashboard = () => {
           </div>
         ) : stats.recent.length === 0 ? (
           <div className="text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
-            <p className="text-sm text-slate-500 font-medium">You haven't filed any complaints yet.</p>
+            <p className="text-sm text-slate-500 font-medium">{t('common:noResultsFound', 'You have not filed any complaints yet.')}</p>
             <Link to="/citizen/complaints/new" className="civic-btn-primary mt-3 text-xs">
-              File Your First Complaint
+              {t('registerNewComplaint', 'File Your First Complaint')}
             </Link>
           </div>
         ) : (
@@ -191,7 +194,7 @@ export const CitizenDashboard = () => {
 
                 <div className="flex items-center gap-3 shrink-0">
                   <span className="text-xs text-slate-400 font-mono hidden sm:inline">
-                    {new Date(complaint.createdAt).toLocaleDateString()}
+                    {formatDate(complaint.createdAt, i18n.language)}
                   </span>
                   <StatusBadge status={complaint.status} isCitizenView={true} />
                 </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Sidebar } from './Sidebar.jsx';
 import { Navbar } from './Navbar.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
@@ -7,6 +8,7 @@ import { Modal } from '../common/Modal.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 
 export const PortalLayout = () => {
+  const { t } = useTranslation(['common', 'auth']);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, changePassword } = useAuth();
   const { addToast } = useToast();
@@ -56,26 +58,30 @@ export const PortalLayout = () => {
         <Modal
           isOpen={true}
           onClose={() => {}}
-          title="Security Requirement: Update Temporary Password"
+          title={t('auth:changePasswordTitle', 'Security Requirement: Update Temporary Password')}
           maxWidth="max-w-md"
         >
           <div className="mb-4 text-xs text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200">
-            You are logging in with a temporary staff password. You must update your password before proceeding.
+            {t('auth:temporaryPasswordNotice', 'You are logging in with a temporary staff password. You must update your password before proceeding.')}
           </div>
           <form onSubmit={handleForcePasswordChange} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Temporary Password</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                {t('auth:currentPassword', 'Temporary Password')}
+              </label>
               <input
                 type="password"
                 required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="civic-input"
-                placeholder="Enter current password"
+                placeholder={t('auth:currentPassword', 'Enter current password')}
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">New Password</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                {t('auth:newPassword', 'New Password')}
+              </label>
               <input
                 type="password"
                 required
@@ -86,14 +92,16 @@ export const PortalLayout = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm New Password</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                {t('auth:confirmPassword', 'Confirm New Password')}
+              </label>
               <input
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="civic-input"
-                placeholder="Repeat new password"
+                placeholder={t('auth:confirmPassword', 'Repeat new password')}
               />
             </div>
             <button
@@ -101,7 +109,7 @@ export const PortalLayout = () => {
               disabled={changingPass}
               className="civic-btn-primary w-full"
             >
-              {changingPass ? 'Updating...' : 'Set Permanent Password'}
+              {changingPass ? t('common:processing', 'Updating...') : t('auth:updatePassword', 'Set Permanent Password')}
             </button>
           </form>
         </Modal>

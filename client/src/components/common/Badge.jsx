@@ -1,8 +1,15 @@
 import React from 'react';
-import { STATUS_COLORS, CITIZEN_STATUS_MAP } from '../../constants/complaintStatus.js';
+import { useTranslation } from 'react-i18next';
+import { STATUS_COLORS, CITIZEN_STATUS_MAP, STATUS_LABELS } from '../../constants/complaintStatus.js';
 
 export const StatusBadge = ({ status, isCitizenView = false }) => {
-  const displayLabel = isCitizenView ? (CITIZEN_STATUS_MAP[status] || status) : status;
+  const { t } = useTranslation('common');
+  const rawKey = isCitizenView ? (CITIZEN_STATUS_MAP[status] || status) : status;
+  const fallbackLabel = isCitizenView
+    ? (CITIZEN_STATUS_MAP[status] || status)
+    : (STATUS_LABELS[status] || status);
+  const displayLabel = t(`statusMap.${rawKey}`, t(`statusMap.${status}`, fallbackLabel));
+
   const config = STATUS_COLORS[status] || {
     bg: 'bg-slate-100',
     text: 'text-slate-700',
@@ -23,6 +30,7 @@ export const StatusBadge = ({ status, isCitizenView = false }) => {
 export const Badge = StatusBadge;
 
 export const RoleBadge = ({ role }) => {
+  const { t } = useTranslation('common');
   let style = 'bg-slate-100 text-slate-700 border-slate-200';
 
   if (role === 'ADMIN') {
@@ -37,7 +45,7 @@ export const RoleBadge = ({ role }) => {
 
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold border ${style}`}>
-      {role}
+      {t(`roles.${role}`, role)}
     </span>
   );
 };

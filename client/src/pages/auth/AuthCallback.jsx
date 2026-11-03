@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import api from '../../services/api.js';
+import i18n from '../../i18n.js';
 
 export const AuthCallback = () => {
+  const { t } = useTranslation('common');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -25,7 +28,11 @@ export const AuthCallback = () => {
           localStorage.setItem('accessToken', token);
           const res = await api.get('/me');
           if (res.data?.success) {
-            localStorage.setItem('user', JSON.stringify(res.data.data.user));
+            const userData = res.data.data.user;
+            localStorage.setItem('user', JSON.stringify(userData));
+            if (userData?.preferredLanguage) {
+              i18n.changeLanguage(userData.preferredLanguage);
+            }
             addToast('Successfully authenticated via Google OAuth', 'success');
             window.location.href = '/citizen/dashboard';
             return;
@@ -45,7 +52,7 @@ export const AuthCallback = () => {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
       <div className="flex flex-col items-center gap-3">
         <div className="w-10 h-10 border-3 border-brand-600 border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs text-slate-500 font-medium">Completing Google authentication...</span>
+        <span className="text-xs text-slate-500 font-medium">{t('loading', 'Completing authentication...')}</span>
       </div>
     </div>
   );

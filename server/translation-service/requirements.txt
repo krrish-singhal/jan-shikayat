@@ -1,0 +1,17 @@
+# AI4Bharat IndicTrans2 Microservice Dependencies
+# Core Framework
+torch>=2.1.0
+transformers>=4.36.0
+sentencepiece>=0.1.99
+accelerate>=0.25.0
+bitsandbytes>=0.41.0; platform_system != "Windows"
+
+# Indic NLP Library
+indic-nlp-library>=0.92
+
+# HTTP / API Layer
+requests>=2.31.0
+uvicorn>=0.25.0
+fastapi>=0.108.0
+pydantic>=2.5.0
+python-dotenv>=1.0.0

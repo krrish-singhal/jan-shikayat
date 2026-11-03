@@ -1,5 +1,7 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { AlertCircle } from 'lucide-react';
+import { formatNumber } from '../../utils/formatters.js';
 
 export const CapacityBar = ({
   maxActiveCases,
@@ -7,6 +9,7 @@ export const CapacityBar = ({
   max,
   current,
 }) => {
+  const { t, i18n } = useTranslation('engineer');
   const effectiveMax = maxActiveCases ?? max ?? 5;
   const effectiveActive = activeCases ?? current ?? 0;
 
@@ -27,16 +30,25 @@ export const CapacityBar = ({
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <div>
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            Workload Capacity
+            {t('capacityTitle', 'Workload Capacity')}
           </span>
           <div className="flex items-baseline gap-2 mt-0.5">
             <span className="text-lg sm:text-xl font-bold text-slate-900">
-              {effectiveActive} <span className="text-xs font-normal text-slate-500">/ {effectiveMax} cases</span>
+              {formatNumber(effectiveActive, i18n.language)}{' '}
+              <span className="text-xs font-normal text-slate-500">
+                / {formatNumber(effectiveMax, i18n.language)}
+              </span>
             </span>
           </div>
         </div>
         <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-md border ${badgeColor}`}>
-          {isFull ? 'Capacity Reached' : `${available} Slot${available === 1 ? '' : 's'} Free`}
+          {isFull
+            ? t('capacityFull', 'Capacity Reached')
+            : t('capacityNotice', {
+                active: formatNumber(effectiveActive, i18n.language),
+                max: formatNumber(effectiveMax, i18n.language),
+                defaultValue: `${available} Slots Free`,
+              })}
         </span>
       </div>
 
@@ -51,7 +63,7 @@ export const CapacityBar = ({
       {isFull && (
         <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-red-700">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-          <span>Maximum case workload reached. Complete or release cases to pick up more.</span>
+          <span>{t('capacityWarning', 'Maximum case workload reached. Complete or release cases to pick up more.')}</span>
         </div>
       )}
     </div>
