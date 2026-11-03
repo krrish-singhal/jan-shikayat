@@ -46,3 +46,16 @@ build/
 *.sw?
 .DS_Store
 Thumbs.db
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.egg-info/
+

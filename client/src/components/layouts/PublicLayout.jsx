@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Shield,
   LogIn,
@@ -16,8 +17,10 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { LanguageSwitcher } from '../common/LanguageSwitcher.jsx';
 
 export const PublicLayout = () => {
+  const { t } = useTranslation(['common', 'auth']);
   const { user, defaultDashboard } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [fontSizeLevel, setFontSizeLevel] = useState(1); // 0: A-, 1: A, 2: A+
@@ -81,10 +84,8 @@ export const PublicLayout = () => {
 
             <span className="text-slate-400 hidden sm:inline">|</span>
 
-            {/* Language indicator */}
-            <span className="text-[11px] text-slate-200 font-medium">
-              English / <span className="font-semibold text-amber-300">हिंदी</span>
-            </span>
+            {/* Global Language Selector Component */}
+            <LanguageSwitcher variant="public" />
           </div>
         </div>
       </div>
@@ -102,14 +103,14 @@ export const PublicLayout = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-[#0f3b68] tracking-tight text-xl leading-none font-serif">
-                  जन शिकायत
+                  {t('common:appName', 'जन शिकायत')}
                 </span>
                 <span className="text-xs px-1.5 py-0.5 font-bold uppercase rounded bg-amber-100 text-amber-800 border border-amber-200">
                   JanShikayat
                 </span>
               </div>
               <span className="text-[11px] text-slate-600 font-semibold tracking-wide mt-0.5 uppercase">
-                Municipal Grievance Redressal Platform
+                {t('common:appTitle', 'Municipal Grievance Redressal Platform')}
               </span>
             </div>
           </Link>
@@ -124,7 +125,7 @@ export const PublicLayout = () => {
                 }`
               }
             >
-              Home
+              {t('common:home', 'Home')}
             </NavLink>
 
             {user ? (
@@ -132,7 +133,7 @@ export const PublicLayout = () => {
                 to={defaultDashboard}
                 className="civic-btn-primary ml-2 text-xs"
               >
-                Go to Workspace ({user.role})
+                {t('auth:goToWorkspace', 'Go to Workspace')} ({user.role})
               </Link>
             ) : (
               <>
@@ -145,7 +146,7 @@ export const PublicLayout = () => {
                   }
                 >
                   <LogIn className="w-3.5 h-3.5" />
-                  <span>Citizen Login</span>
+                  <span>{t('auth:citizenLoginTitle', 'Citizen Login')}</span>
                 </NavLink>
 
                 <NavLink
@@ -157,7 +158,7 @@ export const PublicLayout = () => {
                   }
                 >
                   <Building2 className="w-3.5 h-3.5" />
-                  <span>Staff Desk Login</span>
+                  <span>{t('auth:staffLoginTitle', 'Staff Desk Login')}</span>
                 </NavLink>
 
                 <Link
@@ -165,7 +166,7 @@ export const PublicLayout = () => {
                   className="civic-btn-primary ml-2 text-xs inline-flex items-center gap-1.5"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
-                  <span>Register Grievance</span>
+                  <span>{t('common:registerComplaint', 'Register Grievance')}</span>
                 </Link>
               </>
             )}
@@ -189,7 +190,7 @@ export const PublicLayout = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 rounded text-sm font-semibold text-slate-700 hover:bg-slate-100"
             >
-              Home
+              {t('common:home', 'Home')}
             </Link>
 
             {user ? (
@@ -198,7 +199,7 @@ export const PublicLayout = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 rounded text-sm font-semibold text-white bg-[#0f3b68] text-center"
               >
-                Go to Workspace ({user.role})
+                {t('auth:goToWorkspace', 'Go to Workspace')} ({user.role})
               </Link>
             ) : (
               <>
@@ -208,7 +209,7 @@ export const PublicLayout = () => {
                   className="flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold text-slate-700 hover:bg-slate-100"
                 >
                   <LogIn className="w-4 h-4 text-[#0f3b68]" />
-                  <span>Citizen Login</span>
+                  <span>{t('auth:citizenLoginTitle', 'Citizen Login')}</span>
                 </Link>
 
                 <Link
@@ -217,7 +218,7 @@ export const PublicLayout = () => {
                   className="flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold text-slate-700 hover:bg-slate-100"
                 >
                   <Building2 className="w-4 h-4 text-[#0f3b68]" />
-                  <span>Staff Desk Login (OP / ENG / ADM)</span>
+                  <span>{t('auth:staffLoginTitle', 'Staff Desk Login')}</span>
                 </Link>
 
                 <Link
@@ -226,7 +227,7 @@ export const PublicLayout = () => {
                   className="flex items-center justify-center gap-2 px-3 py-2.5 rounded text-sm font-semibold text-white bg-[#0f3b68] text-center"
                 >
                   <UserPlus className="w-4 h-4" />
-                  <span>Register Grievance</span>
+                  <span>{t('common:registerComplaint', 'Register Grievance')}</span>
                 </Link>
               </>
             )}

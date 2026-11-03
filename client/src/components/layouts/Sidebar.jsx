@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
   PlusCircle,
@@ -21,6 +22,7 @@ import { useAuth } from '../../contexts/AuthContext.jsx';
 import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
 
 export const Sidebar = ({ isOpen, onClose }) => {
+  const { t } = useTranslation(['common', 'operator', 'engineer', 'admin']);
   const { user, logout } = useAuth();
   if (!user) return null;
 
@@ -28,34 +30,34 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
   if (user.role === ROLES.CITIZEN) {
     links = [
-      { to: '/citizen/dashboard', label: 'Citizen Dashboard', icon: LayoutDashboard },
-      { to: '/citizen/complaints/new', label: 'Register Grievance', icon: PlusCircle },
-      { to: '/citizen/complaints', label: 'My Grievances', icon: FileText },
-      { to: '/citizen/profile', label: 'My Profile', icon: User },
+      { to: '/citizen/dashboard', label: t('common:dashboard', 'Citizen Dashboard'), icon: LayoutDashboard },
+      { to: '/citizen/complaints/new', label: t('common:registerComplaint', 'Register Grievance'), icon: PlusCircle },
+      { to: '/citizen/complaints', label: t('common:myComplaints', 'My Grievances'), icon: FileText },
+      { to: '/citizen/profile', label: t('common:profile', 'My Profile'), icon: User },
     ];
   } else if (user.role === ROLES.OPERATOR) {
     links = [
-      { to: '/operator/dashboard', label: 'Intake Dashboard', icon: LayoutDashboard },
-      { to: '/operator/complaints', label: 'Incoming Queue (FIFO)', icon: Inbox },
-      { to: '/operator/history', label: 'Handled History', icon: History },
-      { to: '/operator/profile', label: 'Staff Profile', icon: User },
+      { to: '/operator/dashboard', label: t('operator:dashboardTitle', 'Intake Dashboard'), icon: LayoutDashboard },
+      { to: '/operator/complaints', label: t('operator:incomingQueueTitle', 'Incoming Queue (FIFO)'), icon: Inbox },
+      { to: '/operator/history', label: t('operator:historyTitle', 'Handled History'), icon: History },
+      { to: '/operator/profile', label: t('operator:profileTitle', 'Staff Profile'), icon: User },
     ];
   } else if (user.role === ROLES.ENGINEER) {
     links = [
-      { to: '/engineer/dashboard', label: 'Engineer Dashboard', icon: LayoutDashboard },
-      { to: '/engineer/queue', label: 'Verification Queue', icon: CheckSquare },
-      { to: '/engineer/my-cases', label: 'Active Field Cases', icon: Briefcase },
-      { to: '/engineer/profile', label: 'Engineer Profile', icon: User },
+      { to: '/engineer/dashboard', label: t('engineer:dashboardTitle', 'Engineer Dashboard'), icon: LayoutDashboard },
+      { to: '/engineer/queue', label: t('engineer:queueTitle', 'Verification Queue'), icon: CheckSquare },
+      { to: '/engineer/my-cases', label: t('engineer:myCasesTitle', 'Active Field Cases'), icon: Briefcase },
+      { to: '/engineer/profile', label: t('engineer:profileTitle', 'Engineer Profile'), icon: User },
     ];
   } else if (user.role === ROLES.ADMIN) {
     links = [
-      { to: '/admin/dashboard', label: 'Analytics Console', icon: LayoutDashboard },
-      { to: '/admin/staff', label: 'Staff Governance', icon: Users },
-      { to: '/admin/departments', label: 'Departments', icon: Building2 },
-      { to: '/admin/complaints', label: 'All Municipal Cases', icon: ClipboardList },
-      { to: '/admin/citizens', label: 'Citizen Registry', icon: User },
-      { to: '/admin/audit', label: 'Security Audit Trail', icon: ShieldAlert },
-      { to: '/admin/profile', label: 'Admin Profile', icon: User },
+      { to: '/admin/dashboard', label: t('admin:dashboardTitle', 'Analytics Console'), icon: LayoutDashboard },
+      { to: '/admin/staff', label: t('admin:staffGovernance', 'Staff Governance'), icon: Users },
+      { to: '/admin/departments', label: t('admin:departmentsTitle', 'Departments'), icon: Building2 },
+      { to: '/admin/complaints', label: t('admin:allCasesTitle', 'All Municipal Cases'), icon: ClipboardList },
+      { to: '/admin/citizens', label: t('admin:citizenRegistryTitle', 'Citizen Registry'), icon: User },
+      { to: '/admin/audit', label: t('admin:auditLogsTitle', 'Security Audit Trail'), icon: ShieldAlert },
+      { to: '/admin/profile', label: t('admin:profileTitle', 'Admin Profile'), icon: User },
     ];
   }
 
@@ -103,11 +105,11 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
           {/* User Government Official Identity Card */}
           <div className="p-3.5 mx-3 my-3 bg-[#0f3459] rounded-lg border border-[#14426f]">
-            <div className="text-[11px] text-slate-300 font-medium">Logged in Authority</div>
+            <div className="text-[11px] text-slate-300 font-medium">{t('common:citizen', 'Logged in User')}</div>
             <div className="text-sm font-bold text-white truncate font-sans">{user.name}</div>
             <div className="mt-1 flex items-center gap-1.5 flex-wrap">
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase tracking-wide">
-                {ROLE_LABELS[user.role] || user.role}
+                {t(`common:roles.${user.role}`, ROLE_LABELS[user.role] || user.role)}
               </span>
               {user.staffId && (
                 <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0a2540] text-slate-200 border border-slate-700">
@@ -154,7 +156,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
               className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-xs font-semibold text-rose-300 hover:text-white hover:bg-rose-900/40 transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span>Sign Out Authority</span>
+              <span>{t('common:signOutAuthority', 'Sign Out')}</span>
             </button>
           </div>
         </div>

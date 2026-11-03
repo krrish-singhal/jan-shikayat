@@ -11,6 +11,7 @@ import citizenRoutes from './routes/citizenRoutes.js';
 import operatorRoutes from './routes/operatorRoutes.js';
 import engineerRoutes from './routes/engineerRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import translationRoutes from './routes/translationRoutes.js';
 import { sendError } from './utils/response.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -78,6 +79,7 @@ app.use('/api/v1', citizenRoutes);
 app.use('/api/v1/operator', operatorRoutes);
 app.use('/api/v1/engineer', engineerRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1', translationRoutes);
 
 // Health check endpoint
 app.get('/api/v1/health', (req, res) => {

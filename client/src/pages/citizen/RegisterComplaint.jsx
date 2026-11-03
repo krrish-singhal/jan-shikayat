@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Upload,
   Image as ImageIcon,
@@ -19,6 +20,7 @@ import { useToast } from '../../contexts/ToastContext.jsx';
 export const RegisterComplaint = () => {
   const navigate = useNavigate();
   const { addToast } = useToast();
+  const { t } = useTranslation(['citizen', 'common', 'validation']);
 
   const [departments, setDepartments] = useState([]);
   const [loadingDepts, setLoadingDepts] = useState(true);

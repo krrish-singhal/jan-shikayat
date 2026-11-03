@@ -1,0 +1,12 @@
+{
+  "required": "This field is required",
+  "emailInvalid": "Please provide a valid email address",
+  "passwordMinLength": "Password must be at least 8 characters",
+  "passwordComplexity": "Must contain 1 uppercase, 1 number, and 1 special character",
+  "passwordMatch": "Passwords do not match",
+  "descriptionMinLength": "Description must be at least 10 characters",
+  "phoneInvalid": "Please enter a valid 10-digit phone number",
+  "imageRequired": "Photographic evidence is mandatory",
+  "departmentRequired": "Please select a department",
+  "addressRequired": "Address is required"
+}

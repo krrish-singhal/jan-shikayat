@@ -7,3 +7,4 @@ export { Notification } from './Notification.js';
 export { RefreshToken } from './RefreshToken.js';
 export { PasswordReset } from './PasswordReset.js';
 export { Counter } from './Counter.js';
+export { TranslationCache } from './TranslationCache.js';

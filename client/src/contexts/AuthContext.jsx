@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../services/api.js';
+import i18n from '../i18n.js';
 import { ROLES, ROLE_DASHBOARD_ROUTES } from '../constants/roles.js';
 
 const AuthContext = createContext(null);
@@ -29,9 +30,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await api.get('/me');
       if (res.data?.success) {
-        setUser(res.data.data.user);
+        const userData = res.data.data.user;
+        setUser(userData);
         setUnreadNotifications(res.data.data.unreadNotifications || 0);
-        localStorage.setItem('user', JSON.stringify(res.data.data.user));
+        localStorage.setItem('user', JSON.stringify(userData));
+        if (userData?.preferredLanguage) {
+          i18n.changeLanguage(userData.preferredLanguage);
+        }
       }
     } catch (err) {
       console.warn('[Session Restore] Token expired or invalid, clearing local session.');
@@ -56,6 +61,9 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     localStorage.setItem('accessToken', token);
     localStorage.setItem('user', JSON.stringify(userData));
+    if (userData?.preferredLanguage) {
+      i18n.changeLanguage(userData.preferredLanguage);
+    }
     return userData;
   };
 
@@ -68,6 +76,9 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     localStorage.setItem('accessToken', token);
     localStorage.setItem('user', JSON.stringify(userData));
+    if (userData?.preferredLanguage) {
+      i18n.changeLanguage(userData.preferredLanguage);
+    }
     return { user: userData, mustChangePassword };
   };
 
@@ -79,6 +90,9 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     localStorage.setItem('accessToken', token);
     localStorage.setItem('user', JSON.stringify(userData));
+    if (userData?.preferredLanguage) {
+      i18n.changeLanguage(userData.preferredLanguage);
+    }
     return userData;
   };
 
@@ -90,7 +104,27 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     localStorage.setItem('accessToken', token);
     localStorage.setItem('user', JSON.stringify(userData));
+    if (userData?.preferredLanguage) {
+      i18n.changeLanguage(userData.preferredLanguage);
+    }
     return userData;
+  };
+
+  // Change language preference
+  const changeUserLanguage = async (newLang) => {
+    await i18n.changeLanguage(newLang);
+    localStorage.setItem('i18nextLng', newLang);
+
+    if (user) {
+      const updated = { ...user, preferredLanguage: newLang };
+      setUser(updated);
+      localStorage.setItem('user', JSON.stringify(updated));
+      try {
+        await api.patch('/me/language', { language: newLang });
+      } catch (err) {
+        console.warn('[Sync Language Error]', err?.response?.data || err.message);
+      }
+    }
   };
 
   // Logout
@@ -170,6 +204,7 @@ export const AuthProvider = ({ children }) => {
         registerCitizen,
         loginWithGoogle,
         logout,
+        changeUserLanguage,
         updateProfile,
         changePassword,
         deleteAccount,

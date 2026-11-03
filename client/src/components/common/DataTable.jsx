@@ -1,5 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Search, Inbox } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { formatNumber } from '../../utils/formatters.js';
 
 export const DataTable = ({
   columns = [],
@@ -9,12 +11,15 @@ export const DataTable = ({
   totalPages = 1,
   total = 0,
   onPageChange,
-  searchPlaceholder = 'Search records...',
+  searchPlaceholder,
   searchValue = '',
   onSearchChange,
-  emptyMessage = 'No records found',
+  emptyMessage,
   actions,
 }) => {
+  const { t, i18n } = useTranslation('common');
+  const resolvedSearchPlaceholder = searchPlaceholder || t('search', 'Search records...');
+  const resolvedEmptyMessage = emptyMessage || t('noResultsFound', 'No records found');
   return (
     <div className="civic-card overflow-hidden">
       {/* Table Header / Controls */}
@@ -27,7 +32,7 @@ export const DataTable = ({
                 type="text"
                 value={searchValue}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder={searchPlaceholder}
+                placeholder={resolvedSearchPlaceholder}
                 className="civic-input pl-9 py-2 text-sm"
               />
             </div>
@@ -67,7 +72,7 @@ export const DataTable = ({
                 <td colSpan={columns.length} className="px-4 py-12 text-center text-slate-500">
                   <div className="flex flex-col items-center justify-center gap-2">
                     <Inbox className="w-8 h-8 text-slate-300" />
-                    <p className="text-sm font-medium">{emptyMessage}</p>
+                    <p className="text-sm font-medium">{resolvedEmptyMessage}</p>
                   </div>
                 </td>
               </tr>
@@ -94,24 +99,30 @@ export const DataTable = ({
       {totalPages > 1 && onPageChange && (
         <div className="px-4 py-3.5 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
           <div>
-            Showing page <span className="font-semibold text-slate-800">{page}</span> of{' '}
-            <span className="font-semibold text-slate-800">{totalPages}</span> ({total} total results)
+            {t('showingPagination', {
+              page: formatNumber(page, i18n.language),
+              totalPages: formatNumber(totalPages, i18n.language),
+              total: formatNumber(total, i18n.language),
+              defaultValue: `Showing page ${page} of ${totalPages} (${total} total results)`,
+            })}
           </div>
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => onPageChange(page - 1)}
               disabled={page <= 1 || loading}
               className="p-1.5 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              aria-label={t('previous', 'Previous')}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <span className="px-3 py-1 font-medium text-xs text-slate-700 border border-slate-200 bg-white rounded-lg">
-              {page}
+              {formatNumber(page, i18n.language)}
             </span>
             <button
               onClick={() => onPageChange(page + 1)}
               disabled={page >= totalPages || loading}
               className="p-1.5 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              aria-label={t('next', 'Next')}
             >
               <ChevronRight className="w-4 h-4" />
             </button>

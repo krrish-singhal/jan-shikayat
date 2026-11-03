@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { UserPlus, User, Mail, Phone, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
+import { LanguageSwitcher } from '../../components/common/LanguageSwitcher.jsx';
 
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -29,6 +31,7 @@ const signupSchema = z
   });
 
 export const CitizenSignup = () => {
+  const { t } = useTranslation(['auth', 'common', 'validation']);
   const { registerCitizen } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
@@ -63,17 +66,27 @@ export const CitizenSignup = () => {
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
       <div className="civic-card p-8 max-w-lg w-full shadow-lg border border-slate-200">
+        <div className="flex justify-end mb-2">
+          <LanguageSwitcher variant="default" />
+        </div>
+
         <div className="text-center mb-6">
           <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-3 border border-brand-100">
             <UserPlus className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Citizen Registration</h2>
-          <p className="text-xs text-slate-500 mt-1">Create an account to submit and monitor municipal complaints</p>
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+            {t('signupTitle', 'Citizen Registration')}
+          </h2>
+          <p className="text-xs text-slate-500 mt-1">
+            {t('signupSubtitle', 'Create an account to submit and monitor municipal complaints')}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              {t('fullName', 'Full Name')}
+            </label>
             <div className="relative">
               <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -92,7 +105,9 @@ export const CitizenSignup = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              {t('email', 'Email Address')}
+            </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -111,7 +126,9 @@ export const CitizenSignup = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number (Optional)</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              {t('phoneNumber', 'Phone Number (Optional)')}
+            </label>
             <div className="relative">
               <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -130,7 +147,9 @@ export const CitizenSignup = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Create Password</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              {t('password', 'Create Password')}
+            </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -149,7 +168,9 @@ export const CitizenSignup = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm Password</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              {t('confirmPassword', 'Confirm Password')}
+            </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -172,14 +193,14 @@ export const CitizenSignup = () => {
             disabled={loading}
             className="civic-btn-primary w-full py-2.5 mt-2"
           >
-            {loading ? 'Registering Account...' : 'Create Citizen Account'}
+            {loading ? t('common:loading', 'Registering Account...') : t('registerButton', 'Create Citizen Account')}
           </button>
         </form>
 
         <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
-          Already registered?{' '}
+          {t('alreadyHaveAccount', 'Already registered?')}{' '}
           <Link to="/login" className="text-brand-600 font-semibold hover:underline">
-            Sign In here
+            {t('loginButton', 'Sign In here')}
           </Link>
         </div>
       </div>
