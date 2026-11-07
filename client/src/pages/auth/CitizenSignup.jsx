@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { UserPlus, User, Mail, Phone, Lock, AlertCircle } from 'lucide-react';
+import { UserPlus, User, Mail, Phone, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { LanguageSwitcher } from '../../components/common/LanguageSwitcher.jsx';
@@ -36,6 +36,8 @@ export const CitizenSignup = () => {
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -88,12 +90,12 @@ export const CitizenSignup = () => {
               {t('fullName', 'Full Name')}
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 {...register('name')}
                 placeholder="Aarav Patel"
-                className="civic-input pl-9"
+                className="civic-input pl-10"
               />
             </div>
             {errors.name && (
@@ -109,12 +111,12 @@ export const CitizenSignup = () => {
               {t('email', 'Email Address')}
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="email"
                 {...register('email')}
                 placeholder="aarav.patel@gmail.com"
-                className="civic-input pl-9"
+                className="civic-input pl-10"
               />
             </div>
             {errors.email && (
@@ -130,12 +132,12 @@ export const CitizenSignup = () => {
               {t('phoneNumber', 'Phone Number (Optional)')}
             </label>
             <div className="relative">
-              <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="tel"
                 {...register('phone')}
                 placeholder="+91 9876543210"
-                className="civic-input pl-9"
+                className="civic-input pl-10"
               />
             </div>
             {errors.phone && (
@@ -151,13 +153,26 @@ export const CitizenSignup = () => {
               {t('password', 'Create Password')}
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="Min 8 characters, uppercase, number, symbol"
-                className="civic-input pl-9"
+                className="civic-input pl-10 pr-10"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
             </div>
             {errors.password && (
               <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
@@ -172,13 +187,26 @@ export const CitizenSignup = () => {
               {t('confirmPassword', 'Confirm Password')}
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
-                type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 {...register('confirmPassword')}
                 placeholder="Repeat password"
-                className="civic-input pl-9"
+                className="civic-input pl-10 pr-10"
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
             </div>
             {errors.confirmPassword && (
               <p className="text-xs text-red-600 mt-1 flex items-center gap-1">

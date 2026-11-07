@@ -10,7 +10,7 @@ import {
   XCircle,
   Clock,
 } from 'lucide-react';
-import { formatDateTime } from '../../utils/formatters.js';
+import { formatDateTime, getImageUrl } from '../../utils/formatters.js';
 import { TranslatedContent } from './TranslatedContent.jsx';
 
 export const Timeline = ({
@@ -112,9 +112,13 @@ export const Timeline = ({
                           {t('citizen:verificationPhoto', 'Verification Photograph')}
                         </span>
                         <img
-                          src={completionImageUrl}
+                          src={getImageUrl(completionImageUrl)}
                           alt="Work Completion Verification"
-                          className="w-full max-w-sm h-48 object-cover rounded-lg border border-emerald-300 shadow-sm"
+                          className="w-full max-w-sm h-48 object-cover rounded-lg border border-emerald-300 shadow-sm bg-emerald-100"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/uploads/sample-completed.svg';
+                          }}
                         />
                       </div>
                     )}

@@ -107,3 +107,23 @@ export function getLanguageDirection(langCode = DEFAULT_LANGUAGE) {
   const lang = LANGUAGE_LOOKUP[langCode];
   return lang?.direction || 'ltr';
 }
+
+/**
+ * Resolve full public URL for uploaded media or external URLs
+ */
+export function getImageUrl(pathOrUrl) {
+  if (!pathOrUrl) return '';
+  if (
+    pathOrUrl.startsWith('http://') ||
+    pathOrUrl.startsWith('https://') ||
+    pathOrUrl.startsWith('data:') ||
+    pathOrUrl.startsWith('blob:')
+  ) {
+    return pathOrUrl;
+  }
+  const apiBase = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL.replace(/\/api\/v1\/?$/, '')
+    : 'http://localhost:5000';
+  const cleanPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
+  return `${apiBase}${cleanPath}`;
+}

@@ -87,14 +87,14 @@ export const ForgotPassword = () => {
                 {t('email', 'Email Address')}
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.email@example.com"
-                  className="civic-input pl-9"
+                  className="civic-input pl-10"
                 />
               </div>
             </div>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Shield, Building2, Wrench, Lock, BadgeCheck, AlertCircle, Sparkles } from 'lucide-react';
+import { Shield, Building2, Wrench, Lock, Eye, EyeOff, BadgeCheck, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { ROLE_DASHBOARD_ROUTES } from '../../constants/roles.js';
@@ -21,6 +21,7 @@ export const StaffLogin = () => {
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -109,12 +110,12 @@ export const StaffLogin = () => {
               {t('staffId', 'Staff ID or Official Email')}
             </label>
             <div className="relative">
-              <BadgeCheck className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <BadgeCheck className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 {...register('identifier')}
                 placeholder="OP-0001 or admin@civic.gov.in"
-                className="civic-input pl-9 uppercase"
+                className="civic-input pl-10 uppercase"
               />
             </div>
             {errors.identifier && (
@@ -130,13 +131,26 @@ export const StaffLogin = () => {
               {t('password', 'Staff Password')}
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="••••••••"
-                className="civic-input pl-9"
+                className="civic-input pl-10 pr-10"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
             </div>
             {errors.password && (
               <p className="text-xs text-red-600 mt-1 flex items-center gap-1">

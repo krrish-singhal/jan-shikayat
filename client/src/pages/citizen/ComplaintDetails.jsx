@@ -14,6 +14,7 @@ import api from '../../services/api.js';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { Timeline } from '../../components/common/Timeline.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
+import { getImageUrl } from '../../utils/formatters.js';
 
 export const ComplaintDetails = () => {
   const { id } = useParams();
@@ -79,10 +80,14 @@ export const ComplaintDetails = () => {
             </h4>
             <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
               <img
-                src={complaint.imageUrl}
+                src={getImageUrl(complaint.imageUrl)}
                 alt="Complaint photograph"
                 className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
-                onClick={() => window.open(complaint.imageUrl, '_blank')}
+                onClick={() => window.open(getImageUrl(complaint.imageUrl), '_blank')}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/uploads/sample-road.svg';
+                }}
               />
             </div>
             <p className="text-[10px] text-slate-400 text-center mt-2">Click image to view full size</p>
@@ -144,7 +149,7 @@ export const ComplaintDetails = () => {
             currentStatus={complaint.internalStatus}
             rejectionReason={complaint.rejectionReason}
             completionNote={complaint.completionNote}
-            completionImageUrl={complaint.completionImageUrl}
+            completionImageUrl={getImageUrl(complaint.completionImageUrl)}
             isCitizenView={true}
           />
         </div>
