@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Lock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
 import { LanguageSwitcher } from '../../components/common/LanguageSwitcher.jsx';
 import api from '../../services/api.js';
 import { useToast } from '../../contexts/ToastContext.jsx';
@@ -17,6 +17,8 @@ export const ResetPassword = () => {
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -81,28 +83,52 @@ export const ResetPassword = () => {
             <label className="block text-xs font-semibold text-slate-700 mb-1">
               {t('newPassword', 'New Password')}
             </label>
-            <input
-              type="password"
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="••••••••"
-              className="civic-input"
-            />
+            <div className="relative">
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type={showNewPassword ? 'text' : 'password'}
+                required
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+                className="civic-input pl-10 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
+                aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                tabIndex={-1}
+              >
+                {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
               {t('confirmPassword', 'Confirm Password')}
             </label>
-            <input
-              type="password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
-              className="civic-input"
-            />
+            <div className="relative">
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type={showConfirmPassword ? 'text' : 'password'}
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                className="civic-input pl-10 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
 
           <button

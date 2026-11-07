@@ -5,6 +5,7 @@ import api from '../../services/api.js';
 import { DataTable } from '../../components/common/DataTable.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
+import { getImageUrl } from '../../utils/formatters.js';
 
 export const MyComplaints = () => {
   const navigate = useNavigate();
@@ -82,9 +83,13 @@ export const MyComplaints = () => {
       render: (row) =>
         row.imageUrl ? (
           <img
-            src={row.imageUrl}
+            src={getImageUrl(row.imageUrl)}
             alt="Complaint thumbnail"
-            className="w-10 h-10 rounded-lg object-cover border border-slate-200"
+            className="w-10 h-10 rounded-lg object-cover border border-slate-200 bg-slate-100"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/uploads/sample-road.svg';
+            }}
           />
         ) : (
           <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">

@@ -16,7 +16,7 @@ import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
 import { StatCard } from '../../components/common/StatCard.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
-import { formatNumber, formatDate } from '../../utils/formatters.js';
+import { formatNumber, formatDate, getImageUrl } from '../../utils/formatters.js';
 
 export const CitizenDashboard = () => {
   const { t, i18n } = useTranslation(['citizen', 'common']);
@@ -168,9 +168,13 @@ export const CitizenDashboard = () => {
                 <div className="flex items-center gap-3.5 min-w-0">
                   {complaint.imageUrl ? (
                     <img
-                      src={complaint.imageUrl}
+                      src={getImageUrl(complaint.imageUrl)}
                       alt="Thumbnail"
-                      className="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0"
+                      className="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0 bg-slate-100"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/uploads/sample-road.svg';
+                      }}
                     />
                   ) : (
                     <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
