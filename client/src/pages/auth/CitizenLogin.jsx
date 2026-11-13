@@ -87,21 +87,6 @@ export const CitizenLogin = () => {
           </p>
         </div>
 
-        {/* Demo Quick-Fill Button */}
-        <div className="mb-6 p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-semibold text-slate-700">Seed Citizen Demo Account</div>
-            <div className="text-[10px] text-slate-500 font-mono">aarav.patel@gmail.com</div>
-          </div>
-          <button
-            type="button"
-            onClick={() => handleFillDemo('aarav.patel@gmail.com', 'Citizen@Pass2026!')}
-            className="px-3 py-1 bg-white hover:bg-slate-100 border border-slate-200 rounded text-xs font-semibold text-[#0f3b68] shadow-sm transition-colors"
-          >
-            Auto-Fill
-          </button>
-        </div>
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">
