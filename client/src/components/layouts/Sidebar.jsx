@@ -133,6 +133,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
                 <NavLink
                   key={link.to}
                   to={link.to}
+                  end
                   onClick={() => onClose && onClose()}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold tracking-wide transition-all ${
