@@ -154,9 +154,6 @@ export const CitizenDashboard = () => {
         ) : stats.recent.length === 0 ? (
           <div className="text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
             <p className="text-sm text-slate-500 font-medium">{t('common:noResultsFound', 'You have not filed any complaints yet.')}</p>
-            <Link to="/citizen/complaints/new" className="civic-btn-primary mt-3 text-xs">
-              {t('registerNewComplaint', 'File Your First Complaint')}
-            </Link>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
