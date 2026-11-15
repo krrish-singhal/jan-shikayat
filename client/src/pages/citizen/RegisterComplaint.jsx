@@ -282,7 +282,9 @@ export const RegisterComplaint = () => {
                 disabled={loadingDepts}
                 className="civic-input pl-9"
               >
-                <option value="">-- Choose Department --</option>
+                <option value="" disabled className="text-gray-400">
+                  Choose a department
+                </option>
                 {departments.map((dept) => (
                   <option key={dept._id} value={dept._id}>
                     {dept.name}
