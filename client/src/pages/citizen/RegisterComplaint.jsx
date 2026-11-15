@@ -359,20 +359,48 @@ export const RegisterComplaint = () => {
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">Latitude</label>
               <input
-                type="text"
-                {...register('latitude')}
+                type="number"
+                step="any"
+                {...register('latitude', {
+                  validate: (value) =>
+                    value === '' ||
+                    (Number.isFinite(Number(value)) &&
+                      Number(value) >= -90 &&
+                      Number(value) <= 90) ||
+                    'Enter a valid latitude (-90 to 90)',
+                })}
                 placeholder="e.g. 18.520430"
                 className="civic-input font-mono text-xs"
               />
+
+              {errors.latitude && (
+                <p className="text-xs text-red-600 mt-1">
+                  {errors.latitude.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">Longitude</label>
               <input
-                type="text"
-                {...register('longitude')}
+                type="number"
+                step="any"
+                {...register('longitude', {
+                  validate: (value) =>
+                    value === '' ||
+                    (Number.isFinite(Number(value)) &&
+                      Number(value) >= -180 &&
+                      Number(value) <= 180) ||
+                    'Enter a valid longitude (-180 to 180)',
+                })}
                 placeholder="e.g. 73.856740"
                 className="civic-input font-mono text-xs"
               />
+
+              {errors.longitude && (
+                <p className="text-xs text-red-600 mt-1">
+                  {errors.longitude.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
