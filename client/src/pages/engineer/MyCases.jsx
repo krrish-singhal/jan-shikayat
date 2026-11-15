@@ -270,13 +270,13 @@ export const MyCases = () => {
     {
       header: 'Status',
       key: 'status',
-      className: 'w-36',
+      className: 'w-50',
       render: (row) => <StatusBadge status={row.status} />,
     },
     {
       header: 'Actions',
       key: 'actions',
-      className: 'w-64 text-right',
+      className: 'w-80 text-right',
       render: (row) => (
         <div className="flex items-center justify-end gap-1.5 flex-wrap">
           <button
