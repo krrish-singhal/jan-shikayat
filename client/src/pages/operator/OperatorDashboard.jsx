@@ -148,15 +148,26 @@ export const OperatorDashboard = () => {
             {stats.recentHandled.map((item) => (
               <div
                 key={item._id}
-                onClick={() => navigate(`/operator/complaints/${item.complaintId}`)}
-                className="py-3 px-3 -mx-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors flex items-center justify-between gap-4"
+                onClick={() => {
+                  if (item.action === 'FORWARD') return;
+                  navigate(`/operator/complaints/${item.complaintId}`);
+                }}
+                className={`py-3 px-3 -mx-3 rounded-xl flex items-center justify-between gap-4 transition-colors ${item.action === 'FORWARD'
+                  ? 'bg-slate-100/80 border-l-2 border-r-2 border-slate-400 cursor-not-allowed'
+                  : 'hover:bg-slate-50 cursor-pointer'
+                  }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-xs font-bold text-slate-900">
                       {item.ticketNo}
                     </span>
-                    <span className="text-[11px] px-2 py-0.5 rounded font-semibold bg-slate-100 text-slate-700">
+                    <span
+                      className={`text-[11px] px-2 py-0.5 rounded font-semibold ${item.action === 'FORWARD'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-slate-100 text-slate-700'
+                        }`}
+                    >
                       Action: {item.action}
                     </span>
                   </div>

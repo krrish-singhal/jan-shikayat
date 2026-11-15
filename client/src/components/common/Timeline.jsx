@@ -76,7 +76,7 @@ export const Timeline = ({
               </div>
 
               {/* Milestone Details */}
-              <div className="flex-1 bg-white pt-0.5">
+              <div className="flex-1 bg-white px-3 pt-1">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <h4 className={`text-sm ${textStyle}`}>{m.label}</h4>
                   {ev?.createdAt && (

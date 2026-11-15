@@ -169,7 +169,7 @@ export const Navbar = ({ onOpenSidebar }) => {
               {user?.name?.charAt(0) || 'U'}
             </div>
             <div className="hidden sm:block text-left">
-              <span className="text-xs font-bold text-slate-900 block leading-tight max-w-[130px] truncate">
+              <span className="text-xs font-bold text-slate-900 block leading-tight max-w-[180px] truncate">
                 {user?.name}
               </span>
               <span className="text-[10px] text-slate-500 font-mono block">

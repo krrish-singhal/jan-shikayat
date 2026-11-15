@@ -57,7 +57,8 @@ export const CitizenDashboard = () => {
       <div className="civic-card p-6 sm:p-8 bg-gradient-to-r from-brand-900 via-brand-800 to-indigo-950 text-white rounded-2xl shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wider text-brand-300">
-            {t('common:roles.CITIZEN', 'Citizen')} • {t('dashboardTitle', 'Grievance Redressal Portal')}
+            {/* {t('common:roles.CITIZEN', 'Citizen')} • {t('dashboardTitle', 'Grievance Redressal Portal')} */}
+            {t('common:roles.CITIZEN', 'Citizen')}
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1">
             {t('common:welcome', 'Welcome')}, {user?.name || t('common:citizen', 'Citizen')}
@@ -153,9 +154,6 @@ export const CitizenDashboard = () => {
         ) : stats.recent.length === 0 ? (
           <div className="text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
             <p className="text-sm text-slate-500 font-medium">{t('common:noResultsFound', 'You have not filed any complaints yet.')}</p>
-            <Link to="/citizen/complaints/new" className="civic-btn-primary mt-3 text-xs">
-              {t('registerNewComplaint', 'File Your First Complaint')}
-            </Link>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
