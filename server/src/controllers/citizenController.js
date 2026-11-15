@@ -40,6 +40,23 @@ export class CitizenController {
         return sendError(res, { code: 'INVALID_ADDRESS', message: 'Address is required (at least 3 characters).' }, 400);
       }
 
+      if (latitude !== undefined && latitude !== '') {
+        const lat = Number(latitude);
+
+        if (!Number.isFinite(lat) || lat < -90 || lat > 90) {
+          return sendError(res, { code: 'INVALID_LATITUDE', message: 'Provide correct value of the latitude' }, 400);
+        }
+      }
+
+      if (longitude !== undefined && longitude !== '') {
+        const lng = Number(longitude);
+
+        if (!Number.isFinite(lng) || lng < -180 || lng > 180) {
+          return sendError(res, { code: 'INVALID_LONGITUDE', message: 'Provide correct value of the longitude' }, 400);
+
+        }
+      }
+
       const department = await Department.findOne({ _id: departmentId, isActive: true });
       if (!department) {
         return sendError(res, { code: 'INVALID_DEPARTMENT', message: 'Selected department is invalid or inactive.' }, 400);
