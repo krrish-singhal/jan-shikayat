@@ -164,7 +164,7 @@ export const VerificationQueue = () => {
     {
       header: 'Actions',
       key: 'actions',
-      className: 'w-44 text-right',
+      className: 'w-80 text-right',
       render: (row) => (
         <div className="flex items-center justify-end gap-2">
           <button
