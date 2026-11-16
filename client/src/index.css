@@ -15,12 +15,17 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 antialiased selection:bg-[#0f3b68] selection:text-white transition-colors duration-200;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply bg-[#F4F6FB] text-slate-900 antialiased selection:bg-[#1F3A6E] selection:text-white transition-colors duration-200;
+    font-family: 'Noto Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 15px;
   }
   .dark body,
   html.dark body {
     @apply bg-slate-950 text-slate-100 selection:bg-blue-600 selection:text-white;
+  }
+  /* Noto Sans Devanagari for Hindi/regional script rendering */
+  :lang(hi), .devanagari {
+    font-family: 'Noto Sans Devanagari', 'Noto Sans', sans-serif;
   }
 }
 
@@ -55,7 +60,8 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 @layer components {
   /* Official Government Card Styling */
   .civic-card {
-    @apply bg-white border border-slate-200 rounded-lg shadow-sm transition-all duration-200;
+    @apply bg-white border border-[#CFD6E4] shadow-sm transition-all duration-200;
+    border-radius: 4px;
   }
   .dark .civic-card,
   html.dark .civic-card {
@@ -122,6 +128,150 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 
 /* Official Tricolor Top Band */
 .gov-tricolor-strip {
-  height: 4px;
-  background: linear-gradient(90deg, #ff9933 0%, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);
+  height: 5px;
+  background: linear-gradient(90deg, #FF9933 0%, #FF9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%, #138808 100%);
+}
+
+/* Gov design system overrides */
+.civic-card {
+  border-radius: 4px !important;
+}
+
+/* Gov page background */
+.gov-page-bg {
+  background-color: #F4F6FB;
+}
+html.dark .gov-page-bg {
+  background-color: #0f172a;
+}
+
+/* Announcement ticker animation */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.gov-ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker-scroll 28s linear infinite;
+}
+.gov-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Focus ring for accessibility */
+.gov-focus:focus-visible {
+  outline: 3px solid #FF9933;
+  outline-offset: 2px;
+}
+
+/* Nav active indicator */
+.gov-nav-active {
+  color: #FF9933 !important;
+  border-bottom: 3px solid #FF9933;
+}
+
+/* Text-size buttons */
+.gov-text-size-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 3px;
+  color: #d1d5db;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.15s, color 0.15s;
+}
+.gov-text-size-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+/* Statistics strip */
+.gov-stat-strip {
+  background: #1F3A6E;
+}
+html.dark .gov-stat-strip {
+  background: #1a2744;
+}
+
+/* Notice board */
+.gov-notice-board {
+  background: #fff;
+  border: 1px solid #CFD6E4;
+  border-radius: 4px;
+}
+html.dark .gov-notice-board {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* SLA card white with blue left border */
+.gov-sla-card {
+  background: #fff;
+  border: 1px solid #CFD6E4;
+  border-left: 5px solid #1F3A6E;
+  border-radius: 4px;
+}
+html.dark .gov-sla-card {
+  background: #1e293b;
+  border-color: #334155;
+  border-left-color: #3b82f6;
+}
+
+/* Portal tile label chips */
+.gov-role-chip {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* Responsive ticker container */
+.gov-ticker-wrap {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Mobile nav scroll */
+@media (max-width: 1023px) {
+  .gov-mobile-nav-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .gov-mobile-nav-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Skip link */
+.gov-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.gov-skip-link:focus {
+  left: 1rem;
+  top: 0.5rem;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  z-index: 9999;
+  padding: 6px 14px;
+  background: #1F3A6E;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 4px;
+  text-decoration: none;
 }
