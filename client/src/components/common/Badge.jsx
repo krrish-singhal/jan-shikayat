@@ -31,16 +31,16 @@ export const Badge = StatusBadge;
 
 export const RoleBadge = ({ role }) => {
   const { t } = useTranslation('common');
-  let style = 'bg-slate-100 text-slate-700 border-slate-200';
+  let style = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
 
   if (role === 'ADMIN') {
-    style = 'bg-purple-50 text-purple-700 border-purple-200';
+    style = 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-900/60';
   } else if (role === 'OPERATOR') {
-    style = 'bg-blue-50 text-blue-700 border-blue-200';
+    style = 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-900/60';
   } else if (role === 'ENGINEER') {
-    style = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    style = 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900/60';
   } else if (role === 'CITIZEN') {
-    style = 'bg-amber-50 text-amber-700 border-amber-200';
+    style = 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-900/60';
   }
 
   return (

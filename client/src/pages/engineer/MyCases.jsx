@@ -20,6 +20,7 @@ import { CapacityBar } from '../../components/common/CapacityBar.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { getImageUrl } from '../../utils/formatters.js';
 
 export const MyCases = () => {
   const navigate = useNavigate();
@@ -233,7 +234,7 @@ export const MyCases = () => {
     {
       header: 'Ticket #',
       key: 'ticketNo',
-      className: 'w-36 font-mono font-bold text-slate-900',
+      className: 'w-36 font-mono font-bold text-slate-900 dark:text-slate-100',
       render: (row) => <span>{row.ticketNo}</span>,
     },
     {
@@ -243,12 +244,16 @@ export const MyCases = () => {
       render: (row) =>
         row.imageUrl ? (
           <img
-            src={row.imageUrl}
+            src={getImageUrl(row.imageUrl)}
             alt="Evidence"
-            className="w-10 h-10 rounded-lg object-cover border border-slate-200"
+            className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/uploads/sample-road.svg';
+            }}
           />
         ) : (
-          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+          <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
             <FileText className="w-4 h-4" />
           </div>
         ),
@@ -367,15 +372,15 @@ export const MyCases = () => {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">My Assigned Cases</h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">My Assigned Cases</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Grievances assigned to your engineering desk. Follow the lifecycle from inspection to completion.
           </p>
         </div>
       </div>
 
       {/* Workflow Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto border-b border-slate-200 pb-1">
+      <div className="flex items-center gap-2 overflow-x-auto border-b border-slate-200 dark:border-slate-800 pb-1">
         {[
           { key: 'VERIFYING', label: '1. Verifying' },
           { key: 'APPROVED', label: '2. Approved (Work Pending)' },
@@ -387,8 +392,8 @@ export const MyCases = () => {
             onClick={() => handleTabChange(tab.key)}
             className={`px-4 py-2 text-xs font-semibold rounded-lg whitespace-nowrap transition-colors ${
               currentTab === tab.key
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             {tab.label}

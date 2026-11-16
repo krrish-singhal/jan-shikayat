@@ -43,27 +43,27 @@ export const Timeline = ({
 
   return (
     <div className="civic-card p-6">
-      <h3 className="text-base font-semibold text-slate-900 mb-6 flex items-center gap-2">
-        <Clock className="w-5 h-5 text-brand-600" />
+      <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
+        <Clock className="w-5 h-5 text-brand-600 dark:text-blue-400" />
         {t('citizen:timelineTitle', 'Complaint Lifecycle Timeline')}
       </h3>
 
-      <div className="relative pl-6 space-y-8 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
+      <div className="relative pl-6 space-y-8 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-700">
         {defaultMilestones.map((m) => {
           const ev = eventMap[m.key];
           const isPassed = !!ev;
           const isCurrent = currentStatus === m.key;
           const Icon = m.icon;
 
-          let circleStyle = 'bg-white border-2 border-slate-300 text-slate-400';
-          let textStyle = 'text-slate-400 font-normal';
+          let circleStyle = 'bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500';
+          let textStyle = 'text-slate-400 dark:text-slate-500 font-normal';
 
           if (isPassed) {
             circleStyle = 'bg-emerald-600 border-2 border-emerald-600 text-white shadow-sm';
-            textStyle = 'text-slate-900 font-semibold';
+            textStyle = 'text-slate-900 dark:text-slate-100 font-semibold';
           } else if (isCurrent) {
-            circleStyle = 'bg-brand-600 border-2 border-brand-600 text-white shadow-md ring-4 ring-brand-100';
-            textStyle = 'text-brand-700 font-bold';
+            circleStyle = 'bg-brand-600 border-2 border-brand-600 text-white shadow-md ring-4 ring-brand-100 dark:ring-blue-900/50';
+            textStyle = 'text-brand-700 dark:text-blue-400 font-bold';
           }
 
           return (
@@ -76,11 +76,11 @@ export const Timeline = ({
               </div>
 
               {/* Milestone Details */}
-              <div className="flex-1 bg-white px-3 pt-1">
+              <div className="flex-1 bg-white dark:bg-slate-900 px-3 pt-1">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <h4 className={`text-sm ${textStyle}`}>{m.label}</h4>
                   {ev?.createdAt && (
-                    <span className="text-xs text-slate-400 font-mono">
+                    <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
                       {formatDateTime(ev.createdAt, i18n.language)}
                     </span>
                   )}
@@ -88,27 +88,27 @@ export const Timeline = ({
 
                 {/* Show public note if applicable with translation */}
                 {ev?.note && (
-                  <div className="mt-1 text-xs text-slate-600 bg-slate-50 border border-slate-100 rounded-lg p-2.5 leading-relaxed">
+                  <div className="mt-1 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-lg p-2.5 leading-relaxed">
                     <TranslatedContent text={ev.note} complaintId={complaintId} />
                   </div>
                 )}
 
                 {/* Completed Details with Photograph */}
                 {m.key === 'COMPLETED' && isCompleted && (completionNote || completionImageUrl) && (
-                  <div className="mt-3 p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-3">
+                  <div className="mt-3 p-4 bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-3">
                     {completionNote && (
                       <div>
-                        <span className="text-xs font-bold text-emerald-800 uppercase tracking-wide">
+                        <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">
                           {t('citizen:completionRemarks', 'Completion Remarks')}
                         </span>
-                        <div className="mt-0.5 text-sm text-emerald-950">
+                        <div className="mt-0.5 text-sm text-emerald-950 dark:text-emerald-100">
                           <TranslatedContent text={completionNote} complaintId={complaintId} />
                         </div>
                       </div>
                     )}
                     {completionImageUrl && (
                       <div>
-                        <span className="text-xs font-bold text-emerald-800 uppercase tracking-wide block mb-1.5">
+                        <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide block mb-1.5">
                           {t('citizen:verificationPhoto', 'Verification Photograph')}
                         </span>
                         <img
@@ -132,19 +132,19 @@ export const Timeline = ({
         {/* Rejection Stage if Rejected */}
         {isRejected && (
           <div className="relative flex items-start gap-4">
-            <div className="absolute -left-6 top-0.5 w-6 h-6 rounded-full flex items-center justify-center text-xs bg-red-600 border-2 border-red-600 text-white shadow-md ring-4 ring-red-100">
+            <div className="absolute -left-6 top-0.5 w-6 h-6 rounded-full flex items-center justify-center text-xs bg-red-600 border-2 border-red-600 text-white shadow-md ring-4 ring-red-100 dark:ring-red-950/50">
               <XCircle className="w-3.5 h-3.5" />
             </div>
-            <div className="flex-1 bg-white pt-0.5">
-              <h4 className="text-sm font-bold text-red-700">
+            <div className="flex-1 bg-white dark:bg-slate-900 pt-0.5">
+              <h4 className="text-sm font-bold text-red-700 dark:text-red-400">
                 {t('common:statusMap.REJECTED', 'Complaint Rejected')}
               </h4>
               {rejectionReason && (
-                <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-xl">
-                  <span className="text-xs font-bold text-red-800 uppercase tracking-wide block mb-0.5">
+                <div className="mt-2 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl">
+                  <span className="text-xs font-bold text-red-800 dark:text-red-300 uppercase tracking-wide block mb-0.5">
                     {t('citizen:rejectionReason', 'Rejection Reason')}
                   </span>
-                  <div className="text-sm text-red-900">
+                  <div className="text-sm text-red-900 dark:text-red-200">
                     <TranslatedContent text={rejectionReason} complaintId={complaintId} />
                   </div>
                 </div>

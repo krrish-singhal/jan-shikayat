@@ -199,8 +199,8 @@ export const ComplaintManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Municipal Complaint Register</h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Municipal Complaint Register</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Global repository across all civic wards and departments ({totalCount} total cases)
           </p>
         </div>
@@ -224,8 +224,8 @@ export const ComplaintManagement = () => {
           </button>
         </form>
 
-        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-500 font-semibold">
+        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-semibold">
             <Filter className="w-3.5 h-3.5" />
             <span>Filters:</span>
           </div>
@@ -348,16 +348,16 @@ export const ComplaintManagement = () => {
                       </Link>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-900">{c.citizenId?.name || 'Citizen'}</div>
-                      <div className="text-[11px] font-mono text-slate-400">{c.citizenId?.phone || 'No phone'}</div>
+                      <div className="font-semibold text-slate-900 dark:text-slate-100">{c.citizenId?.name || 'Citizen'}</div>
+                      <div className="text-[11px] font-mono text-slate-400 dark:text-slate-500">{c.citizenId?.phone || 'No phone'}</div>
                     </td>
-                    <td className="py-3 px-4 text-slate-700 font-medium">
+                    <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-medium">
                       {c.departmentId?.name || 'Unassigned'}
                     </td>
                     <td className="py-3 px-4">
                       {c.assignedEngineerId ? (
                         <div>
-                          <div className="font-semibold text-slate-800">{c.assignedEngineerId.name}</div>
+                          <div className="font-semibold text-slate-800 dark:text-slate-200">{c.assignedEngineerId.name}</div>
                           <div className="text-[10px] font-mono text-amber-600">{c.assignedEngineerId.staffId}</div>
                         </div>
                       ) : (

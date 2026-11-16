@@ -17,6 +17,7 @@ import { StatusBadge } from '../../components/common/Badge.jsx';
 import { CapacityBar } from '../../components/common/CapacityBar.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { getImageUrl } from '../../utils/formatters.js';
 
 export const EngineerComplaintDetail = () => {
   const { id } = useParams();
@@ -81,27 +82,35 @@ export const EngineerComplaintDetail = () => {
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
               Citizen Photo Evidence
             </h4>
-            <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+            <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
               <img
-                src={complaint.imageUrl}
+                src={getImageUrl(complaint.imageUrl)}
                 alt="Complaint photograph"
                 className="w-full h-56 object-cover cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => window.open(complaint.imageUrl, '_blank')}
+                onClick={() => window.open(getImageUrl(complaint.imageUrl), '_blank')}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/uploads/sample-road.svg';
+                }}
               />
             </div>
-            <p className="text-[10px] text-slate-400 text-center mt-2">Click to open high-res original</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center mt-2">Click to open high-res original</p>
           </div>
 
           {complaint.completionImageUrl && (
-            <div className="civic-card p-4 border-emerald-200 bg-emerald-50/20">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-3">
+            <div className="civic-card p-4 border-emerald-200 dark:border-emerald-800 bg-emerald-50/20 dark:bg-emerald-950/30">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 mb-3">
                 Completion Evidence Photo
               </h4>
-              <div className="rounded-xl overflow-hidden border border-emerald-300 bg-slate-900">
+              <div className="rounded-xl overflow-hidden border border-emerald-300 dark:border-emerald-700 bg-slate-900">
                 <img
-                  src={complaint.completionImageUrl}
+                  src={getImageUrl(complaint.completionImageUrl)}
                   alt="Work completion photograph"
                   className="w-full h-48 object-cover"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/uploads/sample-completed.svg';
+                  }}
                 />
               </div>
             </div>
@@ -109,37 +118,37 @@ export const EngineerComplaintDetail = () => {
 
           <div className="civic-card p-5 space-y-4 text-xs">
             <div>
-              <span className="font-bold uppercase tracking-wider text-slate-400 block mb-1">
+              <span className="font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
                 Citizen Informant
               </span>
-              <p className="text-sm font-semibold text-slate-900">{complaint.citizenId?.name || 'Citizen'}</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{complaint.citizenId?.name || 'Citizen'}</p>
               {complaint.citizenId?.phone && (
-                <p className="text-slate-600 font-mono mt-0.5 flex items-center gap-1">
+                <p className="text-slate-600 dark:text-slate-400 font-mono mt-0.5 flex items-center gap-1">
                   <Phone className="w-3.5 h-3.5 text-slate-400" />
                   {complaint.citizenId.phone}
                 </p>
               )}
             </div>
 
-            <div className="pt-3 border-t border-slate-100">
-              <span className="font-bold uppercase tracking-wider text-slate-400 block mb-1">
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+              <span className="font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
                 Assigned Engineer
               </span>
-              <p className="text-slate-800 font-medium">
+              <p className="text-slate-800 dark:text-slate-200 font-medium">
                 {complaint.assignedEngineerId?.name || 'Unassigned'} {complaint.assignedEngineerId?.staffId ? `(${complaint.assignedEngineerId.staffId})` : ''}
               </p>
             </div>
 
-            <div className="pt-3 border-t border-slate-100">
-              <span className="font-bold uppercase tracking-wider text-slate-400 block mb-1">
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+              <span className="font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
                 Ground Location
               </span>
-              <p className="text-slate-700 leading-relaxed flex items-start gap-1.5">
-                <MapPin className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed flex items-start gap-1.5">
+                <MapPin className="w-4 h-4 text-brand-600 dark:text-blue-400 shrink-0 mt-0.5" />
                 <span>{complaint.location?.address}</span>
               </p>
               {complaint.location?.latitude && (
-                <p className="font-mono text-slate-500 mt-1">
+                <p className="font-mono text-slate-500 dark:text-slate-400 mt-1">
                   Lat: {complaint.location.latitude}, Lng: {complaint.location.longitude}
                 </p>
               )}
@@ -150,44 +159,44 @@ export const EngineerComplaintDetail = () => {
         {/* Right: Description & Full Audit Event History */}
         <div className="md:col-span-2 space-y-6">
           <div className="civic-card p-6">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-2">
               Issue Description
             </h3>
-            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-line bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
               {complaint.description}
             </p>
 
             {complaint.completionNote && (
-              <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-                <span className="text-xs font-bold text-emerald-800 uppercase tracking-wide block mb-1">
+              <div className="mt-4 p-4 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 rounded-xl">
+                <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide block mb-1">
                   Engineer Completion Remarks
                 </span>
-                <p className="text-sm text-emerald-950">{complaint.completionNote}</p>
+                <p className="text-sm text-emerald-950 dark:text-emerald-200">{complaint.completionNote}</p>
               </div>
             )}
 
             {complaint.rejectionReason && (
-              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
-                <span className="text-xs font-bold text-red-800 uppercase tracking-wide block mb-1">
+              <div className="mt-4 p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded-xl">
+                <span className="text-xs font-bold text-red-800 dark:text-red-300 uppercase tracking-wide block mb-1">
                   Rejection Reason
                 </span>
-                <p className="text-sm text-red-900">{complaint.rejectionReason}</p>
+                <p className="text-sm text-red-900 dark:text-red-200">{complaint.rejectionReason}</p>
               </div>
             )}
           </div>
 
           {/* Event History Trail */}
           <div className="civic-card p-6">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-brand-600" />
+            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-brand-600 dark:text-blue-400" />
               <span>Full Event Trail</span>
             </h3>
 
             <div className="space-y-4">
               {events.map((ev) => (
-                <div key={ev._id} className="p-3.5 bg-slate-50 border border-slate-100 rounded-xl text-xs space-y-1">
+                <div key={ev._id} className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 rounded-xl text-xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-800">
+                    <span className="font-bold text-slate-800 dark:text-slate-200">
                       {ev.action} • {ev.toStatus}
                     </span>
                     <span className="text-[11px] font-mono text-slate-400">

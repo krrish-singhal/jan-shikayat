@@ -73,7 +73,7 @@ export const MyComplaints = () => {
     {
       header: 'Ticket #',
       key: 'ticketNo',
-      className: 'w-36 font-mono font-bold text-slate-900',
+      className: 'w-36 font-mono font-bold text-slate-900 dark:text-slate-100',
       render: (row) => <span>{row.ticketNo}</span>,
     },
     {
@@ -85,14 +85,14 @@ export const MyComplaints = () => {
           <img
             src={getImageUrl(row.imageUrl)}
             alt="Complaint thumbnail"
-            className="w-10 h-10 rounded-lg object-cover border border-slate-200 bg-slate-100"
+            className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800"
             onError={(e) => {
               e.currentTarget.onerror = null;
               e.currentTarget.src = '/uploads/sample-road.svg';
             }}
           />
         ) : (
-          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+          <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
             <FileText className="w-4 h-4" />
           </div>
         ),
@@ -100,19 +100,19 @@ export const MyComplaints = () => {
     {
       header: 'Department',
       key: 'department',
-      className: 'font-medium text-slate-800',
+      className: 'font-medium text-slate-800 dark:text-slate-200',
       render: (row) => row.department,
     },
     {
       header: 'Description',
       key: 'description',
-      className: 'max-w-xs truncate text-slate-600',
+      className: 'max-w-xs truncate text-slate-600 dark:text-slate-300',
       render: (row) => <span className="truncate block max-w-xs">{row.description}</span>,
     },
     {
       header: 'Date Filed',
       key: 'createdAt',
-      className: 'w-32 font-mono text-xs text-slate-500',
+      className: 'w-32 font-mono text-xs text-slate-500 dark:text-slate-400',
       render: (row) => new Date(row.createdAt).toLocaleDateString(),
     },
     {
@@ -140,12 +140,12 @@ export const MyComplaints = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">My Registered Complaints</h2>
-        <p className="text-xs text-slate-500 mt-1">Track the resolution lifecycle of all your submitted municipal grievances</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">My Registered Complaints</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Track the resolution lifecycle of all your submitted municipal grievances</p>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1 overflow-x-auto pb-1 border-b border-slate-200">
+      <div className="flex items-center gap-1 overflow-x-auto pb-1 border-b border-slate-200 dark:border-slate-800">
         {filterTabs.map((tab) => {
           const isActive = currentTab === tab.key;
           return (
@@ -154,8 +154,8 @@ export const MyComplaints = () => {
               onClick={() => handleTabChange(tab.key)}
               className={`px-4 py-2 text-xs font-semibold rounded-lg whitespace-nowrap transition-colors ${
                 isActive
-                  ? 'bg-brand-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  ? 'bg-brand-600 dark:bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               {tab.label}

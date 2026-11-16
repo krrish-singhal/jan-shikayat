@@ -70,8 +70,8 @@ export const AuditLogs = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Municipal Audit Trail</h2>
-        <p className="text-xs text-slate-500 mt-1">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Municipal Audit Trail</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Cryptographically immutable, append-only operational log recording all administrative overrides, staff actions, and complaint status transitions ({totalCount} logged events)
         </p>
       </div>
@@ -94,8 +94,8 @@ export const AuditLogs = () => {
           </button>
         </form>
 
-        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-500 font-semibold">
+        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-semibold">
             <Filter className="w-3.5 h-3.5" />
             <span>Date Range:</span>
           </div>
@@ -185,8 +185,8 @@ export const AuditLogs = () => {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-900">{log.actorName || 'System'}</div>
-                      <div className="text-[10px] font-mono text-slate-400">{log.actorRole || 'SYSTEM'}</div>
+                      <div className="font-semibold text-slate-900 dark:text-slate-100">{log.actorName || 'System'}</div>
+                      <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500">{log.actorRole || 'SYSTEM'}</div>
                     </td>
                     <td className="py-3 px-4">
                       {log.complaintId ? (

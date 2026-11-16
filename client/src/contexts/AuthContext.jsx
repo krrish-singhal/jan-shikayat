@@ -97,8 +97,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Google OAuth Login
-  const loginWithGoogle = async ({ email, name, googleId }) => {
-    const res = await api.post('/auth/google', { email, name, googleId });
+  const loginWithGoogle = async ({ email, name, googleId, phone, accessToken }) => {
+    const res = await api.post('/auth/google', { email, name, googleId, phone, accessToken });
     const { user: userData, accessToken: token } = res.data.data;
     setAccessToken(token);
     setUser(userData);
@@ -108,6 +108,12 @@ export const AuthProvider = ({ children }) => {
       i18n.changeLanguage(userData.preferredLanguage);
     }
     return userData;
+  };
+
+  // Check Google User existence & phone status
+  const checkGoogleUser = async ({ email, googleId }) => {
+    const res = await api.post('/auth/google/check', { email, googleId });
+    return res.data.data;
   };
 
   // Change language preference
@@ -203,6 +209,7 @@ export const AuthProvider = ({ children }) => {
         loginStaff,
         registerCitizen,
         loginWithGoogle,
+        checkGoogleUser,
         logout,
         changeUserLanguage,
         updateProfile,

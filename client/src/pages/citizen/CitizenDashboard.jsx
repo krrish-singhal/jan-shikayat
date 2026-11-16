@@ -133,12 +133,12 @@ export const CitizenDashboard = () => {
       <div className="civic-card p-6">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h3 className="text-base font-bold text-slate-900">{t('myComplaintsTitle', 'Recent Complaints')}</h3>
-            <p className="text-xs text-slate-500 mt-0.5">{t('myComplaintsSubtitle', 'Your most recently submitted municipal issues')}</p>
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">{t('myComplaintsTitle', 'Recent Complaints')}</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{t('myComplaintsSubtitle', 'Your most recently submitted municipal issues')}</p>
           </div>
           <Link
             to="/citizen/complaints"
-            className="text-xs font-semibold text-brand-600 hover:text-brand-700 inline-flex items-center gap-1"
+            className="text-xs font-semibold text-brand-600 dark:text-blue-400 hover:text-brand-700 dark:hover:text-blue-300 inline-flex items-center gap-1"
           >
             <span>{t('common:viewDetails', 'View All')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -148,54 +148,54 @@ export const CitizenDashboard = () => {
         {loading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-slate-100 rounded-xl animate-pulse" />
+              <div key={i} className="h-16 bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : stats.recent.length === 0 ? (
-          <div className="text-center py-10 bg-slate-50 rounded-xl border border-slate-100">
-            <p className="text-sm text-slate-500 font-medium">{t('common:noResultsFound', 'You have not filed any complaints yet.')}</p>
+          <div className="text-center py-10 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{t('common:noResultsFound', 'You have not filed any complaints yet.')}</p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {stats.recent.map((complaint) => (
               <div
                 key={complaint._id}
                 onClick={() => navigate(`/citizen/complaints/${complaint._id}`)}
-                className="py-3.5 px-3 -mx-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors flex items-center justify-between gap-4"
+                className="py-3.5 px-3 -mx-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors flex items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   {complaint.imageUrl ? (
                     <img
                       src={getImageUrl(complaint.imageUrl)}
                       alt="Thumbnail"
-                      className="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0 bg-slate-100"
+                      className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100 dark:bg-slate-800"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
                         e.currentTarget.src = '/uploads/sample-road.svg';
                       }}
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                    <div className="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
                       <FileText className="w-5 h-5" />
                     </div>
                   )}
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-slate-900">
+                      <span className="font-mono text-xs font-bold text-slate-900 dark:text-slate-100">
                         {complaint.ticketNo}
                       </span>
-                      <span className="text-[11px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
                         {complaint.department}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 truncate max-w-md mt-0.5">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 truncate max-w-md mt-0.5">
                       {complaint.description}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-xs text-slate-400 font-mono hidden sm:inline">
+                  <span className="text-xs text-slate-400 dark:text-slate-500 font-mono hidden sm:inline">
                     {formatDate(complaint.createdAt, i18n.language)}
                   </span>
                   <StatusBadge status={complaint.status} isCitizenView={true} />

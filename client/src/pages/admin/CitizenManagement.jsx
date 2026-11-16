@@ -135,8 +135,8 @@ export const CitizenManagement = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Citizen Registry</h2>
-        <p className="text-xs text-slate-500 mt-1">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Citizen Registry</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Civic registry of registered residents, complaint history, and account governance ({totalCount} registered)
         </p>
       </div>
@@ -214,7 +214,7 @@ export const CitizenManagement = () => {
                 citizens.map((c) => (
                   <tr key={c._id} className="hover:bg-slate-50/70 transition-colors">
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-900">{c.name}</div>
+                      <div className="font-semibold text-slate-900 dark:text-slate-100">{c.name}</div>
                       {c.isBlocked && c.blockReason && (
                         <div className="text-[10px] text-rose-600 font-medium">
                           Reason: {c.blockReason}

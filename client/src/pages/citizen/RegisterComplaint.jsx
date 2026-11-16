@@ -164,25 +164,25 @@ export const RegisterComplaint = () => {
   if (successData) {
     return (
       <div className="max-w-xl mx-auto py-8">
-        <div className="civic-card p-8 text-center bg-white shadow-xl rounded-2xl border border-emerald-100">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+        <div className="civic-card p-8 text-center bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-emerald-100 dark:border-emerald-900/50">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4 border border-emerald-200 dark:border-emerald-800">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
             Grievance Registered Successfully
           </h2>
-          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
             Your complaint has been submitted to the municipal department queue. You will receive real-time updates as ground verification proceeds.
           </p>
 
           {/* Prominent Ticket Card */}
-          <div className="my-6 p-5 bg-slate-50 rounded-2xl border border-slate-200 inline-block w-full max-w-md text-left">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+          <div className="my-6 p-5 bg-slate-50 dark:bg-slate-800/70 rounded-2xl border border-slate-200 dark:border-slate-700 inline-block w-full max-w-md text-left">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
               Official Ticket Reference Number
             </span>
             <div className="flex items-center justify-between">
-              <span className="font-mono text-2xl font-black text-brand-700 tracking-wider">
+              <span className="font-mono text-2xl font-black text-brand-700 dark:text-blue-400 tracking-wider">
                 {successData.ticketNo}
               </span>
               <button
@@ -220,8 +220,8 @@ export const RegisterComplaint = () => {
   return (
     <div className="max-w-3xl mx-auto py-4">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Register New Grievance</h2>
-        <p className="text-xs text-slate-500 mt-1">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Register New Grievance</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Provide complete issue details and photograph for fast departmental routing and ground verification.
         </p>
       </div>
@@ -229,15 +229,15 @@ export const RegisterComplaint = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Photo Upload Card */}
         <div className="civic-card p-6">
-          <label className="block text-sm font-semibold text-slate-900 mb-1">
+          <label className="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">
             Complaint Evidence Photograph <span className="text-red-500">*</span>
           </label>
-          <p className="text-xs text-slate-500 mb-4">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
             Upload clear photograph showing the defect, road damage, garbage pile, or water leak (JPG, PNG, WEBP, max 5MB).
           </p>
 
           {previewUrl ? (
-            <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 max-w-md">
+            <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-900 max-w-md">
               <img src={previewUrl} alt="Preview" className="w-full h-64 object-cover" />
               <button
                 type="button"
@@ -250,13 +250,13 @@ export const RegisterComplaint = () => {
           ) : (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-300 hover:border-brand-500 bg-slate-50/50 hover:bg-brand-50/10 rounded-2xl p-8 text-center cursor-pointer transition-all duration-150"
+              className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-blue-500 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-brand-50/10 dark:hover:bg-slate-800/70 rounded-2xl p-8 text-center cursor-pointer transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 rounded-full bg-brand-50 dark:bg-blue-950/60 text-brand-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-3 border border-brand-100 dark:border-blue-900">
                 <Upload className="w-6 h-6" />
               </div>
-              <p className="text-sm font-semibold text-slate-700">Click to upload or drag &amp; drop</p>
-              <p className="text-xs text-slate-400 mt-1">JPG, PNG, or WEBP up to 5MB</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Click to upload or drag &amp; drop</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">JPG, PNG, or WEBP up to 5MB</p>
             </div>
           )}
 
@@ -272,7 +272,7 @@ export const RegisterComplaint = () => {
         {/* Department & Description Card */}
         <div className="civic-card p-6 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Select Municipal Department <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -293,16 +293,16 @@ export const RegisterComplaint = () => {
               </select>
             </div>
             {errors.departmentId && (
-              <p className="text-xs text-red-600 mt-1">{errors.departmentId.message}</p>
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.departmentId.message}</p>
             )}
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-semibold text-slate-700">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Detailed Complaint Description <span className="text-red-500">*</span>
               </label>
-              <span className={`text-[11px] ${descriptionValue.length < 10 ? 'text-amber-600 font-medium' : 'text-slate-400'}`}>
+              <span className={`text-[11px] ${descriptionValue.length < 10 ? 'text-amber-600 dark:text-amber-400 font-medium' : 'text-slate-400'}`}>
                 {descriptionValue.length} / 1000 chars (min 10)
               </span>
             </div>
@@ -317,7 +317,7 @@ export const RegisterComplaint = () => {
               className="civic-input"
             />
             {errors.description && (
-              <p className="text-xs text-red-600 mt-1">{errors.description.message}</p>
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.description.message}</p>
             )}
           </div>
         </div>
@@ -325,15 +325,15 @@ export const RegisterComplaint = () => {
         {/* Location & GPS Card */}
         <div className="civic-card p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-brand-600" />
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-brand-600 dark:text-blue-400" />
               Incident Location
             </h3>
             <button
               type="button"
               onClick={handleAutoLocate}
               disabled={locating}
-              className="text-xs font-semibold text-brand-600 hover:text-brand-700 inline-flex items-center gap-1"
+              className="text-xs font-semibold text-brand-600 dark:text-blue-400 hover:text-brand-700 dark:hover:text-blue-300 inline-flex items-center gap-1"
             >
               <Navigation className="w-3.5 h-3.5" />
               <span>{locating ? 'Detecting GPS...' : 'Auto-detect Coordinates'}</span>
@@ -341,7 +341,7 @@ export const RegisterComplaint = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               Physical Street Address &amp; Landmark <span className="text-red-500">*</span>
             </label>
             <input
@@ -351,13 +351,13 @@ export const RegisterComplaint = () => {
               className="civic-input"
             />
             {errors.address && (
-              <p className="text-xs text-red-600 mt-1">{errors.address.message}</p>
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.address.message}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Latitude</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Latitude</label>
               <input
                 type="number"
                 step="any"
@@ -374,13 +374,13 @@ export const RegisterComplaint = () => {
               />
 
               {errors.latitude && (
-                <p className="text-xs text-red-600 mt-1">
+                <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                   {errors.latitude.message}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Longitude</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Longitude</label>
               <input
                 type="number"
                 step="any"
@@ -397,7 +397,7 @@ export const RegisterComplaint = () => {
               />
 
               {errors.longitude && (
-                <p className="text-xs text-red-600 mt-1">
+                <p className="text-xs text-red-600 dark:text-red-400 mt-1">
                   {errors.longitude.message}
                 </p>
               )}
@@ -406,8 +406,8 @@ export const RegisterComplaint = () => {
         </div>
 
         {/* Submit Action */}
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <Link to="/citizen/dashboard" className="civic-btn-secondary">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2">
+          <Link to="/citizen/dashboard" className="civic-btn-secondary text-center">
             Cancel
           </Link>
           <button

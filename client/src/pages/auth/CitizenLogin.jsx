@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { LogIn, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
-import { LanguageSwitcher } from '../../components/common/LanguageSwitcher.jsx';
+import { GooglePhoneModal } from '../../components/common/GooglePhoneModal.jsx';
 
 const loginSchema = z.object({
   email: z.string().trim().email('Please enter a valid email address'),
@@ -16,12 +16,15 @@ const loginSchema = z.object({
 
 export const CitizenLogin = () => {
   const { t } = useTranslation(['auth', 'common', 'validation']);
-  const { loginCitizen, loginWithGoogle } = useAuth();
+  const { loginCitizen, loginWithGoogle, checkGoogleUser } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [phoneModalOpen, setPhoneModalOpen] = useState(false);
+  const [pendingGoogleUser, setPendingGoogleUser] = useState(null);
+  const [phoneSubmitting, setPhoneSubmitting] = useState(false);
 
   const {
     register,
@@ -50,17 +53,34 @@ export const CitizenLogin = () => {
     }
   };
 
-  const handleSimulatedGoogleAuth = async () => {
+  const handleGoogleSuccessProfile = async (profile) => {
     try {
       setGoogleLoading(true);
-      // Simulate Google OAuth account response
-      await loginWithGoogle({
-        email: 'google.citizen@example.com',
-        name: 'Google Citizen User',
-        googleId: 'google-oauth-demo-id-12345',
+      // Check if user exists and whether phone is already provided
+      const status = await checkGoogleUser({
+        email: profile.email,
+        googleId: profile.googleId,
       });
-      addToast('Logged in with Google account', 'success');
-      navigate('/citizen/dashboard');
+
+      if (status?.exists && status?.hasPhone) {
+        // User exists and already has phone -> login directly
+        await loginWithGoogle({
+          email: profile.email,
+          name: profile.name,
+          googleId: profile.googleId,
+        });
+        addToast(`Welcome back, ${status.name || profile.name}!`, 'success');
+        navigate('/citizen/dashboard');
+      } else {
+        // First-time signup or missing phone -> prompt citizen for phone number
+        setPendingGoogleUser({
+          email: profile.email,
+          name: profile.name,
+          googleId: profile.googleId,
+          phone: '',
+        });
+        setPhoneModalOpen(true);
+      }
     } catch (err) {
       addToast(err.response?.data?.error?.message || err.message, 'error');
     } finally {
@@ -68,28 +88,108 @@ export const CitizenLogin = () => {
     }
   };
 
+  const handlePhoneSubmit = async (phone) => {
+    if (!pendingGoogleUser) return;
+    try {
+      setPhoneSubmitting(true);
+      await loginWithGoogle({
+        ...pendingGoogleUser,
+        phone,
+      });
+      setPhoneModalOpen(false);
+      addToast('Welcome to JanShikayat! Mobile number linked.', 'success');
+      navigate('/citizen/dashboard');
+    } catch (err) {
+      addToast(err.response?.data?.error?.message || err.message, 'error');
+    } finally {
+      setPhoneSubmitting(false);
+    }
+  };
+
+  const handlePhoneSkip = async () => {
+    if (!pendingGoogleUser) return;
+    try {
+      setPhoneSubmitting(true);
+      await loginWithGoogle(pendingGoogleUser);
+      setPhoneModalOpen(false);
+      addToast('Welcome to JanShikayat Citizen Portal!', 'success');
+      navigate('/citizen/dashboard');
+    } catch (err) {
+      addToast(err.response?.data?.error?.message || err.message, 'error');
+    } finally {
+      setPhoneSubmitting(false);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    // 1. Try Google Identity Services (GIS) Token Client if script is loaded
+    if (googleClientId && window.google?.accounts?.oauth2) {
+      try {
+        setGoogleLoading(true);
+        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: googleClientId,
+          scope: 'email profile openid',
+          callback: async (tokenResponse) => {
+            if (tokenResponse.error) {
+              setGoogleLoading(false);
+              if (tokenResponse.error === 'popup_closed_by_user') {
+                return;
+              }
+              // If popup or origins blocked, seamlessly use server OAuth redirect
+              console.warn('[GIS popup error, redirecting to server OAuth]', tokenResponse.error);
+              window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}/auth/google`;
+              return;
+            }
+            try {
+              const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+              });
+              const profile = await userInfoRes.json();
+              await handleGoogleSuccessProfile({
+                email: profile.email,
+                name: profile.name,
+                googleId: profile.sub,
+                accessToken: tokenResponse.access_token,
+              });
+            } catch (err) {
+              setGoogleLoading(false);
+              addToast(err.response?.data?.error?.message || err.message, 'error');
+            }
+          },
+        });
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
+        return;
+      } catch (err) {
+        console.warn('[GIS init failed, redirecting to server OAuth]', err);
+      }
+    }
+
+    // 2. Official Google OAuth 2.0 Web Redirect Flow (always forces prompt=select_account)
+    setGoogleLoading(true);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+    window.location.href = `${apiUrl}/auth/google`;
+  };
+
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
-      <div className="civic-card p-8 max-w-md w-full shadow-lg border border-slate-200">
-        <div className="flex justify-end mb-2">
-          <LanguageSwitcher variant="default" />
-        </div>
-
+      <div className="civic-card p-8 max-w-md w-full shadow-lg border border-slate-200 dark:border-slate-800">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-3 border border-brand-100">
+          <div className="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-3 border border-brand-100 dark:border-brand-900/50">
             <LogIn className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             {t('citizenLoginTitle', 'Citizen Sign In')}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t('citizenLoginSubtitle', 'Access your registered complaints and track status')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               {t('email', 'Email Address')}
             </label>
             <div className="relative">
@@ -102,7 +202,7 @@ export const CitizenLogin = () => {
               />
             </div>
             {errors.email && (
-              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1 flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 {errors.email.message}
               </p>
@@ -111,10 +211,10 @@ export const CitizenLogin = () => {
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-semibold text-slate-700">
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 {t('password', 'Password')}
               </label>
-              <Link to="/forgot-password" className="text-xs text-brand-600 hover:underline">
+              <Link to="/forgot-password" className="text-xs text-brand-600 dark:text-blue-400 hover:underline">
                 {t('forgotPassword', 'Forgot password?')}
               </Link>
             </div>
@@ -129,7 +229,7 @@ export const CitizenLogin = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none p-1 rounded-md transition-colors"
                 aria-label={showPassword ? t('hidePassword', 'Hide password') : t('showPassword', 'Show password')}
                 tabIndex={-1}
               >
@@ -141,7 +241,7 @@ export const CitizenLogin = () => {
               </button>
             </div>
             {errors.password && (
-              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1 flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 {errors.password.message}
               </p>
@@ -159,17 +259,17 @@ export const CitizenLogin = () => {
 
         {/* Google OAuth Option */}
         <div className="my-5 relative flex items-center justify-center">
-          <div className="border-t border-slate-200 w-full" />
-          <span className="bg-white px-3 text-xs text-slate-400 uppercase tracking-wider absolute">
+          <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
+          <span className="bg-white dark:bg-slate-900 px-3 text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider absolute">
             {t('common:or', 'or')}
           </span>
         </div>
 
         <button
           type="button"
-          onClick={handleSimulatedGoogleAuth}
+          onClick={handleGoogleAuth}
           disabled={googleLoading}
-          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
@@ -193,21 +293,30 @@ export const CitizenLogin = () => {
         </button>
 
         {/* Footer Links */}
-        <div className="mt-6 pt-4 border-t border-slate-100 flex flex-col gap-2 text-center text-xs text-slate-500">
+        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2 text-center text-xs text-slate-500 dark:text-slate-400">
           <div>
             {t('dontHaveAccount', "Don't have an account?")}{' '}
-            <Link to="/signup" className="text-brand-600 font-semibold hover:underline">
+            <Link to="/signup" className="text-brand-600 dark:text-blue-400 font-semibold hover:underline">
               {t('registerNow', 'Register now')}
             </Link>
           </div>
           <div className="pt-2">
             Are you a municipal staff member?{' '}
-            <Link to="/staff/login" className="text-slate-700 font-semibold hover:underline inline-flex items-center gap-1">
+            <Link to="/staff/login" className="text-slate-700 dark:text-slate-300 font-semibold hover:underline inline-flex items-center gap-1">
               {t('staffLoginButton', 'Staff Portal Login')} <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>
       </div>
+
+      <GooglePhoneModal
+        isOpen={phoneModalOpen}
+        onClose={() => setPhoneModalOpen(false)}
+        googleProfile={pendingGoogleUser}
+        onSubmit={handlePhoneSubmit}
+        onSkip={handlePhoneSkip}
+        loading={phoneSubmitting}
+      />
     </div>
   );
 };

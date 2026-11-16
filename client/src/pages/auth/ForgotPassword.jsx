@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Mail, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
-import { LanguageSwitcher } from '../../components/common/LanguageSwitcher.jsx';
 import api from '../../services/api.js';
 
 export const ForgotPassword = () => {
@@ -34,19 +33,18 @@ export const ForgotPassword = () => {
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
-      <div className="civic-card p-8 max-w-md w-full shadow-lg border border-slate-200">
-        <div className="flex justify-between items-center mb-4">
-          <Link to="/login" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors">
+      <div className="civic-card p-8 max-w-md w-full shadow-lg border border-slate-200 dark:border-slate-800">
+        <div className="mb-4">
+          <Link to="/login" className="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" /> {t('backToLogin', 'Back to Sign In')}
           </Link>
-          <LanguageSwitcher variant="default" />
         </div>
 
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             {t('forgotPasswordTitle', 'Forgot Password')}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t('forgotPasswordSubtitle', 'Enter your registered email to receive recovery instructions')}
           </p>
         </div>

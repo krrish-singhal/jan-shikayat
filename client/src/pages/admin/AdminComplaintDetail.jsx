@@ -21,6 +21,7 @@ import { Timeline } from '../../components/common/Timeline.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { COMPLAINT_STATUS, STATUS_LABELS } from '../../constants/complaintStatus.js';
+import { getImageUrl } from '../../utils/formatters.js';
 
 export const AdminComplaintDetail = () => {
   const { id } = useParams();
@@ -198,21 +199,21 @@ export const AdminComplaintDetail = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/admin/complaints')}
-            className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100"
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono font-bold text-lg text-slate-900">{complaint.ticketNo}</span>
+              <span className="font-mono font-bold text-lg text-slate-900 dark:text-slate-100">{complaint.ticketNo}</span>
               <Badge status={complaint.status} />
               {complaint.forwardCount > 0 && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60">
                   Forwarded {complaint.forwardCount}x
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Logged on {new Date(complaint.createdAt).toLocaleString()}
             </p>
           </div>
@@ -268,11 +269,15 @@ export const AdminComplaintDetail = () => {
 
             {/* Complaint Image */}
             {complaint.imageUrl && (
-              <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900/5 max-h-96 flex items-center justify-center">
+              <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-900/5 dark:bg-slate-800 max-h-96 flex items-center justify-center">
                 <img
-                  src={complaint.imageUrl}
+                  src={getImageUrl(complaint.imageUrl)}
                   alt="Ground complaint condition"
                   className="w-full h-full object-cover max-h-96"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/uploads/sample-road.svg';
+                  }}
                 />
               </div>
             )}
@@ -281,23 +286,23 @@ export const AdminComplaintDetail = () => {
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">
                 Citizen Narrative
               </span>
-              <p className="text-sm text-slate-800 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                 {complaint.description}
               </p>
             </div>
 
             {/* Location */}
-            <div className="pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div>
                 <span className="font-semibold text-slate-400 block mb-1">Reported Address</span>
-                <p className="text-slate-800 flex items-start gap-1.5">
+                <p className="text-slate-800 dark:text-slate-200 flex items-start gap-1.5">
                   <MapPin className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
                   <span>{complaint.location?.address || 'Street address unspecified'}</span>
                 </p>
               </div>
               <div>
                 <span className="font-semibold text-slate-400 block mb-1">GPS Coordinates</span>
-                <p className="font-mono text-slate-700">
+                <p className="font-mono text-slate-700 dark:text-slate-300">
                   {complaint.location?.latitude && complaint.location?.longitude
                     ? `${complaint.location.latitude}, ${complaint.location.longitude}`
                     : 'Coordinates unavailable'}
@@ -307,25 +312,29 @@ export const AdminComplaintDetail = () => {
 
             {/* Completion Evidence if COMPLETED */}
             {complaint.status === COMPLAINT_STATUS.COMPLETED && (
-              <div className="mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 space-y-3">
-                <div className="flex items-center gap-2 text-emerald-900 font-bold text-xs uppercase tracking-wider">
+              <div className="mt-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 space-y-3">
+                <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-300 font-bold text-xs uppercase tracking-wider">
                   <ImageIcon className="w-4 h-4 text-emerald-600" />
                   Resolution Completion Dossier
                 </div>
                 {complaint.completionImageUrl && (
-                  <div className="rounded-lg overflow-hidden border border-emerald-200 max-h-64">
+                  <div className="rounded-lg overflow-hidden border border-emerald-200 dark:border-emerald-800 max-h-64">
                     <img
-                      src={complaint.completionImageUrl}
+                      src={getImageUrl(complaint.completionImageUrl)}
                       alt="Work Completion Verification"
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/uploads/sample-completed.svg';
+                      }}
                     />
                   </div>
                 )}
                 <div>
-                  <span className="text-xs font-semibold text-emerald-800 block mb-1">
+                  <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 block mb-1">
                     Engineer Completion Note
                   </span>
-                  <p className="text-xs text-emerald-900 bg-white/80 p-3 rounded-lg border border-emerald-200">
+                  <p className="text-xs text-emerald-900 dark:text-emerald-200 bg-white/80 dark:bg-slate-900/80 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800">
                     {complaint.completionNote || 'Work executed and verified by engineering team.'}
                   </p>
                 </div>
@@ -334,11 +343,11 @@ export const AdminComplaintDetail = () => {
 
             {/* Rejection Note if REJECTED */}
             {complaint.status === COMPLAINT_STATUS.REJECTED && (
-              <div className="mt-4 p-4 rounded-xl bg-rose-50 border border-rose-200 space-y-2">
-                <span className="font-bold text-xs uppercase tracking-wider text-rose-900 block">
+              <div className="mt-4 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 space-y-2">
+                <span className="font-bold text-xs uppercase tracking-wider text-rose-900 dark:text-rose-300 block">
                   Ground Rejection Reason
                 </span>
-                <p className="text-xs text-rose-800 bg-white/80 p-3 rounded-lg border border-rose-200">
+                <p className="text-xs text-rose-800 dark:text-rose-200 bg-white/80 dark:bg-slate-900/80 p-3 rounded-lg border border-rose-200 dark:border-rose-900">
                   {complaint.rejectionReason || 'Complaint rejected.'}
                 </p>
               </div>
@@ -347,12 +356,12 @@ export const AdminComplaintDetail = () => {
 
           {/* Audit Logs Table for this Complaint */}
           <div className="civic-card overflow-hidden">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-800">Immutable Audit Trail</h3>
-                <p className="text-[11px] text-slate-400">Security event logging for complaint #{complaint.ticketNo}</p>
+                <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Immutable Audit Trail</h3>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500">Security event logging for complaint #{complaint.ticketNo}</p>
               </div>
-              <span className="text-[11px] font-mono text-slate-400">{auditLogs.length} events logged</span>
+              <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">{auditLogs.length} events logged</span>
             </div>
 
             <div className="overflow-x-auto w-full">
@@ -412,24 +421,24 @@ export const AdminComplaintDetail = () => {
               <div className="flex items-start gap-3">
                 <Building2 className="w-4 h-4 text-slate-400 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Department</span>
-                  <span className="font-semibold text-slate-900">{complaint.departmentId?.name || 'Unassigned'}</span>
+                  <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold">Department</span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-100">{complaint.departmentId?.name || 'Unassigned'}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <UserCheck className="w-4 h-4 text-slate-400 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Joint Engineer</span>
+                  <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold">Joint Engineer</span>
                   {complaint.assignedEngineerId ? (
                     <div>
-                      <span className="font-semibold text-slate-900">{complaint.assignedEngineerId.name}</span>
-                      <span className="block text-[11px] font-mono text-slate-400">
+                      <span className="font-semibold text-slate-900 dark:text-slate-100">{complaint.assignedEngineerId.name}</span>
+                      <span className="block text-[11px] font-mono text-slate-400 dark:text-slate-500">
                         {complaint.assignedEngineerId.staffId} • {complaint.assignedEngineerId.phone || 'No phone'}
                       </span>
                     </div>
                   ) : (
-                    <span className="text-slate-400 italic">No field engineer picked yet</span>
+                    <span className="text-slate-400 dark:text-slate-500 italic">No field engineer picked yet</span>
                   )}
                 </div>
               </div>
@@ -438,19 +447,19 @@ export const AdminComplaintDetail = () => {
 
           {/* Citizen Dossier Card */}
           <div className="civic-card p-5 space-y-3 text-xs">
-            <h4 className="font-bold text-slate-800 uppercase tracking-wider text-[11px]">Citizen Information</h4>
+            <h4 className="font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider text-[11px]">Citizen Information</h4>
             <div className="space-y-2">
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Citizen Name</span>
-                <span className="font-semibold text-slate-900">{complaint.citizenId?.name || 'Citizen'}</span>
+                <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold">Citizen Name</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">{complaint.citizenId?.name || 'Citizen'}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Contact Email</span>
-                <span className="font-mono text-slate-800">{complaint.citizenId?.email || 'N/A'}</span>
+                <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold">Contact Email</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200">{complaint.citizenId?.email || 'N/A'}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[10px] uppercase font-bold">Phone</span>
-                <span className="font-mono text-slate-800">{complaint.citizenId?.phone || 'Not provided'}</span>
+                <span className="text-slate-400 dark:text-slate-500 block text-[10px] uppercase font-bold">Phone</span>
+                <span className="font-mono text-slate-800 dark:text-slate-200">{complaint.citizenId?.phone || 'Not provided'}</span>
               </div>
               <div>
                 <span className="text-slate-400 block text-[10px] uppercase font-bold">Citizen Status</span>

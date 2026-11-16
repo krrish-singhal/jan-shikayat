@@ -121,12 +121,12 @@ export const OperatorDashboard = () => {
       <div className="civic-card p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Recently Handled Complaints</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Complaints processed by your desk session</p>
+            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Recently Handled Complaints</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Complaints processed by your desk session</p>
           </div>
           <Link
             to="/operator/history"
-            className="text-xs font-semibold text-brand-600 hover:text-brand-700 inline-flex items-center gap-1"
+            className="text-xs font-semibold text-brand-600 dark:text-blue-400 hover:text-brand-700 dark:hover:text-blue-300 inline-flex items-center gap-1"
           >
             <span>Full History</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -136,15 +136,15 @@ export const OperatorDashboard = () => {
         {loading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-14 bg-slate-100 rounded-xl animate-pulse" />
+              <div key={i} className="h-14 bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : stats.recentHandled.length === 0 ? (
-          <div className="text-center py-8 text-xs text-slate-500">
+          <div className="text-center py-8 text-xs text-slate-500 dark:text-slate-400">
             No complaints processed yet in this operator session.
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {stats.recentHandled.map((item) => (
               <div
                 key={item._id}
@@ -153,19 +153,19 @@ export const OperatorDashboard = () => {
                   navigate(`/operator/complaints/${item.complaintId}`);
                 }}
                 className={`py-3 px-3 -mx-3 rounded-xl flex items-center justify-between gap-4 transition-colors ${item.action === 'FORWARD'
-                  ? 'bg-slate-100/80 border-l-2 border-r-2 border-slate-400 cursor-not-allowed'
-                  : 'hover:bg-slate-50 cursor-pointer'
+                  ? 'bg-slate-100/80 dark:bg-slate-800/80 border-l-2 border-r-2 border-slate-400 dark:border-slate-600 cursor-not-allowed'
+                  : 'hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer'
                   }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-slate-900">
+                    <span className="font-mono text-xs font-bold text-slate-900 dark:text-slate-100">
                       {item.ticketNo}
                     </span>
                     <span
                       className={`text-[11px] px-2 py-0.5 rounded font-semibold ${item.action === 'FORWARD'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-slate-100 text-slate-700'
+                          ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                         }`}
                     >
                       Action: {item.action}

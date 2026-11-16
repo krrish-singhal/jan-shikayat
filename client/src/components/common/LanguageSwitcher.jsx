@@ -51,14 +51,14 @@ export const LanguageSwitcher = ({ variant = 'default', className = '' }) => {
           isPublic
             ? 'px-2.5 py-1 bg-[#082543] text-amber-300 hover:text-white border border-blue-900/60 shadow-xs'
             : isCompact
-            ? 'p-1.5 text-slate-600 hover:text-[#0f3b68] hover:bg-slate-100 border border-slate-200'
-            : 'px-2.5 py-1.5 text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 shadow-2xs'
+            ? 'p-1.5 text-slate-600 dark:text-slate-300 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700'
+            : 'px-2.5 py-1.5 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 shadow-2xs'
         }`}
       >
-        <Languages className={`w-3.5 h-3.5 shrink-0 ${isPublic ? 'text-amber-400' : 'text-[#0f3b68]'}`} />
+        <Languages className={`w-3.5 h-3.5 shrink-0 ${isPublic ? 'text-amber-400' : 'text-[#0f3b68] dark:text-blue-400'}`} />
         <span className="font-semibold">{currentLang.nativeName}</span>
         {!isCompact && (
-          <span className={`text-[10px] hidden sm:inline ${isPublic ? 'text-slate-300' : 'text-slate-500'}`}>
+          <span className={`text-[10px] hidden sm:inline ${isPublic ? 'text-slate-300' : 'text-slate-500 dark:text-slate-400'}`}>
             ({currentLang.name})
           </span>
         )}
@@ -68,12 +68,12 @@ export const LanguageSwitcher = ({ variant = 'default', className = '' }) => {
       {/* Language Selection Dropdown Menu */}
       {isOpen && (
         <div
-          className="absolute right-0 mt-1.5 w-64 bg-white rounded-lg shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in-50 zoom-in-95 duration-150 max-h-80 overflow-y-auto"
+          className="absolute right-0 mt-1.5 w-64 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-200 dark:border-slate-800 py-1.5 z-50 animate-in fade-in-50 zoom-in-95 duration-150 max-h-80 overflow-y-auto"
           role="menu"
         >
-          <div className="px-3 py-1.5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+          <div className="px-3 py-1.5 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
             <span>Select Portal Language</span>
-            <span className="font-mono text-slate-500">12 Indic Languages</span>
+            <span className="font-mono text-slate-500 dark:text-slate-400">12 Indic Languages</span>
           </div>
 
           <div className="py-1">
@@ -86,20 +86,20 @@ export const LanguageSwitcher = ({ variant = 'default', className = '' }) => {
                   onClick={() => handleSelectLanguage(lang.code)}
                   className={`w-full text-left px-3.5 py-2 flex items-center justify-between text-xs transition-colors ${
                     isSelected
-                      ? 'bg-blue-50/80 text-[#0f3b68] font-bold'
-                      : 'text-slate-700 hover:bg-slate-50'
+                      ? 'bg-blue-50/80 dark:bg-blue-950/40 text-[#0f3b68] dark:text-blue-400 font-bold'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                   role="menuitem"
                 >
                   <div className="flex flex-col">
-                    <span className="text-sm font-semibold leading-tight text-slate-900">
+                    <span className="text-sm font-semibold leading-tight text-slate-900 dark:text-slate-100">
                       {lang.nativeName}
                     </span>
-                    <span className="text-[11px] text-slate-500">
-                      {lang.name} • <span className="text-slate-400">{lang.script}</span>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {lang.name} • <span className="text-slate-400 dark:text-slate-500">{lang.script}</span>
                     </span>
                   </div>
-                  {isSelected && <Check className="w-4 h-4 text-[#0f3b68] shrink-0" />}
+                  {isSelected && <Check className="w-4 h-4 text-[#0f3b68] dark:text-blue-400 shrink-0" />}
                 </button>
               );
             })}

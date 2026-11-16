@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
-import { LanguageSwitcher } from '../../components/common/LanguageSwitcher.jsx';
 import api from '../../services/api.js';
 import { useToast } from '../../contexts/ToastContext.jsx';
 
@@ -54,19 +53,15 @@ export const ResetPassword = () => {
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
-      <div className="civic-card p-8 max-w-md w-full shadow-lg border border-slate-200">
-        <div className="flex justify-end mb-2">
-          <LanguageSwitcher variant="default" />
-        </div>
-
+      <div className="civic-card p-8 max-w-md w-full shadow-lg border border-slate-200 dark:border-slate-800">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-3 border border-brand-100">
+          <div className="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto mb-3 border border-brand-100 dark:border-brand-900/50">
             <Lock className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             {t('resetPasswordTitle', 'Set New Password')}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t('resetPasswordSubtitle', 'Enter your new secure password below')}
           </p>
         </div>

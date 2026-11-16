@@ -18,24 +18,26 @@ export const CapacityBar = ({
   const isFull = effectiveActive >= effectiveMax;
 
   let barColor = 'bg-emerald-600';
-  let badgeColor = 'text-emerald-800 bg-emerald-50 border-emerald-300';
+  let badgeColor = 'text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800';
 
   if (percentage >= 80) {
     barColor = isFull ? 'bg-red-600' : 'bg-amber-500';
-    badgeColor = isFull ? 'text-red-800 bg-red-50 border-red-300' : 'text-amber-800 bg-amber-50 border-amber-300';
+    badgeColor = isFull
+      ? 'text-red-800 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800'
+      : 'text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800';
   }
 
   return (
-    <div className="civic-card p-3.5 sm:p-4 bg-slate-50 border border-slate-200">
+    <div className="civic-card p-3.5 sm:p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             {t('capacityTitle', 'Workload Capacity')}
           </span>
           <div className="flex items-baseline gap-2 mt-0.5">
-            <span className="text-lg sm:text-xl font-bold text-slate-900">
+            <span className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">
               {formatNumber(effectiveActive, i18n.language)}{' '}
-              <span className="text-xs font-normal text-slate-500">
+              <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
                 / {formatNumber(effectiveMax, i18n.language)}
               </span>
             </span>
@@ -53,7 +55,7 @@ export const CapacityBar = ({
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+      <div className="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-300 ${barColor}`}
           style={{ width: `${percentage}%` }}
@@ -61,7 +63,7 @@ export const CapacityBar = ({
       </div>
 
       {isFull && (
-        <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-red-700">
+        <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-red-700 dark:text-red-400">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           <span>{t('capacityWarning', 'Maximum case workload reached. Complete or release cases to pick up more.')}</span>
         </div>

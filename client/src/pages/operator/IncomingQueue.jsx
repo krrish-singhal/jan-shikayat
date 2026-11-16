@@ -6,6 +6,7 @@ import { DataTable } from '../../components/common/DataTable.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { getImageUrl } from '../../utils/formatters.js';
 
 export const IncomingQueue = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ export const IncomingQueue = () => {
     {
       header: 'Ticket #',
       key: 'ticketNo',
-      className: 'w-36 font-mono font-bold text-slate-900',
+      className: 'w-36 font-mono font-bold text-slate-900 dark:text-slate-100',
       render: (row) => <span>{row.ticketNo}</span>,
     },
     {
@@ -65,12 +66,16 @@ export const IncomingQueue = () => {
       render: (row) =>
         row.imageUrl ? (
           <img
-            src={row.imageUrl}
+            src={getImageUrl(row.imageUrl)}
             alt="Evidence"
-            className="w-10 h-10 rounded-lg object-cover border border-slate-200"
+            className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/uploads/sample-road.svg';
+            }}
           />
         ) : (
-          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+          <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
             <FileText className="w-4 h-4" />
           </div>
         ),
@@ -148,12 +153,12 @@ export const IncomingQueue = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Department Incoming Queue</h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Displaying complaints for <span className="font-semibold text-slate-800">{user?.departmentId?.name}</span> (FIFO Order: Oldest First)
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Department Incoming Queue</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Displaying complaints for <span className="font-semibold text-slate-800 dark:text-slate-200">{user?.departmentId?.name}</span> (FIFO Order: Oldest First)
           </p>
         </div>
-        <div className="text-xs font-semibold px-3 py-1.5 bg-amber-50 text-amber-800 border border-amber-200 rounded-lg shrink-0">
+        <div className="text-xs font-semibold px-3 py-1.5 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60 rounded-lg shrink-0">
           Status: SUBMITTED ({total})
         </div>
       </div>

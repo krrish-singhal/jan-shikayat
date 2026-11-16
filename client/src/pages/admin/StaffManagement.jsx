@@ -252,8 +252,8 @@ export const StaffManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Staff Management</h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Staff Management</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Provision and oversee Operators, Joint Engineers, and Municipal Officers ({totalCount} total)
           </p>
         </div>
@@ -381,13 +381,13 @@ export const StaffManagement = () => {
                 </tr>
               ) : (
                 staffList.map((staff) => (
-                  <tr key={staff._id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-3 px-4 font-mono font-bold text-slate-800">
+                  <tr key={staff._id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/60 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-slate-800 dark:text-slate-200">
                       {staff.staffId || 'N/A'}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-900">{staff.name}</div>
-                      <div className="text-[11px] font-mono text-slate-400">{staff.email}</div>
+                      <div className="font-semibold text-slate-900 dark:text-slate-100">{staff.name}</div>
+                      <div className="text-[11px] font-mono text-slate-400 dark:text-slate-500">{staff.email}</div>
                     </td>
                     <td className="py-3 px-4">
                       <span
@@ -587,7 +587,7 @@ export const StaffManagement = () => {
                 required
                 value={formData.maxActiveCases}
                 onChange={(e) => setFormData({ ...formData, maxActiveCases: e.target.value })}
-                className="civic-input bg-white w-24 text-center"
+                className="civic-input w-24 text-center"
               />
               <p className="text-[11px] text-amber-700 mt-1">
                 Maximum concurrent complaints this engineer can hold in verification or work in progress.

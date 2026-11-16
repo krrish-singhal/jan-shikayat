@@ -8,7 +8,6 @@ import { Shield, Building2, Wrench, Lock, Eye, EyeOff, BadgeCheck, AlertCircle, 
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { ROLE_DASHBOARD_ROUTES } from '../../constants/roles.js';
-import { LanguageSwitcher } from '../../components/common/LanguageSwitcher.jsx';
 
 const staffLoginSchema = z.object({
   identifier: z.string().trim().min(1, 'Staff ID or Email is required'),
@@ -53,19 +52,15 @@ export const StaffLogin = () => {
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
-      <div className="civic-card p-8 max-w-lg w-full shadow-lg border border-slate-200">
-        <div className="flex justify-end mb-2">
-          <LanguageSwitcher variant="default" />
-        </div>
-
+      <div className="civic-card p-8 max-w-lg w-full shadow-lg border border-slate-200 dark:border-slate-800">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mx-auto mb-3 shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mx-auto mb-3 shadow-md border border-slate-700">
             <Shield className="w-6 h-6 text-brand-400" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             {t('staffLoginTitle', 'Municipal Staff Login')}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t('staffLoginSubtitle', 'Department Operators, Joint Engineers & Municipal Administrators')}
           </p>
         </div>
@@ -106,7 +101,7 @@ export const StaffLogin = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               {t('staffId', 'Staff ID or Official Email')}
             </label>
             <div className="relative">
@@ -119,7 +114,7 @@ export const StaffLogin = () => {
               />
             </div>
             {errors.identifier && (
-              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1 flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 {errors.identifier.message}
               </p>
@@ -127,7 +122,7 @@ export const StaffLogin = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               {t('password', 'Staff Password')}
             </label>
             <div className="relative">
@@ -141,7 +136,7 @@ export const StaffLogin = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1 rounded-md transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none p-1 rounded-md transition-colors"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
                 tabIndex={-1}
               >
@@ -153,7 +148,7 @@ export const StaffLogin = () => {
               </button>
             </div>
             {errors.password && (
-              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1 flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 {errors.password.message}
               </p>
@@ -163,15 +158,15 @@ export const StaffLogin = () => {
           <button
             type="submit"
             disabled={loading}
-            className="civic-btn-primary w-full py-2.5 mt-2 bg-slate-900 hover:bg-slate-800"
+            className="civic-btn-primary w-full py-2.5 mt-2 bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500"
           >
             {loading ? t('common:loading', 'Validating Credentials...') : t('staffLoginButton', 'Sign In to Staff Console')}
           </button>
         </form>
 
-        <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
+        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
           Citizen user?{' '}
-          <Link to="/login" className="text-brand-600 font-semibold hover:underline">
+          <Link to="/login" className="text-brand-600 dark:text-blue-400 font-semibold hover:underline">
             {t('citizenLoginTitle', 'Go to Citizen Login')}
           </Link>
         </div>

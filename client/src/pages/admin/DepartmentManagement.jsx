@@ -123,8 +123,8 @@ export const DepartmentManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Municipal Departments</h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Municipal Departments</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Configure civic divisions, desk intake categories, and operational scopes ({departments.length} active)
           </p>
         </div>
@@ -187,7 +187,7 @@ export const DepartmentManagement = () => {
                     <Building2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-sm leading-tight">{dept.name}</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm leading-tight">{dept.name}</h3>
                     <span
                       className={`text-[10px] font-semibold px-2 py-0.2 rounded-full inline-block mt-0.5 ${
                         dept.isActive

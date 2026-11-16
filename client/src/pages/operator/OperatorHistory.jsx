@@ -61,7 +61,7 @@ export const OperatorHistory = () => {
     {
       header: 'Ticket #',
       key: 'ticketNo',
-      className: 'w-36 font-mono font-bold text-slate-900',
+      className: 'w-36 font-mono font-bold text-slate-900 dark:text-slate-100',
       render: (row) => <span>{row.ticketNo}</span>,
     },
     {
@@ -120,20 +120,20 @@ export const OperatorHistory = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Operator Action History</h2>
-          <p className="text-xs text-slate-500 mt-1">Audit log of all grievances triaged by your operator account</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Operator Action History</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Audit log of all grievances triaged by your operator account</p>
         </div>
 
         {/* Filter buttons */}
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1.5">
           {['ALL', 'ACCEPT', 'REJECT', 'FORWARD'].map((act) => (
             <button
               key={act}
               onClick={() => handleActionFilter(act)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                 currentAction === act
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                  ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-sm'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
               }`}
             >
               {act === 'ALL' ? 'All Actions' : act}

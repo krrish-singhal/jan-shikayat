@@ -15,6 +15,7 @@ export const AuthCallback = () => {
   useEffect(() => {
     const handleCallback = async () => {
       const token = searchParams.get('token');
+      const code = searchParams.get('code');
       const error = searchParams.get('error');
 
       if (error) {
@@ -33,12 +34,31 @@ export const AuthCallback = () => {
             if (userData?.preferredLanguage) {
               i18n.changeLanguage(userData.preferredLanguage);
             }
-            addToast('Successfully authenticated via Google OAuth', 'success');
+            addToast(`Welcome, ${userData.name}! Successfully signed in via Google.`, 'success');
             window.location.href = '/citizen/dashboard';
             return;
           }
         } catch (err) {
           addToast('Failed to complete OAuth authentication', 'error');
+        }
+      }
+
+      if (code) {
+        try {
+          const res = await api.post('/auth/google/exchange-code', { code });
+          if (res.data?.success) {
+            const { user: userData, accessToken } = res.data.data;
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('user', JSON.stringify(userData));
+            if (userData?.preferredLanguage) {
+              i18n.changeLanguage(userData.preferredLanguage);
+            }
+            addToast(`Welcome, ${userData.name}! Successfully signed in via Google.`, 'success');
+            window.location.href = '/citizen/dashboard';
+            return;
+          }
+        } catch (err) {
+          addToast(err.response?.data?.error?.message || 'Failed to complete Google sign-in exchange', 'error');
         }
       }
 

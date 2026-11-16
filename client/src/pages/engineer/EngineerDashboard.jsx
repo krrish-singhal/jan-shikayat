@@ -146,10 +146,10 @@ export const EngineerDashboard = () => {
       {/* Quick Access Action Card */}
       <div className="civic-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-4 border-l-brand-600">
         <div>
-          <h4 className="text-sm font-bold text-slate-900">
+          <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">
             Unassigned Verification Queue ({stats.verificationNeededCount} complaints available)
           </h4>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Complaints accepted by department operators waiting for joint engineer ground inspection.
           </p>
         </div>

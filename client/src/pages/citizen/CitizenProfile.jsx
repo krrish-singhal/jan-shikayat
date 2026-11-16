@@ -75,16 +75,16 @@ export const CitizenProfile = () => {
   return (
     <div className="max-w-2xl mx-auto py-4 space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Citizen Profile Management</h2>
-        <p className="text-xs text-slate-500 mt-1">Manage your personal contact details, security credentials, and account settings</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Citizen Profile Management</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Manage your personal contact details, security credentials, and account settings</p>
       </div>
 
       {/* Profile Form Card */}
       <div className="civic-card p-6">
-        <h3 className="text-sm font-semibold text-slate-900 mb-4">Contact Information</h3>
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-4">Contact Information</h3>
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name</label>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
             <div className="relative">
               <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -98,21 +98,21 @@ export const CitizenProfile = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 disabled
                 value={user?.email || ''}
-                className="civic-input pl-9 bg-slate-100 text-slate-500 cursor-not-allowed"
+                className="civic-input pl-9 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed"
               />
             </div>
-            <p className="text-[11px] text-slate-400 mt-1">Official registered email address cannot be modified directly.</p>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Official registered email address cannot be modified directly.</p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
             <div className="relative">
               <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -138,8 +138,8 @@ export const CitizenProfile = () => {
       {/* Security & Password Card */}
       <div className="civic-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Account Security</h3>
-          <p className="text-xs text-slate-500 mt-0.5">Regularly updating your password safeguards your grievance records.</p>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Account Security</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Regularly updating your password safeguards your grievance records.</p>
         </div>
         <button
           onClick={() => setPasswordModalOpen(true)}

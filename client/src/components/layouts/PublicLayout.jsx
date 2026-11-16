@@ -18,23 +18,15 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { LanguageSwitcher } from '../common/LanguageSwitcher.jsx';
+import { ThemeToggle } from '../common/ThemeToggle.jsx';
 
 export const PublicLayout = () => {
   const { t } = useTranslation(['common', 'auth']);
   const { user, defaultDashboard } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [fontSizeLevel, setFontSizeLevel] = useState(1); // 0: A-, 1: A, 2: A+
-
-  const handleFontSize = (level) => {
-    setFontSizeLevel(level);
-    const root = document.documentElement;
-    if (level === 0) root.style.fontSize = '90%';
-    else if (level === 1) root.style.fontSize = '100%';
-    else if (level === 2) root.style.fontSize = '110%';
-  };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between font-sans text-slate-800">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-between font-sans text-slate-800 dark:text-slate-200 transition-colors duration-200">
       {/* 1. National Tricolor Top Strip */}
       <div className="gov-tricolor-strip w-full" />
 
@@ -49,38 +41,9 @@ export const PublicLayout = () => {
             <span className="hidden md:inline text-slate-200">Municipal Civic Grievance Redressal Board</span>
           </div>
 
-          <div className="flex items-center gap-3 ml-auto text-xs">
-            {/* Text Accessibility Controls */}
-            <div className="flex items-center gap-1 bg-[#082543] px-2 py-0.5 rounded border border-blue-900/60">
-              <span className="text-[10px] text-slate-300 mr-1 hidden sm:inline">Text Size:</span>
-              <button
-                onClick={() => handleFontSize(0)}
-                className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${
-                  fontSizeLevel === 0 ? 'bg-amber-400 text-slate-900' : 'text-slate-200 hover:text-white'
-                }`}
-                title="Decrease font size"
-              >
-                A-
-              </button>
-              <button
-                onClick={() => handleFontSize(1)}
-                className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${
-                  fontSizeLevel === 1 ? 'bg-amber-400 text-slate-900' : 'text-slate-200 hover:text-white'
-                }`}
-                title="Default font size"
-              >
-                A
-              </button>
-              <button
-                onClick={() => handleFontSize(2)}
-                className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${
-                  fontSizeLevel === 2 ? 'bg-amber-400 text-slate-900' : 'text-slate-200 hover:text-white'
-                }`}
-                title="Increase font size"
-              >
-                A+
-              </button>
-            </div>
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto text-xs">
+            {/* Theme Toggle (Public header variant) */}
+            <ThemeToggle variant="public" />
 
             <span className="text-slate-400 hidden sm:inline">|</span>
 
@@ -91,7 +54,7 @@ export const PublicLayout = () => {
       </div>
 
       {/* 3. Official Municipal Portal Navigation Bar */}
-      <header className="bg-white border-b-2 border-slate-200 sticky top-0 z-40 shadow-sm">
+      <header className="bg-white dark:bg-slate-900 border-b-2 border-slate-200 dark:border-slate-800 sticky top-0 z-40 shadow-sm transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           {/* Official Emblem & Branding */}
           <Link to="/" className="flex items-center gap-3 group">
@@ -102,14 +65,14 @@ export const PublicLayout = () => {
 
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-[#0f3b68] tracking-tight text-xl leading-none font-serif">
+                <span className="font-extrabold text-[#0f3b68] dark:text-blue-400 tracking-tight text-xl leading-none font-serif">
                   {t('common:appName', 'जन शिकायत')}
                 </span>
-                <span className="text-xs px-1.5 py-0.5 font-bold uppercase rounded bg-amber-100 text-amber-800 border border-amber-200">
+                <span className="text-xs px-1.5 py-0.5 font-bold uppercase rounded bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50">
                   JanShikayat
                 </span>
               </div>
-              <span className="text-[11px] text-slate-600 font-semibold tracking-wide mt-0.5 uppercase">
+              <span className="text-[11px] text-slate-600 dark:text-slate-400 font-semibold tracking-wide mt-0.5 uppercase">
                 {t('common:appTitle', 'Municipal Grievance Redressal Platform')}
               </span>
             </div>
@@ -121,7 +84,9 @@ export const PublicLayout = () => {
               to="/"
               className={({ isActive }) =>
                 `px-3 py-1.5 rounded text-xs font-semibold uppercase tracking-wider transition-colors ${
-                  isActive ? 'text-[#0f3b68] bg-blue-50 border border-blue-200' : 'text-slate-700 hover:text-[#0f3b68] hover:bg-slate-100'
+                  isActive
+                    ? 'text-[#0f3b68] dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`
               }
             >
@@ -141,24 +106,28 @@ export const PublicLayout = () => {
                   to="/login"
                   className={({ isActive }) =>
                     `px-3 py-1.5 rounded text-xs font-semibold uppercase tracking-wider transition-colors inline-flex items-center gap-1.5 ${
-                      isActive ? 'text-[#0f3b68] bg-blue-50 border border-blue-200' : 'text-slate-700 hover:text-[#0f3b68] hover:bg-slate-100'
+                      isActive
+                        ? 'text-[#0f3b68] dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900'
+                        : 'text-slate-700 dark:text-slate-300 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`
                   }
                 >
                   <LogIn className="w-3.5 h-3.5" />
-                  <span>{t('auth:citizenLoginTitle', 'Citizen Login')}</span>
+                  <span>{t('auth:citizenNav', 'Citizen Portal')}</span>
                 </NavLink>
 
                 <NavLink
                   to="/staff/login"
                   className={({ isActive }) =>
                     `px-3 py-1.5 rounded text-xs font-semibold uppercase tracking-wider transition-colors inline-flex items-center gap-1.5 ${
-                      isActive ? 'text-[#0f3b68] bg-blue-50 border border-blue-200' : 'text-slate-700 hover:text-[#0f3b68] hover:bg-slate-100'
+                      isActive
+                        ? 'text-[#0f3b68] dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900'
+                        : 'text-slate-700 dark:text-slate-300 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`
                   }
                 >
                   <Building2 className="w-3.5 h-3.5" />
-                  <span>{t('auth:staffLoginTitle', 'Staff Desk Login')}</span>
+                  <span>{t('auth:staffNav', 'Staff Desk')}</span>
                 </NavLink>
 
                 <Link
@@ -175,7 +144,7 @@ export const PublicLayout = () => {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 lg:hidden"
+            className="p-2 rounded-md border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -184,11 +153,11 @@ export const PublicLayout = () => {
 
         {/* Mobile Navigation Dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-2 shadow-lg animate-in slide-in-from-top-2">
+          <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-4 space-y-2 shadow-lg animate-in slide-in-from-top-2">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded text-sm font-semibold text-slate-700 hover:bg-slate-100"
+              className="block px-3 py-2 rounded text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               {t('common:home', 'Home')}
             </Link>
@@ -197,7 +166,7 @@ export const PublicLayout = () => {
               <Link
                 to={defaultDashboard}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded text-sm font-semibold text-white bg-[#0f3b68] text-center"
+                className="block px-3 py-2.5 rounded text-sm font-semibold text-white bg-[#0f3b68] dark:bg-blue-600 text-center"
               >
                 {t('auth:goToWorkspace', 'Go to Workspace')} ({user.role})
               </Link>
@@ -206,31 +175,36 @@ export const PublicLayout = () => {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                  className="flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
-                  <LogIn className="w-4 h-4 text-[#0f3b68]" />
-                  <span>{t('auth:citizenLoginTitle', 'Citizen Login')}</span>
+                  <LogIn className="w-4 h-4 text-[#0f3b68] dark:text-blue-400" />
+                  <span>{t('auth:citizenNav', 'Citizen Portal')}</span>
                 </Link>
 
                 <Link
                   to="/staff/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                  className="flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
-                  <Building2 className="w-4 h-4 text-[#0f3b68]" />
-                  <span>{t('auth:staffLoginTitle', 'Staff Desk Login')}</span>
+                  <Building2 className="w-4 h-4 text-[#0f3b68] dark:text-blue-400" />
+                  <span>{t('auth:staffNav', 'Staff Desk')}</span>
                 </Link>
 
                 <Link
                   to="/signup"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 px-3 py-2.5 rounded text-sm font-semibold text-white bg-[#0f3b68] text-center"
+                  className="flex items-center justify-center gap-2 px-3 py-2.5 rounded text-sm font-semibold text-white bg-[#0f3b68] dark:bg-blue-600 text-center"
                 >
                   <UserPlus className="w-4 h-4" />
                   <span>{t('common:registerComplaint', 'Register Grievance')}</span>
                 </Link>
               </>
             )}
+
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between px-3">
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Appearance Theme</span>
+              <ThemeToggle variant="default" />
+            </div>
           </div>
         )}
       </header>

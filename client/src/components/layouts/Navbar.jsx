@@ -3,6 +3,7 @@ import { Menu, Bell, User, LogOut, CheckCheck, Shield, ChevronDown } from 'lucid
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { LanguageSwitcher } from '../common/LanguageSwitcher.jsx';
+import { ThemeToggle } from '../common/ThemeToggle.jsx';
 import api from '../../services/api.js';
 
 export const Navbar = ({ onOpenSidebar }) => {
@@ -68,7 +69,7 @@ export const Navbar = ({ onOpenSidebar }) => {
   }, []);
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-sm transition-colors duration-200">
       {/* Tricolor Top Stripe */}
       <div className="gov-tricolor-strip w-full" />
 
@@ -77,25 +78,28 @@ export const Navbar = ({ onOpenSidebar }) => {
         <div className="flex items-center gap-3">
           <button
             onClick={onOpenSidebar}
-            className="p-2 rounded-md text-slate-700 hover:text-slate-900 hover:bg-slate-100 lg:hidden border border-slate-200"
+            className="p-2 rounded-md text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden border border-slate-200 dark:border-slate-700"
             aria-label="Open Municipal Menu"
           >
             <Menu className="w-5 h-5" />
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs sm:text-sm font-bold text-[#0f3b68] tracking-tight hidden sm:inline-block">
+            <span className="text-xs sm:text-sm font-bold text-[#0f3b68] dark:text-blue-400 tracking-tight hidden sm:inline-block">
               {t('officialPortal', 'Municipal Corporation of India')}
             </span>
-            <span className="text-slate-300 hidden sm:inline-block">•</span>
-            <span className="text-xs text-slate-600 font-medium truncate max-w-[200px] sm:max-w-none">
+            <span className="text-slate-300 dark:text-slate-600 hidden sm:inline-block">•</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium truncate max-w-[200px] sm:max-w-none">
               {t('portalTitle', 'Grievance Redressal Workspace')}
             </span>
           </div>
         </div>
 
-        {/* Right Controls: Language Selector, Notifications & Authority Profile */}
+        {/* Right Controls: Theme Toggle, Language Selector, Notifications & Authority Profile */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Dark / Light Theme Toggle */}
+          <ThemeToggle variant="default" />
+
           {/* Global Language Selector */}
           <LanguageSwitcher variant="default" />
 
@@ -103,12 +107,12 @@ export const Navbar = ({ onOpenSidebar }) => {
           <div className="relative" ref={notifRef}>
             <button
               onClick={handleToggleNotifications}
-              className="relative p-2 text-slate-600 hover:text-[#0f3b68] hover:bg-slate-100 rounded-md transition-colors border border-slate-200"
+              className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors border border-slate-200 dark:border-slate-700"
               title={t('systemNotifications', 'Official Notifications')}
             >
               <Bell className="w-4 h-4" />
               {unreadNotifications > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900">
                   {unreadNotifications > 9 ? '9+' : unreadNotifications}
                 </span>
               )}
@@ -116,15 +120,15 @@ export const Navbar = ({ onOpenSidebar }) => {
 
             {/* Notifications Dropdown */}
             {notificationsOpen && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden z-50 animate-in fade-in-50 duration-150">
-                <div className="p-3 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                  <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden z-50 animate-in fade-in-50 duration-150">
+                <div className="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/80">
+                  <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
                     {t('systemNotifications', 'System Notifications')}
                   </span>
                   {unreadNotifications > 0 && (
                     <button
                       onClick={handleMarkAllRead}
-                      className="text-[11px] font-semibold text-[#0f3b68] hover:underline flex items-center gap-1"
+                      className="text-[11px] font-semibold text-[#0f3b68] dark:text-blue-400 hover:underline flex items-center gap-1"
                     >
                       <CheckCheck className="w-3.5 h-3.5" />
                       {t('markAllRead', 'Mark all read')}
@@ -132,27 +136,27 @@ export const Navbar = ({ onOpenSidebar }) => {
                   )}
                 </div>
 
-                <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
                   {loadingNotifications ? (
-                    <div className="p-6 text-center text-xs text-slate-500">{t('checkingDispatches', 'Checking dispatches...')}</div>
+                    <div className="p-6 text-center text-xs text-slate-500 dark:text-slate-400">{t('checkingDispatches', 'Checking dispatches...')}</div>
                   ) : notificationsList.length === 0 ? (
-                    <div className="p-6 text-center text-xs text-slate-500">{t('noNotifications', 'No new notifications recorded.')}</div>
+                    <div className="p-6 text-center text-xs text-slate-500 dark:text-slate-400">{t('noNotifications', 'No new notifications recorded.')}</div>
                   ) : (
                     notificationsList.map((item) => (
                       <div
                         key={item._id}
                         onClick={() => !item.isRead && handleMarkAsRead(item._id)}
-                        className={`p-3 text-xs hover:bg-slate-50 cursor-pointer transition-colors ${
-                          item.isRead ? 'text-slate-500' : 'bg-blue-50/50 text-slate-900 font-medium'
+                        className={`p-3 text-xs hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors ${
+                          item.isRead ? 'text-slate-500 dark:text-slate-400' : 'bg-blue-50/50 dark:bg-blue-950/30 text-slate-900 dark:text-slate-100 font-medium'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
                           <p className="leading-snug flex-1">{item.message}</p>
                           {!item.isRead && (
-                            <span className="w-2 h-2 rounded-full bg-[#0f3b68] shrink-0 mt-1" />
+                            <span className="w-2 h-2 rounded-full bg-[#0f3b68] dark:bg-blue-400 shrink-0 mt-1" />
                           )}
                         </div>
-                        <span className="text-[10px] text-slate-400 mt-1 block font-mono">
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 block font-mono">
                           {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
@@ -164,15 +168,15 @@ export const Navbar = ({ onOpenSidebar }) => {
           </div>
 
           {/* User Authority Mini Badge */}
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-            <div className="w-8 h-8 rounded-full bg-[#0f3b68] text-amber-300 font-bold text-xs flex items-center justify-center border border-amber-300/40">
+          <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-700">
+            <div className="w-8 h-8 rounded-full bg-[#0f3b68] dark:bg-blue-600 text-amber-300 dark:text-white font-bold text-xs flex items-center justify-center border border-amber-300/40 dark:border-blue-400/40">
               {user?.name?.charAt(0) || 'U'}
             </div>
             <div className="hidden sm:block text-left">
-              <span className="text-xs font-bold text-slate-900 block leading-tight max-w-[180px] truncate">
+              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 block leading-tight max-w-[180px] truncate">
                 {user?.name}
               </span>
-              <span className="text-[10px] text-slate-500 font-mono block">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono block">
                 {user?.staffId || user?.role}
               </span>
             </div>
