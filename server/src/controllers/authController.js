@@ -431,30 +431,232 @@ export class AuthController {
   }
 
   /**
-   * Google OAuth Callback / Exchange (supports direct token or callback code)
+   * Check if Google user exists and whether phone is already provided
    */
-  static async googleAuth(req, res) {
+  static async checkGoogleUser(req, res) {
     try {
-      const { email, name, googleId } = req.body;
-      if (!email || !googleId) {
-        return sendError(res, { code: 'VALIDATION_ERROR', message: 'Email and Google ID are required' }, 400);
+      const { email, googleId } = req.body;
+      if (!email && !googleId) {
+        return sendError(res, { code: 'VALIDATION_ERROR', message: 'Email or Google ID is required' }, 400);
       }
 
+      const query = { isDeleted: false, $or: [] };
+      if (email) query.$or.push({ email: email.toLowerCase() });
+      if (googleId) query.$or.push({ googleId });
+
+      const user = await User.findOne(query);
+
+      return sendSuccess(res, {
+        exists: !!user,
+        hasPhone: !!(user && user.phone && user.phone.trim().length > 0),
+        phone: user?.phone || '',
+        name: user?.name || '',
+      });
+    } catch (err) {
+      return sendError(res, { code: 'CHECK_ERROR', message: err.message }, 500);
+    }
+  }
+
+  /**
+   * Initiate Google OAuth 2.0 Web Redirect Flow
+   * Forces account selection prompt ('prompt=select_account')
+   */
+  static async googleOAuthRedirect(req, res) {
+    try {
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      const callbackUrl = process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/v1/auth/google/callback';
+      const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
+      if (!clientId) {
+        return res.redirect(`${clientUrl}/login?error=${encodeURIComponent('Google Client ID is not configured on the server.')}`);
+      }
+
+      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(
+        clientId
+      )}&redirect_uri=${encodeURIComponent(
+        callbackUrl
+      )}&response_type=code&scope=openid%20email%20profile&prompt=select_account&access_type=offline`;
+
+      return res.redirect(googleAuthUrl);
+    } catch (err) {
+      console.error('[Google OAuth Redirect Error]', err);
+      const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+      return res.redirect(`${clientUrl}/login?error=${encodeURIComponent('Failed to initiate Google authentication.')}`);
+    }
+  }
+
+  /**
+   * Handle Google OAuth 2.0 Web Callback with authorization code
+   */
+  static async googleOAuthCallback(req, res) {
+    const { code, error } = req.query;
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
+    if (error || !code) {
+      const errorMsg = error || 'Google sign-in was cancelled or denied.';
+      return res.redirect(`${clientUrl}/auth/callback?error=${encodeURIComponent(errorMsg)}`);
+    }
+
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    const callbackUrl = process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/v1/auth/google/callback';
+
+    try {
+      // 1. Exchange authorization code for Google access token
+      const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code,
+          client_id: clientId,
+          client_secret: clientSecret,
+          redirect_uri: callbackUrl,
+          grant_type: 'authorization_code',
+        }),
+      });
+
+      const tokenData = await tokenRes.json();
+      if (!tokenRes.ok || !tokenData.access_token) {
+        console.error('[Google Token Exchange Error]', tokenData);
+        return res.redirect(
+          `${clientUrl}/auth/callback?error=${encodeURIComponent(
+            tokenData.error_description || 'Failed to exchange authorization code with Google'
+          )}`
+        );
+      }
+
+      // 2. Fetch authenticated profile from Google UserInfo endpoint
+      const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      });
+
+      const profile = await userRes.json();
+      if (!userRes.ok || !profile.email) {
+        return res.redirect(`${clientUrl}/auth/callback?error=${encodeURIComponent('Failed to retrieve user profile from Google')}`);
+      }
+
+      // 3. Find or create citizen in database
       let user = await User.findOne({
-        $or: [{ googleId }, { email: email.toLowerCase() }],
+        $or: [{ googleId: profile.sub }, { email: profile.email.toLowerCase() }],
         isDeleted: false,
       });
 
       if (!user) {
         user = await User.create({
-          name: name || 'Google Citizen',
-          email: email.toLowerCase(),
-          googleId,
+          name: profile.name || 'Google Citizen',
+          email: profile.email.toLowerCase(),
+          googleId: profile.sub,
           role: ROLES.CITIZEN,
+          phone: '',
         });
       } else {
+        let changed = false;
         if (!user.googleId) {
-          user.googleId = googleId;
+          user.googleId = profile.sub;
+          changed = true;
+        }
+        if (profile.name && (!user.name || user.name === 'Google Citizen')) {
+          user.name = profile.name;
+          changed = true;
+        }
+        if (changed) {
+          await user.save();
+        }
+      }
+
+      if (user.isBlocked) {
+        return res.redirect(
+          `${clientUrl}/auth/callback?error=${encodeURIComponent(
+            `Account is blocked. Reason: ${user.blockReason || 'Terms violation'}`
+          )}`
+        );
+      }
+
+      const accessToken = generateAccessToken(user);
+      const rawRefreshToken = generateRandomToken();
+      const tokenHash = hashToken(rawRefreshToken);
+      const familyId = crypto.randomUUID();
+
+      await RefreshToken.create({
+        userId: user._id,
+        tokenHash,
+        familyId,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+
+      setRefreshTokenCookie(res, rawRefreshToken);
+
+      return res.redirect(`${clientUrl}/auth/callback?token=${accessToken}`);
+    } catch (err) {
+      console.error('[Google OAuth Callback Exception]', err);
+      return res.redirect(`${clientUrl}/auth/callback?error=${encodeURIComponent(err.message)}`);
+    }
+  }
+
+  /**
+   * Exchange Google authorization code via REST POST (for SPA client direct code handling)
+   */
+  static async googleExchangeCode(req, res) {
+    try {
+      const { code, redirectUri } = req.body;
+      if (!code) {
+        return sendError(res, { code: 'VALIDATION_ERROR', message: 'Authorization code is required' }, 400);
+      }
+
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+      const callbackUrl = redirectUri || process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/v1/auth/google/callback';
+
+      const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          code,
+          client_id: clientId,
+          client_secret: clientSecret,
+          redirect_uri: callbackUrl,
+          grant_type: 'authorization_code',
+        }),
+      });
+
+      const tokenData = await tokenRes.json();
+      if (!tokenRes.ok || !tokenData.access_token) {
+        return sendError(res, { code: 'TOKEN_EXCHANGE_FAILED', message: tokenData.error_description || 'Failed to exchange authorization code' }, 400);
+      }
+
+      const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      });
+
+      const profile = await userRes.json();
+      if (!userRes.ok || !profile.email) {
+        return sendError(res, { code: 'PROFILE_FETCH_FAILED', message: 'Failed to retrieve profile from Google' }, 400);
+      }
+
+      let user = await User.findOne({
+        $or: [{ googleId: profile.sub }, { email: profile.email.toLowerCase() }],
+        isDeleted: false,
+      });
+
+      if (!user) {
+        user = await User.create({
+          name: profile.name || 'Google Citizen',
+          email: profile.email.toLowerCase(),
+          googleId: profile.sub,
+          role: ROLES.CITIZEN,
+          phone: '',
+        });
+      } else {
+        let changed = false;
+        if (!user.googleId) {
+          user.googleId = profile.sub;
+          changed = true;
+        }
+        if (profile.name && (!user.name || user.name === 'Google Citizen')) {
+          user.name = profile.name;
+          changed = true;
+        }
+        if (changed) {
           await user.save();
         }
       }
@@ -480,6 +682,93 @@ export class AuthController {
       return sendSuccess(res, {
         user: user.toJSON(),
         accessToken,
+      });
+    } catch (err) {
+      return sendError(res, { code: 'EXCHANGE_ERROR', message: err.message }, 500);
+    }
+  }
+
+  /**
+   * Google OAuth Callback / Exchange (supports direct token or profile payload)
+   */
+  static async googleAuth(req, res) {
+    try {
+      let { email, name, googleId, phone, accessToken } = req.body;
+
+      // If an access token from Google Identity Services is provided, verify against Google userinfo
+      if (accessToken) {
+        try {
+          const googleRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          if (googleRes.ok) {
+            const googleProfile = await googleRes.json();
+            if (googleProfile.email) email = googleProfile.email;
+            if (googleProfile.name) name = googleProfile.name;
+            if (googleProfile.sub) googleId = googleProfile.sub;
+          }
+        } catch (e) {
+          console.warn('[Google AccessToken Verification Warning]', e.message);
+        }
+      }
+
+      if (!email || !googleId) {
+        return sendError(res, { code: 'VALIDATION_ERROR', message: 'Email and Google ID are required' }, 400);
+      }
+
+      let user = await User.findOne({
+        $or: [{ googleId }, { email: email.toLowerCase() }],
+        isDeleted: false,
+      });
+
+      if (!user) {
+        user = await User.create({
+          name: name || 'Google Citizen',
+          email: email.toLowerCase(),
+          googleId,
+          role: ROLES.CITIZEN,
+          phone: phone ? phone.trim() : '',
+        });
+      } else {
+        let changed = false;
+        if (!user.googleId) {
+          user.googleId = googleId;
+          changed = true;
+        }
+        if (name && (!user.name || user.name === 'Google Citizen')) {
+          user.name = name;
+          changed = true;
+        }
+        if (phone && phone.trim() && !user.phone) {
+          user.phone = phone.trim();
+          changed = true;
+        }
+        if (changed) {
+          await user.save();
+        }
+      }
+
+      if (user.isBlocked) {
+        return sendError(res, { code: 'ACCOUNT_BLOCKED', message: `Account is blocked. Reason: ${user.blockReason || 'Terms violation'}` }, 403);
+      }
+
+      const jwtAccessToken = generateAccessToken(user);
+      const rawRefreshToken = generateRandomToken();
+      const tokenHash = hashToken(rawRefreshToken);
+      const familyId = crypto.randomUUID();
+
+      await RefreshToken.create({
+        userId: user._id,
+        tokenHash,
+        familyId,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+
+      setRefreshTokenCookie(res, rawRefreshToken);
+
+      return sendSuccess(res, {
+        user: user.toJSON(),
+        accessToken: jwtAccessToken,
       });
     } catch (err) {
       return sendError(res, { code: 'GOOGLE_AUTH_ERROR', message: err.message }, 500);

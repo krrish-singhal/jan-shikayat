@@ -18,10 +18,11 @@ const router = Router();
 router.post('/register', validate(citizenRegisterSchema), AuthController.registerCitizen);
 router.post('/login', validate(citizenLoginSchema), AuthController.loginCitizen);
 router.post('/staff/login', validate(staffLoginSchema), AuthController.loginStaff);
+router.get('/google', AuthController.googleOAuthRedirect);
+router.get('/google/callback', AuthController.googleOAuthCallback);
 router.post('/google', AuthController.googleAuth);
-router.get('/google/callback', (req, res) => {
-  res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/auth/callback?${new URLSearchParams(req.query).toString()}`);
-});
+router.post('/google/check', AuthController.checkGoogleUser);
+router.post('/google/exchange-code', AuthController.googleExchangeCode);
 router.post('/refresh', AuthController.refreshToken);
 router.post('/logout', AuthController.logout);
 router.post('/forgot-password', validate(forgotPasswordSchema), AuthController.forgotPassword);

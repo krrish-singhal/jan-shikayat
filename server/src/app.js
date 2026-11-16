@@ -28,8 +28,10 @@ app.use(
 );
 
 // CORS configuration
+const clientUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL.replace(/\/+$/, '') : 'http://localhost:5173';
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:5173',
+  clientUrl,
+  'https://jan-shikayat.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
 ];
@@ -80,6 +82,16 @@ app.use('/api/v1/operator', operatorRoutes);
 app.use('/api/v1/engineer', engineerRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1', translationRoutes);
+
+// Root welcome endpoint
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'JanShikayat Municipal API is running',
+    version: '1.0.0',
+    health: '/api/v1/health',
+  });
+});
 
 // Health check endpoint
 app.get('/api/v1/health', (req, res) => {
