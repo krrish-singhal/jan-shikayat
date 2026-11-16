@@ -70,7 +70,7 @@ export const StaffLogin = () => {
           </p>
         </div>
 
-        {/* Demo Quick-Fill Buttons */}
+        {/* Demo Quick-Fill Buttons
         <div className="mb-6 p-3 bg-slate-50 rounded-xl border border-slate-200">
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600 mb-2">
             <Sparkles className="w-3.5 h-3.5 text-brand-600" />
@@ -102,7 +102,7 @@ export const StaffLogin = () => {
               <div className="text-slate-500 font-mono text-[10px]">ENG-0001</div>
             </button>
           </div>
-        </div>
+        </div> */}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
