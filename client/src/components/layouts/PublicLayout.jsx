@@ -447,8 +447,8 @@ export const PublicLayout = () => {
 
             {/* Meta: last-updated + visitor count — static placeholders */}
             <div className="flex items-center gap-3 text-[11px] text-slate-500 whitespace-nowrap">
-              {/* TODO: replace with real last-updated date from CMS/deploy */}
-              <span>Last Updated: 01-Nov-2026</span>
+              {/* Dynamic last-updated: formatted as DD-Mon-YYYY */}
+              <span>Last Updated: {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-')}</span>
               <span aria-hidden="true" className="text-slate-700">|</span>
               {/* TODO: replace with real visitor counter API call */}
               <span>Visitors: 1,24,587</span>
