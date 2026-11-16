@@ -13,7 +13,7 @@ import re
 import hashlib
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-PORT = int(os.environ.get("TRANSLATION_PORT", 5001))
+PORT = int(os.environ.get("PORT") or os.environ.get("TRANSLATION_PORT", 5001))
 HOST = os.environ.get("TRANSLATION_HOST", "0.0.0.0")
 
 # IndicTrans2 FLORES-200 Language Tag Mapping
@@ -395,8 +395,14 @@ class IndicTransRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.end_headers()
 
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+
     def do_GET(self):
-        if self.path in ("/health", "/api/health"):
+        if self.path in ("/", "/health", "/api/health"):
             self._send_json(200, {
                 "success": True,
                 "status": "UP",
