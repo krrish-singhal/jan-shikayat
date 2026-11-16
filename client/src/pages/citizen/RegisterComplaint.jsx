@@ -61,13 +61,13 @@ export const RegisterComplaint = () => {
           setDepartments(res.data.data);
         }
       } catch (err) {
-        addToast('Failed to load active departments', 'error');
+        addToast(t('common:loadDeptsFailed', 'Failed to load active departments'), 'error');
       } finally {
         setLoadingDepts(false);
       }
     };
     fetchDepts();
-  }, [addToast]);
+  }, [addToast, t]);
 
   // Handle file select
   const handleFileChange = (e) => {
@@ -76,12 +76,12 @@ export const RegisterComplaint = () => {
 
     const allowed = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowed.includes(file.mimetype) && !allowed.includes(file.type)) {
-      addToast('Invalid file format. Please upload JPG, PNG, or WEBP.', 'error');
+      addToast(t('validation:invalidImageFormat', 'Invalid file format. Please upload JPG, PNG, or WEBP.'), 'error');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      addToast('File exceeds 5MB size limit.', 'error');
+      addToast(t('validation:fileTooLarge', 'File exceeds 5MB size limit.'), 'error');
       return;
     }
 
@@ -100,7 +100,7 @@ export const RegisterComplaint = () => {
   // GPS auto-locate
   const handleAutoLocate = () => {
     if (!navigator.geolocation) {
-      addToast('Geolocation is not supported by your browser', 'error');
+      addToast(t('citizen:geoNotSupported', 'Geolocation is not supported by your browser'), 'error');
       return;
     }
 
@@ -109,11 +109,11 @@ export const RegisterComplaint = () => {
       (position) => {
         setValue('latitude', position.coords.latitude.toFixed(6));
         setValue('longitude', position.coords.longitude.toFixed(6));
-        addToast('Location coordinates captured from device GPS', 'success');
+        addToast(t('citizen:locationCaptured', 'Location coordinates captured from device GPS'), 'success');
         setLocating(false);
       },
       (error) => {
-        addToast('Could not retrieve GPS coordinates. Please enter manually.', 'warning');
+        addToast(t('citizen:gpsFailed', 'Could not retrieve GPS coordinates. Please enter manually.'), 'warning');
         setLocating(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
@@ -122,7 +122,7 @@ export const RegisterComplaint = () => {
 
   const onSubmit = async (data) => {
     if (!selectedFile) {
-      addToast('Please upload a photograph of the complaint issue.', 'error');
+      addToast(t('validation:photoRequired', 'Please upload a photograph of the complaint issue.'), 'error');
       return;
     }
 
@@ -142,7 +142,7 @@ export const RegisterComplaint = () => {
 
       if (res.data?.success) {
         setSuccessData(res.data.data);
-        addToast('Complaint submitted successfully!', 'success');
+        addToast(t('citizen:complaintSubmittedSuccess', 'Complaint submitted successfully!'), 'success');
       }
     } catch (err) {
       addToast(err.response?.data?.error?.message || err.message, 'error');
@@ -156,7 +156,7 @@ export const RegisterComplaint = () => {
       navigator.clipboard.writeText(successData.ticketNo);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-      addToast('Ticket number copied to clipboard', 'info');
+      addToast(t('common:ticketCopied', 'Ticket number copied to clipboard'), 'info');
     }
   };
 
@@ -170,16 +170,16 @@ export const RegisterComplaint = () => {
           </div>
 
           <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-            Grievance Registered Successfully
+            {t('citizen:grievanceSuccessTitle', 'Grievance Registered Successfully')}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
-            Your complaint has been submitted to the municipal department queue. You will receive real-time updates as ground verification proceeds.
+            {t('citizen:grievanceSuccessSubtitle', 'Your complaint has been submitted to the municipal department queue. You will receive real-time updates as ground verification proceeds.')}
           </p>
 
           {/* Prominent Ticket Card */}
           <div className="my-6 p-5 bg-slate-50 dark:bg-slate-800/70 rounded-2xl border border-slate-200 dark:border-slate-700 inline-block w-full max-w-md text-left">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
-              Official Ticket Reference Number
+              {t('citizen:officialTicketNumber', 'Official Ticket Reference Number')}
             </span>
             <div className="flex items-center justify-between">
               <span className="font-mono text-2xl font-black text-brand-700 dark:text-blue-400 tracking-wider">
@@ -190,7 +190,7 @@ export const RegisterComplaint = () => {
                 className="civic-btn-secondary text-xs px-3 py-1.5 flex items-center gap-1.5"
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-                <span>{copied ? 'Copied' : 'Copy'}</span>
+                <span>{copied ? t('common:copied', 'Copied') : t('common:copy', 'Copy')}</span>
               </button>
             </div>
           </div>
@@ -200,7 +200,7 @@ export const RegisterComplaint = () => {
               to={`/citizen/complaints/${successData.complaint._id}`}
               className="civic-btn-primary w-full sm:w-auto"
             >
-              View Complaint Details &amp; Timeline
+              {t('citizen:viewDetailsTimeline', 'View Complaint Details & Timeline')}
             </Link>
             <button
               onClick={() => {
@@ -209,7 +209,7 @@ export const RegisterComplaint = () => {
               }}
               className="civic-btn-secondary w-full sm:w-auto"
             >
-              Register Another Grievance
+              {t('citizen:registerAnother', 'Register Another Grievance')}
             </button>
           </div>
         </div>
@@ -220,9 +220,11 @@ export const RegisterComplaint = () => {
   return (
     <div className="max-w-3xl mx-auto py-4">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Register New Grievance</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+          {t('citizen:newComplaintTitle', 'Register New Grievance')}
+        </h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-          Provide complete issue details and photograph for fast departmental routing and ground verification.
+          {t('citizen:newComplaintSubtitle', 'Provide complete issue details and photograph for fast departmental routing and ground verification.')}
         </p>
       </div>
 
@@ -230,10 +232,10 @@ export const RegisterComplaint = () => {
         {/* Photo Upload Card */}
         <div className="civic-card p-6">
           <label className="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">
-            Complaint Evidence Photograph <span className="text-red-500">*</span>
+            {t('citizen:evidencePhotoTitle', 'Complaint Evidence Photograph')} <span className="text-red-500">*</span>
           </label>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-            Upload clear photograph showing the defect, road damage, garbage pile, or water leak (JPG, PNG, WEBP, max 5MB).
+            {t('citizen:evidencePhotoHint', 'Upload clear photograph showing the defect, road damage, garbage pile, or water leak (JPG, PNG, WEBP, max 5MB).')}
           </p>
 
           {previewUrl ? (
@@ -243,6 +245,7 @@ export const RegisterComplaint = () => {
                 type="button"
                 onClick={handleClearFile}
                 className="absolute top-2 right-2 p-1.5 rounded-full bg-slate-900/80 text-white hover:bg-slate-900 transition-colors"
+                aria-label={t('common:clear', 'Clear')}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -255,8 +258,12 @@ export const RegisterComplaint = () => {
               <div className="w-12 h-12 rounded-full bg-brand-50 dark:bg-blue-950/60 text-brand-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-3 border border-brand-100 dark:border-blue-900">
                 <Upload className="w-6 h-6" />
               </div>
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">Click to upload or drag &amp; drop</p>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">JPG, PNG, or WEBP up to 5MB</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                {t('citizen:clickToUpload', 'Click to upload or drag & drop')}
+              </p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                {t('citizen:uploadFormatsHint', 'JPG, PNG, or WEBP up to 5MB')}
+              </p>
             </div>
           )}
 
@@ -273,21 +280,21 @@ export const RegisterComplaint = () => {
         <div className="civic-card p-6 space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Select Municipal Department <span className="text-red-500">*</span>
+              {t('citizen:departmentLabel', 'Select Municipal Department')} <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <Building className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <select
-                {...register('departmentId', { required: 'Please select a department' })}
+                {...register('departmentId', { required: t('validation:departmentRequired', 'Please select a department') })}
                 disabled={loadingDepts}
                 className="civic-input pl-9"
               >
                 <option value="" disabled className="text-gray-400">
-                  Choose a department
+                  {t('citizen:departmentPlaceholder', 'Choose a department')}
                 </option>
                 {departments.map((dept) => (
                   <option key={dept._id} value={dept._id}>
-                    {dept.name}
+                    {t(`common:departments.${dept.name}`, dept.name)}
                   </option>
                 ))}
               </select>
@@ -300,20 +307,20 @@ export const RegisterComplaint = () => {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Detailed Complaint Description <span className="text-red-500">*</span>
+                {t('citizen:descriptionLabel', 'Detailed Complaint Description')} <span className="text-red-500">*</span>
               </label>
               <span className={`text-[11px] ${descriptionValue.length < 10 ? 'text-amber-600 dark:text-amber-400 font-medium' : 'text-slate-400'}`}>
-                {descriptionValue.length} / 1000 chars (min 10)
+                {descriptionValue.length} / 1000 {t('citizen:charsMin', 'chars (min 10)')}
               </span>
             </div>
             <textarea
               rows={4}
               {...register('description', {
-                required: 'Description is mandatory',
-                minLength: { value: 10, message: 'Minimum 10 characters required' },
-                maxLength: { value: 1000, message: 'Maximum 1000 characters allowed' },
+                required: t('validation:descriptionRequired', 'Description is mandatory'),
+                minLength: { value: 10, message: t('validation:descriptionMin', 'Minimum 10 characters required') },
+                maxLength: { value: 1000, message: t('validation:descriptionMax', 'Maximum 1000 characters allowed') },
               })}
-              placeholder="Describe the nature of the issue, severity, landmark, and public hazard..."
+              placeholder={t('citizen:descriptionPlaceholder', 'Describe the nature of the issue, severity, landmark, and public hazard...')}
               className="civic-input"
             />
             {errors.description && (
@@ -327,7 +334,7 @@ export const RegisterComplaint = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-brand-600 dark:text-blue-400" />
-              Incident Location
+              {t('citizen:incidentLocationTitle', 'Incident Location')}
             </h3>
             <button
               type="button"
@@ -336,18 +343,18 @@ export const RegisterComplaint = () => {
               className="text-xs font-semibold text-brand-600 dark:text-blue-400 hover:text-brand-700 dark:hover:text-blue-300 inline-flex items-center gap-1"
             >
               <Navigation className="w-3.5 h-3.5" />
-              <span>{locating ? 'Detecting GPS...' : 'Auto-detect Coordinates'}</span>
+              <span>{locating ? t('citizen:detectingGps', 'Detecting GPS...') : t('citizen:autoDetectCoords', 'Auto-detect Coordinates')}</span>
             </button>
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              Physical Street Address &amp; Landmark <span className="text-red-500">*</span>
+              {t('citizen:addressLabel', 'Physical Street Address & Landmark')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              {...register('address', { required: 'Address is required (at least 3 characters)' })}
-              placeholder="e.g. Opposite City Hospital Gate 3, Station Road, Ward 12"
+              {...register('address', { required: t('validation:addressRequired', 'Address is required (at least 3 characters)') })}
+              placeholder={t('citizen:addressPlaceholder', 'e.g. Opposite City Hospital Gate 3, Station Road, Ward 12')}
               className="civic-input"
             />
             {errors.address && (
@@ -357,7 +364,9 @@ export const RegisterComplaint = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Latitude</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                {t('citizen:latitude', 'Latitude')}
+              </label>
               <input
                 type="number"
                 step="any"
@@ -367,7 +376,7 @@ export const RegisterComplaint = () => {
                     (Number.isFinite(Number(value)) &&
                       Number(value) >= -90 &&
                       Number(value) <= 90) ||
-                    'Enter a valid latitude (-90 to 90)',
+                    t('validation:latitudeInvalid', 'Enter a valid latitude (-90 to 90)'),
                 })}
                 placeholder="e.g. 18.520430"
                 className="civic-input font-mono text-xs"
@@ -380,7 +389,9 @@ export const RegisterComplaint = () => {
               )}
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Longitude</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                {t('citizen:longitude', 'Longitude')}
+              </label>
               <input
                 type="number"
                 step="any"
@@ -390,7 +401,7 @@ export const RegisterComplaint = () => {
                     (Number.isFinite(Number(value)) &&
                       Number(value) >= -180 &&
                       Number(value) <= 180) ||
-                    'Enter a valid longitude (-180 to 180)',
+                    t('validation:longitudeInvalid', 'Enter a valid longitude (-180 to 180)'),
                 })}
                 placeholder="e.g. 73.856740"
                 className="civic-input font-mono text-xs"
@@ -408,14 +419,14 @@ export const RegisterComplaint = () => {
         {/* Submit Action */}
         <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2">
           <Link to="/citizen/dashboard" className="civic-btn-secondary text-center">
-            Cancel
+            {t('common:cancel', 'Cancel')}
           </Link>
           <button
             type="submit"
             disabled={submitting}
             className="civic-btn-primary px-6"
           >
-            {submitting ? 'Submitting Grievance...' : 'Submit Grievance'}
+            {submitting ? t('citizen:submittingGrievance', 'Submitting Grievance...') : t('citizen:submitGrievanceBtn', 'Submit Grievance')}
           </button>
         </div>
       </form>

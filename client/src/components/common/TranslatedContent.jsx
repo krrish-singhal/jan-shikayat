@@ -19,8 +19,8 @@ export const TranslatedContent = ({
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // If target is English or source is same, no translation needed
-    if (!text || activeLang === 'en' || activeLang === sourceLanguage) {
+    // If target is same as source language, no translation needed
+    if (!text || activeLang === sourceLanguage) {
       setTranslatedText('');
       setLoading(false);
       return;
@@ -64,8 +64,8 @@ export const TranslatedContent = ({
 
   if (!text) return null;
 
-  // In English view, simply display original text
-  if (activeLang === 'en' || !translatedText || translatedText === text) {
+  // If active language matches source language or translation is identical, display text directly
+  if (activeLang === sourceLanguage || !translatedText || translatedText === text) {
     return <div className={className}><p className={textClassName}>{text}</p></div>;
   }
 

@@ -5,8 +5,17 @@
   "passwordComplexity": "इसमें 1 बड़ा अक्षर, 1 संख्या और 1 विशेष वर्ण होना चाहिए",
   "passwordMatch": "पासवर्ड मेल नहीं खाते",
   "descriptionMinLength": "विवरण कम से कम 10 अक्षरों का होना चाहिए",
-  "phoneInvalid": "कृपया 10 अंकों का मान्य मोबाइल नंबर दर्ज करें",
+  "phoneInvalid": "मोबाइल नंबर ठीक 10 अंकों का होना चाहिए",
   "imageRequired": "फ़ोटो साक्ष्य अनिवार्य है",
-  "departmentRequired": "कृपया एक विभाग चुनें",
-  "addressRequired": "स्थान का पता आवश्यक है"
+  "departmentRequired": "অনুগ্ৰহ কৰি এটা বিভাগ বাছক",
+  "addressRequired": "ঠিকনা বাধ্যতামূলক (অন্ততঃ ৩টা আখৰ)",
+  "phoneRequired": "कृपया 10 अंकों का फोन नंबर दर्ज करें या 'अभी छोड़ें' पर क्लिक करें",
+  "invalidImageFormat": "অবৈধ ফাইল ফৰ্মেট। অনুগ্ৰহ কৰি JPG, PNG, বা WEBP আপলোড কৰক।",
+  "fileTooLarge": "ফাইলৰ আকাৰ 5MB সীমা অতিক্ৰম কৰিছে।",
+  "photoRequired": "অনুগ্ৰহ কৰি অভিযোগৰ এটা ছবি আপলোড কৰক।",
+  "descriptionRequired": "বিৱৰণ বাধ্যতামূলক",
+  "descriptionMin": "নূন্যতম ১০টা আখৰ প্ৰয়োজন",
+  "descriptionMax": "সৰ্বোচ্চ ১০০০টা আখৰ অনুমোদিত",
+  "latitudeInvalid": "বৈধ অক্ষৰেখা প্ৰবিষ্ট কৰক (-৯০ ৰ পৰা ৯০)",
+  "longitudeInvalid": "বৈধ দ্ৰাঘিমাংশ প্ৰবিষ্ট কৰক (-১৮০ ৰ পৰা ১৮০)"
 }

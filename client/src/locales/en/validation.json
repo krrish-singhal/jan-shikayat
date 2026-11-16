@@ -5,8 +5,17 @@
   "passwordComplexity": "Must contain 1 uppercase, 1 number, and 1 special character",
   "passwordMatch": "Passwords do not match",
   "descriptionMinLength": "Description must be at least 10 characters",
-  "phoneInvalid": "Please enter a valid 10-digit phone number",
+  "phoneInvalid": "Mobile number must be exactly 10 digits",
   "imageRequired": "Photographic evidence is mandatory",
   "departmentRequired": "Please select a department",
-  "addressRequired": "Address is required"
+  "addressRequired": "Address is required (at least 3 characters)",
+  "phoneRequired": "Please enter a 10-digit phone number or click \"Skip for now\"",
+  "invalidImageFormat": "Invalid file format. Please upload JPG, PNG, or WEBP.",
+  "fileTooLarge": "File exceeds 5MB size limit.",
+  "photoRequired": "Please upload a photograph of the complaint issue.",
+  "descriptionRequired": "Description is mandatory",
+  "descriptionMin": "Minimum 10 characters required",
+  "descriptionMax": "Maximum 1000 characters allowed",
+  "latitudeInvalid": "Enter a valid latitude (-90 to 90)",
+  "longitudeInvalid": "Enter a valid longitude (-180 to 180)"
 }

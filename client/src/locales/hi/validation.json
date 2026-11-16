@@ -5,8 +5,17 @@
   "passwordComplexity": "इसमें 1 बड़ा अक्षर, 1 संख्या और 1 विशेष वर्ण होना चाहिए",
   "passwordMatch": "पासवर्ड मेल नहीं खाते",
   "descriptionMinLength": "विवरण कम से कम 10 अक्षरों का होना चाहिए",
-  "phoneInvalid": "कृपया 10 अंकों का मान्य मोबाइल नंबर दर्ज करें",
+  "phoneInvalid": "मोबाइल नंबर ठीक 10 अंकों का होना चाहिए",
   "imageRequired": "फ़ोटो साक्ष्य अनिवार्य है",
   "departmentRequired": "कृपया एक विभाग चुनें",
-  "addressRequired": "स्थान का पता आवश्यक है"
+  "addressRequired": "पता आवश्यक है (कम से कम 3 अक्षर)",
+  "phoneRequired": "कृपया 10 अंकों का फोन नंबर दर्ज करें या 'अभी छोड़ें' पर क्लिक करें",
+  "invalidImageFormat": "अमान्य फ़ाइल प्रारूप। कृपया JPG, PNG, या WEBP अपलोड करें।",
+  "fileTooLarge": "फ़ाइल 5MB आकार सीमा से अधिक है।",
+  "photoRequired": "कृपया शिकायत की समस्या की एक तस्वीर अपलोड करें।",
+  "descriptionRequired": "विवरण अनिवार्य है",
+  "descriptionMin": "न्यूनतम 10 अक्षर आवश्यक हैं",
+  "descriptionMax": "अधिकतम 1000 अक्षरों की अनुमति है",
+  "latitudeInvalid": "मान्य अक्षांश (-90 से 90) दर्ज करें",
+  "longitudeInvalid": "मान्य देशांतर (-180 से 180) दर्ज करें"
 }

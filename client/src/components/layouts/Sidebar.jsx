@@ -105,7 +105,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
           {/* User Government Official Identity Card */}
           <div className="p-3.5 mx-3 my-3 bg-[#0f3459] rounded-lg border border-[#14426f]">
-            <div className="text-[11px] text-slate-300 font-medium">{t('common:citizen', 'Logged in User')}</div>
+            <div className="text-[11px] text-slate-300 font-medium">{t('common:loggedInUser', 'Logged in User')}</div>
             <div className="text-sm font-bold text-white truncate font-sans">{user.name}</div>
             <div className="mt-1 flex items-center gap-1.5 flex-wrap">
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase tracking-wide">
@@ -120,7 +120,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
             {user.departmentId?.name && (
               <div className="mt-2 pt-2 border-t border-[#14426f] text-[11px] text-slate-300 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                <span className="truncate">{user.departmentId.name}</span>
+                <span className="truncate">{t(`common:departments.${user.departmentId.name}`, user.departmentId.name)}</span>
               </div>
             )}
           </div>

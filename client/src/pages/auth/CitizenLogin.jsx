@@ -44,7 +44,7 @@ export const CitizenLogin = () => {
     try {
       setLoading(true);
       await loginCitizen(data);
-      addToast('Welcome back to JanShikayat Citizen Portal', 'success');
+      addToast(t('auth:welcomeBackCitizen', 'Welcome back to JanShikayat Citizen Portal'), 'success');
       navigate('/citizen/dashboard');
     } catch (err) {
       addToast(err.response?.data?.error?.message || err.message, 'error');
@@ -97,7 +97,7 @@ export const CitizenLogin = () => {
         phone,
       });
       setPhoneModalOpen(false);
-      addToast('Welcome to JanShikayat! Mobile number linked.', 'success');
+      addToast(t('auth:mobileLinked', 'Welcome to JanShikayat! Mobile number linked.'), 'success');
       navigate('/citizen/dashboard');
     } catch (err) {
       addToast(err.response?.data?.error?.message || err.message, 'error');
@@ -112,7 +112,7 @@ export const CitizenLogin = () => {
       setPhoneSubmitting(true);
       await loginWithGoogle(pendingGoogleUser);
       setPhoneModalOpen(false);
-      addToast('Welcome to JanShikayat Citizen Portal!', 'success');
+      addToast(t('auth:welcomeCitizenPortal', 'Welcome to JanShikayat Citizen Portal!'), 'success');
       navigate('/citizen/dashboard');
     } catch (err) {
       addToast(err.response?.data?.error?.message || err.message, 'error');
@@ -301,7 +301,7 @@ export const CitizenLogin = () => {
             </Link>
           </div>
           <div className="pt-2">
-            Are you a municipal staff member?{' '}
+            {t('areYouStaff', 'Are you a municipal staff member?')}{' '}
             <Link to="/staff/login" className="text-slate-700 dark:text-slate-300 font-semibold hover:underline inline-flex items-center gap-1">
               {t('staffLoginButton', 'Staff Portal Login')} <ArrowRight className="w-3 h-3" />
             </Link>

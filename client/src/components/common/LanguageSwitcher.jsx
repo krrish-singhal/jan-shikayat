@@ -5,7 +5,7 @@ import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '../../constants/languages
 import { useAuth } from '../../contexts/AuthContext.jsx';
 
 export const LanguageSwitcher = ({ variant = 'default', className = '' }) => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('common');
   const { changeUserLanguage } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -72,8 +72,8 @@ export const LanguageSwitcher = ({ variant = 'default', className = '' }) => {
           role="menu"
         >
           <div className="px-3 py-1.5 border-b border-slate-100 dark:border-slate-800 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
-            <span>Select Portal Language</span>
-            <span className="font-mono text-slate-500 dark:text-slate-400">12 Indic Languages</span>
+            <span>{t('selectPortalLanguage', 'Select Portal Language')}</span>
+            <span className="font-mono text-slate-500 dark:text-slate-400">{t('twelveIndicLanguages', '12 Indic Languages')}</span>
           </div>
 
           <div className="py-1">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   ArrowLeft,
   MapPin,
@@ -13,13 +14,15 @@ import {
 import api from '../../services/api.js';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { Timeline } from '../../components/common/Timeline.jsx';
+import { TranslatedContent } from '../../components/common/TranslatedContent.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
-import { getImageUrl } from '../../utils/formatters.js';
+import { getImageUrl, formatDateTime } from '../../utils/formatters.js';
 
 export const ComplaintDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToast } = useToast();
+  const { t, i18n } = useTranslation(['citizen', 'common']);
 
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,7 +65,7 @@ export const ComplaintDetails = () => {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Complaints</span>
+          <span>{t('citizen:backToComplaints', 'Back to Complaints')}</span>
         </Link>
         <div className="flex items-center gap-3">
           <span className="font-mono text-sm font-bold text-slate-700 dark:text-slate-200">{complaint.ticketNo}</span>
@@ -76,7 +79,7 @@ export const ComplaintDetails = () => {
           {/* Photograph Card */}
           <div className="civic-card p-4">
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
-              Submitted Photo Evidence
+              {t('common:photoEvidence', 'Photo Evidence')}
             </h4>
             <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
               <img
@@ -90,33 +93,32 @@ export const ComplaintDetails = () => {
                 }}
               />
             </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center mt-2">Click image to view full size</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center mt-2">{t('citizen:clickToViewFull', 'Click image to view full size')}</p>
           </div>
 
           {/* Department & Location Meta Card */}
           <div className="civic-card p-5 space-y-4 text-xs">
             <div>
               <span className="font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
-                Department
+                {t('common:department', 'Department')}
               </span>
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{complaint.department}</p>
-            </div>
-
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
-              <span className="font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
-                Date Registered
-              </span>
-              <p className="text-slate-700 dark:text-slate-300 font-mono">
-                {new Date(complaint.createdAt).toLocaleString(undefined, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })}
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                {t(`common:departments.${complaint.department}`, complaint.department)}
               </p>
             </div>
 
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
               <span className="font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
-                Address &amp; Landmark
+                {t('common:dateRegistered', 'Date Registered')}
+              </span>
+              <p className="text-slate-700 dark:text-slate-300 font-mono">
+                {formatDateTime(complaint.createdAt, i18n.language)}
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+              <span className="font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
+                {t('common:address', 'Address & Landmark')}
               </span>
               <p className="text-slate-700 dark:text-slate-300 leading-relaxed flex items-start gap-1.5">
                 <MapPin className="w-4 h-4 text-brand-600 dark:text-blue-400 shrink-0 mt-0.5" />
@@ -136,11 +138,11 @@ export const ComplaintDetails = () => {
           {/* Description Card */}
           <div className="civic-card p-6">
             <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-2">
-              Citizen Description
+              {t('common:description', 'Citizen Description')}
             </h3>
-            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-              {complaint.description}
-            </p>
+            <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+              <TranslatedContent text={complaint.description} complaintId={complaint._id} />
+            </div>
           </div>
 
           {/* Vertical Timeline */}
@@ -151,6 +153,7 @@ export const ComplaintDetails = () => {
             completionNote={complaint.completionNote}
             completionImageUrl={getImageUrl(complaint.completionImageUrl)}
             isCitizenView={true}
+            complaintId={complaint._id}
           />
         </div>
       </div>

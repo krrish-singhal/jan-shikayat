@@ -49,9 +49,9 @@ export const HomePage = () => {
           return;
         }
       }
-      setSearchError('To view complete ground inspection evidence and timeline, please log in with your citizen credentials.');
+      setSearchError(t('auth:loginToTrackError', 'To view complete ground inspection evidence and timeline, please log in with your citizen credentials.'));
     } catch (err) {
-      setSearchError('Unable to locate complaint with this ticket number.');
+      setSearchError(t('auth:ticketNotFoundError', 'Unable to locate complaint with this ticket number.'));
     } finally {
       setSearching(false);
     }
@@ -97,12 +97,12 @@ export const HomePage = () => {
   ];
 
   const civicDepartments = [
-    { name: t('common:deptRoads', 'Roads & Potholes'), icon: Layers, desc: 'Pavement restoration, potholes repair, asphalt overlay' },
-    { name: t('common:deptWater', 'Water Supply'), icon: Droplets, desc: 'Pipeline leakage, potable water distribution, pressure drop' },
-    { name: t('common:deptSanitation', 'Sanitation & Solid Waste'), icon: Truck, desc: 'Garbage clearance, community bin maintenance, segregation' },
-    { name: t('common:deptLighting', 'Street Lighting'), icon: Lightbulb, desc: 'Defective street lamps, timer switches, pole maintenance' },
-    { name: t('common:deptElectricity', 'Electricity & Utilities'), icon: Zap, desc: 'Cable hazard mitigation, transformer clearing, feeder issues' },
-    { name: t('common:deptHealth', 'Public Health & Hygiene'), icon: HeartPulse, desc: 'Vector control, fogging, open drain disinfestation' },
+    { name: t('common:deptRoads', 'Roads & Potholes'), icon: Layers, desc: t('common:deptRoadsDesc', 'Pavement restoration, potholes repair, asphalt overlay') },
+    { name: t('common:deptWater', 'Water Supply'), icon: Droplets, desc: t('common:deptWaterDesc', 'Pipeline leakage, potable water distribution, pressure drop') },
+    { name: t('common:deptSanitation', 'Sanitation & Solid Waste'), icon: Truck, desc: t('common:deptSanitationDesc', 'Garbage clearance, community bin maintenance, segregation') },
+    { name: t('common:deptLighting', 'Street Lighting'), icon: Lightbulb, desc: t('common:deptLightingDesc', 'Defective street lamps, timer switches, pole maintenance') },
+    { name: t('common:deptElectricity', 'Electricity & Utilities'), icon: Zap, desc: t('common:deptElectricityDesc', 'Cable hazard mitigation, transformer clearing, feeder issues') },
+    { name: t('common:deptHealth', 'Public Health & Hygiene'), icon: HeartPulse, desc: t('common:deptHealthDesc', 'Vector control, fogging, open drain disinfestation') },
   ];
 
   return (
@@ -112,7 +112,7 @@ export const HomePage = () => {
         <div className="max-w-7xl mx-auto text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#0f3b68]/10 dark:bg-blue-950/60 border border-[#0f3b68]/20 dark:border-blue-800 text-[#0f3b68] dark:text-blue-300 text-xs font-semibold">
             <Shield className="w-3.5 h-3.5 text-[#0f3b68] dark:text-blue-400" />
-            <span>सत्यमेव जयते • {t('common:officialPortal', 'Official Municipal Citizen Grievance Portal')}</span>
+            <span>{t('common:officialPortal', 'Official Municipal Citizen Grievance Portal')}</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f3b68] dark:text-white tracking-tight max-w-4xl mx-auto leading-tight">
@@ -127,7 +127,7 @@ export const HomePage = () => {
           <div className="pt-4 max-w-2xl mx-auto w-full">
             <div className="bg-white dark:bg-slate-900/95 p-4 sm:p-5 rounded-lg border-2 border-[#0f3b68] dark:border-blue-500 shadow-md text-left space-y-3">
               <label className="block text-xs font-bold uppercase tracking-wider text-[#0f3b68] dark:text-blue-400">
-                {t('common:ticketNo', 'Ticket')} Status Tracker
+                {t('common:ticketNo', 'Ticket')} {t('common:statusTracker', 'Status Tracker')}
               </label>
 
               <form onSubmit={handleTrackComplaint} className="flex flex-col sm:flex-row gap-2">
@@ -158,7 +158,7 @@ export const HomePage = () => {
                     <span>{searchError}</span>
                     <div className="mt-1">
                       <Link to="/login" className="font-bold underline text-[#0f3b68] dark:text-blue-400">
-                        Click here to Login
+                        {t('auth:clickHereToLogin', 'Click here to Login')}
                       </Link>
                     </div>
                   </div>
@@ -173,13 +173,13 @@ export const HomePage = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8">
           <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded border border-amber-200 dark:border-amber-900/60">
-            Integrated Governance Architecture
+            {t('auth:integratedArchitecture', 'Integrated Governance Architecture')}
           </span>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-2">
-            Dedicated Portals for Citizens, Operators, Engineers &amp; Administrators
+            {t('auth:dedicatedPortalsTitle', 'Dedicated Portals for Citizens, Operators, Engineers & Administrators')}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl mx-auto">
-            All four operational branches coordinate on the same real-time municipal database records.
+            {t('auth:dedicatedPortalsSubtitle', 'All four operational branches coordinate on the same real-time municipal database records.')}
           </p>
         </div>
 
@@ -231,10 +231,10 @@ export const HomePage = () => {
         <div className="civic-card p-4 sm:p-6 bg-slate-50/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
           <div className="mb-6">
             <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
-              Active Municipal Redressal Divisions
+              {t('common:activeDivisionsTitle', 'Active Municipal Redressal Divisions')}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Citizen complaints are routed directly to designated departmental intake desks.
+              {t('common:activeDivisionsSubtitle', 'Citizen complaints are routed directly to designated departmental intake desks.')}
             </p>
           </div>
 
@@ -263,13 +263,13 @@ export const HomePage = () => {
           <div className="space-y-1 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 text-xs font-bold text-amber-300 dark:text-amber-400 uppercase tracking-wide">
               <Clock className="w-4 h-4" />
-              <span>Standard Service Level Guarantee (SLA)</span>
+              <span>{t('auth:slaTitle', 'Standard Service Level Guarantee (SLA)')}</span>
             </div>
             <h3 className="text-base sm:text-lg font-bold">
-              Guaranteed Initial Departmental Review within 48 Hours
+              {t('auth:slaHeading', 'Guaranteed Initial Departmental Review within 48 Hours')}
             </h3>
             <p className="text-xs text-slate-200 dark:text-slate-300 max-w-2xl leading-relaxed">
-              Every submitted grievance is assigned a permanent tracking ticket. Cases pending verification beyond 7 days are automatically escalated to the Municipal Commissioner oversight queue.
+              {t('auth:slaDesc', 'Every submitted grievance is assigned a permanent tracking ticket. Cases pending verification beyond 7 days are automatically escalated to the Municipal Commissioner oversight queue.')}
             </p>
           </div>
 
@@ -278,13 +278,13 @@ export const HomePage = () => {
               to="/signup"
               className="px-5 py-2.5 rounded bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wide text-center transition-colors shadow-sm"
             >
-              File New Grievance
+              {t('common:registerComplaint', 'File New Grievance')}
             </Link>
             <Link
               to="/login"
               className="px-5 py-2.5 rounded bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/20 text-center transition-colors"
             >
-              Track Grievance
+              {t('auth:trackGrievance', 'Track Grievance')}
             </Link>
           </div>
         </div>

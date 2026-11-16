@@ -177,7 +177,7 @@ export const Navbar = ({ onOpenSidebar }) => {
                 {user?.name}
               </span>
               <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono block">
-                {user?.staffId || user?.role}
+                {user?.staffId || (user?.role ? t(`roles.${user.role}`, user.role) : '')}
               </span>
             </div>
           </div>

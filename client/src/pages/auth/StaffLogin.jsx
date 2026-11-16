@@ -165,7 +165,7 @@ export const StaffLogin = () => {
         </form>
 
         <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
-          Citizen user?{' '}
+          {t('citizenUser', 'Citizen user?')}{' '}
           <Link to="/login" className="text-brand-600 dark:text-blue-400 font-semibold hover:underline">
             {t('citizenLoginTitle', 'Go to Citizen Login')}
           </Link>

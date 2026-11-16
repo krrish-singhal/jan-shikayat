@@ -1,14 +1,16 @@
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
 
 export const ThemeToggle = ({ variant = 'default', className = '' }) => {
+  const { t } = useTranslation('common');
   const { isDark, toggleTheme } = useTheme();
 
   const isPublic = variant === 'public';
   const isCompact = variant === 'compact';
 
-  const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+  const label = isDark ? t('switchToLight', 'Switch to light mode') : t('switchToDark', 'Switch to dark mode');
 
   return (
     <button
@@ -27,12 +29,12 @@ export const ThemeToggle = ({ variant = 'default', className = '' }) => {
       {isDark ? (
         <>
           <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-          {!isCompact && !isPublic && <span className="hidden sm:inline">Light</span>}
+          {!isCompact && !isPublic && <span className="hidden sm:inline">{t('light', 'Light')}</span>}
         </>
       ) : (
         <>
           <Moon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-          {!isCompact && !isPublic && <span className="hidden sm:inline">Dark</span>}
+          {!isCompact && !isPublic && <span className="hidden sm:inline">{t('dark', 'Dark')}</span>}
         </>
       )}
     </button>

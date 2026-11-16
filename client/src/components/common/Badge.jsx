@@ -8,7 +8,9 @@ export const StatusBadge = ({ status, isCitizenView = false }) => {
   const fallbackLabel = isCitizenView
     ? (CITIZEN_STATUS_MAP[status] || status)
     : (STATUS_LABELS[status] || status);
-  const displayLabel = t(`statusMap.${rawKey}`, t(`statusMap.${status}`, fallbackLabel));
+  const normalizedKey = (rawKey || '').toUpperCase().replace(/\s+/g, '_');
+  const normalizedStatus = (status || '').toUpperCase().replace(/\s+/g, '_');
+  const displayLabel = t(`statusMap.${normalizedKey}`, t(`statusMap.${normalizedStatus}`, fallbackLabel));
 
   const config = STATUS_COLORS[status] || {
     bg: 'bg-slate-100',

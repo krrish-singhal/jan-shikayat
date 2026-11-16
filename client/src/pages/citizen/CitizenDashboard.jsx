@@ -16,6 +16,7 @@ import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
 import { StatCard } from '../../components/common/StatCard.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
+import { TranslatedContent } from '../../components/common/TranslatedContent.jsx';
 import { formatNumber, formatDate, getImageUrl } from '../../utils/formatters.js';
 
 export const CitizenDashboard = () => {
@@ -185,12 +186,12 @@ export const CitizenDashboard = () => {
                         {complaint.ticketNo}
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
-                        {complaint.department}
+                        {t(`common:departments.${complaint.department}`, complaint.department)}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 truncate max-w-md mt-0.5">
-                      {complaint.description}
-                    </p>
+                    <div className="text-xs text-slate-600 dark:text-slate-300 truncate max-w-md mt-0.5">
+                      <TranslatedContent text={complaint.description} complaintId={complaint._id} />
+                    </div>
                   </div>
                 </div>
 

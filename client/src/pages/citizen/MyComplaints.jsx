@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Eye, FileText, Filter, Search } from 'lucide-react';
 import api from '../../services/api.js';
 import { DataTable } from '../../components/common/DataTable.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
+import { TranslatedContent } from '../../components/common/TranslatedContent.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
-import { getImageUrl } from '../../utils/formatters.js';
+import { getImageUrl, formatDate } from '../../utils/formatters.js';
 
 export const MyComplaints = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { addToast } = useToast();
+  const { t, i18n } = useTranslation(['citizen', 'common']);
 
   const currentTab = searchParams.get('status') || 'ALL';
   const currentPage = Number(searchParams.get('page')) || 1;
@@ -22,12 +25,12 @@ export const MyComplaints = () => {
   const [search, setSearch] = useState('');
 
   const filterTabs = [
-    { key: 'ALL', label: 'All Complaints' },
-    { key: 'Pending', label: 'Pending' },
-    { key: 'Approved', label: 'Approved' },
-    { key: 'Work in Progress', label: 'In Progress' },
-    { key: 'Completed', label: 'Completed' },
-    { key: 'Rejected', label: 'Rejected' },
+    { key: 'ALL', label: t('common:all', 'All Complaints') },
+    { key: 'Pending', label: t('common:statusMap.PENDING', 'Pending') },
+    { key: 'Approved', label: t('common:statusMap.APPROVED', 'Approved') },
+    { key: 'Work in Progress', label: t('common:statusMap.WORK_IN_PROGRESS', 'In Progress') },
+    { key: 'Completed', label: t('common:statusMap.COMPLETED', 'Completed') },
+    { key: 'Rejected', label: t('common:statusMap.REJECTED', 'Rejected') },
   ];
 
   const fetchComplaints = useCallback(async () => {
@@ -71,13 +74,13 @@ export const MyComplaints = () => {
 
   const columns = [
     {
-      header: 'Ticket #',
+      header: t('common:ticketNo', 'Ticket #'),
       key: 'ticketNo',
       className: 'w-36 font-mono font-bold text-slate-900 dark:text-slate-100',
       render: (row) => <span>{row.ticketNo}</span>,
     },
     {
-      header: 'Evidence',
+      header: t('common:photoEvidence', 'Evidence'),
       key: 'image',
       className: 'w-16',
       render: (row) =>
@@ -98,31 +101,35 @@ export const MyComplaints = () => {
         ),
     },
     {
-      header: 'Department',
+      header: t('common:department', 'Department'),
       key: 'department',
       className: 'font-medium text-slate-800 dark:text-slate-200',
-      render: (row) => row.department,
+      render: (row) => t(`common:departments.${row.department}`, row.department),
     },
     {
-      header: 'Description',
+      header: t('common:description', 'Description'),
       key: 'description',
-      className: 'max-w-xs truncate text-slate-600 dark:text-slate-300',
-      render: (row) => <span className="truncate block max-w-xs">{row.description}</span>,
+      className: 'max-w-xs text-slate-600 dark:text-slate-300',
+      render: (row) => (
+        <div className="max-w-xs truncate">
+          <TranslatedContent text={row.description} complaintId={row._id} />
+        </div>
+      ),
     },
     {
-      header: 'Date Filed',
+      header: t('common:date', 'Date Filed'),
       key: 'createdAt',
       className: 'w-32 font-mono text-xs text-slate-500 dark:text-slate-400',
-      render: (row) => new Date(row.createdAt).toLocaleDateString(),
+      render: (row) => formatDate(row.createdAt, i18n.language),
     },
     {
-      header: 'Status',
+      header: t('common:status', 'Status'),
       key: 'status',
       className: 'w-36',
       render: (row) => <StatusBadge status={row.status} isCitizenView={true} />,
     },
     {
-      header: 'Actions',
+      header: t('common:actions', 'Actions'),
       key: 'actions',
       className: 'w-28 text-right',
       render: (row) => (
@@ -131,7 +138,7 @@ export const MyComplaints = () => {
           className="civic-btn-secondary text-xs py-1.5 px-2.5 inline-flex items-center gap-1"
         >
           <Eye className="w-3.5 h-3.5" />
-          <span>Details</span>
+          <span>{t('common:viewDetails', 'Details')}</span>
         </button>
       ),
     },
@@ -140,8 +147,8 @@ export const MyComplaints = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">My Registered Complaints</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Track the resolution lifecycle of all your submitted municipal grievances</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">{t('citizen:myComplaintsTitle', 'My Registered Complaints')}</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('citizen:myComplaintsSubtitle', 'Track the resolution lifecycle of all your submitted municipal grievances')}</p>
       </div>
 
       {/* Filter Tabs */}
@@ -173,10 +180,10 @@ export const MyComplaints = () => {
         totalPages={totalPages}
         total={total}
         onPageChange={handlePageChange}
-        searchPlaceholder="Search by ticket # or keyword..."
+        searchPlaceholder={t('citizen:searchPlaceholder', 'Search complaints by ticket, description, location...')}
         searchValue={search}
         onSearchChange={setSearch}
-        emptyMessage="No complaints match this filter."
+        emptyMessage={t('common:noResultsFound', 'No complaints match this filter.')}
       />
     </div>
   );
