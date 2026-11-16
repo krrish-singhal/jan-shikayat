@@ -1,4 +1,3 @@
-import http from 'http';
 import { INDIC_TRANS2_LANG_CODES } from '../../constants/languages.js';
 
 const TRANSLATION_SERVICE_URL = process.env.TRANSLATION_SERVICE_URL || 'http://127.0.0.1:5001';
@@ -156,61 +155,40 @@ function translateLocally(text, targetLang) {
 }
 
 /**
- * Low-level HTTP client to query internal IndicTrans2 Python microservice
+ * Low-level HTTP/HTTPS client to query internal IndicTrans2 Python microservice
  */
-function postInternalJson(endpoint, payload, timeoutMs = REQUEST_TIMEOUT_MS) {
-  return new Promise((resolve, reject) => {
-    try {
-      const url = new URL(endpoint, TRANSLATION_SERVICE_URL);
-      const postData = JSON.stringify(payload);
+async function postInternalJson(endpoint, payload, timeoutMs = REQUEST_TIMEOUT_MS) {
+  const base = TRANSLATION_SERVICE_URL.endsWith('/') ? TRANSLATION_SERVICE_URL : `${TRANSLATION_SERVICE_URL}/`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+  const url = new URL(cleanEndpoint, base);
 
-      const options = {
-        hostname: url.hostname,
-        port: url.port || 5001,
-        path: url.pathname,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Content-Length': Buffer.byteLength(postData),
-        },
-        timeout: timeoutMs,
-      };
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-      const req = http.request(options, (res) => {
-        let rawData = '';
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          rawData += chunk;
-        });
-        res.on('end', () => {
-          if (res.statusCode >= 200 && res.statusCode < 300) {
-            try {
-              const parsed = JSON.parse(rawData);
-              resolve(parsed);
-            } catch (err) {
-              reject(new Error(`Failed to parse translation response JSON: ${err.message}`));
-            }
-          } else {
-            reject(new Error(`Translation service returned status code ${res.statusCode}: ${rawData}`));
-          }
-        });
-      });
+  try {
+    const res = await fetch(url.toString(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
 
-      req.on('timeout', () => {
-        req.destroy();
-        reject(new Error(`Translation service timed out after ${timeoutMs}ms`));
-      });
-
-      req.on('error', (err) => {
-        reject(err);
-      });
-
-      req.write(postData);
-      req.end();
-    } catch (err) {
-      reject(err);
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Translation service returned status code ${res.status}: ${errText}`);
     }
-  });
+
+    return await res.json();
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new Error(`Translation service timed out after ${timeoutMs}ms`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 function chunkText(text, maxChars = 500) {
