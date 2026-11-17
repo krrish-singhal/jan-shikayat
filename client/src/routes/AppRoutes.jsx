@@ -39,6 +39,7 @@ import { EngineerProfile } from '../pages/engineer/EngineerProfile.jsx';
 import { AdminDashboard } from '../pages/admin/AdminDashboard.jsx';
 import { StaffManagement } from '../pages/admin/StaffManagement.jsx';
 import { DepartmentManagement } from '../pages/admin/DepartmentManagement.jsx';
+import { NoticeManagement } from '../pages/admin/NoticeManagement.jsx';
 import { ComplaintManagement } from '../pages/admin/ComplaintManagement.jsx';
 import { AdminComplaintDetail } from '../pages/admin/AdminComplaintDetail.jsx';
 import { CitizenManagement } from '../pages/admin/CitizenManagement.jsx';
@@ -102,6 +103,7 @@ export const AppRoutes = () => {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/staff" element={<StaffManagement />} />
           <Route path="/admin/departments" element={<DepartmentManagement />} />
+          <Route path="/admin/notices" element={<NoticeManagement />} />
           <Route path="/admin/complaints" element={<ComplaintManagement />} />
           <Route path="/admin/complaints/:id" element={<AdminComplaintDetail />} />
           <Route path="/admin/citizens" element={<CitizenManagement />} />

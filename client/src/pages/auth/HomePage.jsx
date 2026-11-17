@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -24,6 +24,7 @@ import {
   Users,
   CheckCheck,
   Timer,
+  Edit,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
@@ -36,6 +37,32 @@ export const HomePage = () => {
   const [ticketSearch, setTicketSearch] = useState('');
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
+  const [notices, setNotices] = useState([
+    { date: '15 Nov 2026', text: 'Online grievance submission portal updated with multi-language support.' },
+    { date: '10 Nov 2026', text: 'New SLA: Road & Pothole complaints resolved within 5 working days.' },
+    { date: '05 Nov 2026', text: 'Scheduled maintenance: Water supply disruption on 20 Nov (6–10 AM).' },
+    { date: '01 Nov 2026', text: 'Field engineers to upload geo-tagged photos for all closed complaints.' },
+    { date: '28 Oct 2026', text: 'Citizen charter revised — download the updated PDF from the helpdesk.' },
+  ]);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const res = await api.get('/notices');
+        if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          setNotices(
+            res.data.data.map((item) => ({
+              date: item.date || new Date(item.createdAt).toLocaleDateString(),
+              text: item.title,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error('Failed to load notices from server:', err);
+      }
+    };
+    fetchNotices();
+  }, []);
 
   /* ── existing tracker handler — untouched ─────────────────────────── */
   const handleTrackComplaint = async (e) => {
@@ -128,14 +155,7 @@ export const HomePage = () => {
     { label: 'Avg. Resolution', value: '4.2 days', icon: TrendingUp, color: 'text-blue-300' },
   ];
 
-  /* ── static notice board items (placeholder) ─────────────────────── */
-  const notices = [
-    { date: '15 Nov 2026', text: 'Online grievance submission portal updated with multi-language support.' },
-    { date: '10 Nov 2026', text: 'New SLA: Road & Pothole complaints resolved within 5 working days.' },
-    { date: '05 Nov 2026', text: 'Scheduled maintenance: Water supply disruption on 20 Nov (6–10 AM).' },
-    { date: '01 Nov 2026', text: 'Field engineers to upload geo-tagged photos for all closed complaints.' },
-    { date: '28 Oct 2026', text: 'Citizen charter revised — download the updated PDF from the helpdesk.' },
-  ];
+
 
   return (
     <div className="gov-page-bg dark:bg-slate-950 pb-8">
@@ -242,11 +262,23 @@ export const HomePage = () => {
             aria-label="Official notice board"
           >
             {/* Notice board header */}
-            <div className="bg-[#1F3A6E] dark:bg-[#1F2F4D] px-4 py-2.5 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#FF9933]" aria-hidden="true" />
-              <span className="text-xs font-bold uppercase tracking-widest text-white">
-                Notice Board
-              </span>
+            <div className="bg-[#1F3A6E] dark:bg-[#1F2F4D] px-4 py-2.5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#FF9933]" aria-hidden="true" />
+                <span className="text-xs font-bold uppercase tracking-widest text-white">
+                  Notice Board
+                </span>
+              </div>
+              {user?.role === 'ADMIN' && (
+                <Link
+                  to="/admin/notices"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#FF9933] hover:text-white bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded transition-colors"
+                  title="Manage and Edit Notices in Admin Console"
+                >
+                  <Edit className="w-3 h-3" />
+                  <span>Edit</span>
+                </Link>
+              )}
             </div>
 
             {/* Notice items */}

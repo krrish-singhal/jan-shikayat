@@ -9,7 +9,9 @@ import {
   ArrowRight,
   Building,
   User,
+  MessageSquarePlus,
 } from 'lucide-react';
+import { NoticeRequestModal } from '../../components/common/NoticeRequestModal.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
 import { StatCard } from '../../components/common/StatCard.jsx';
@@ -29,6 +31,7 @@ export const OperatorDashboard = () => {
     recentHandled: [],
   });
   const [loading, setLoading] = useState(true);
+  const [requestModalOpen, setRequestModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -67,13 +70,22 @@ export const OperatorDashboard = () => {
           </p>
         </div>
 
-        <Link
-          to="/operator/complaints"
-          className="civic-btn-primary bg-brand-600 hover:bg-brand-500 text-white font-semibold px-4 py-2.5 text-xs sm:text-sm shrink-0 shadow-lg shadow-black/20"
-        >
-          <Inbox className="w-4 h-4" />
-          <span>Open Incoming Queue ({stats.totalIncoming})</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <button
+            onClick={() => setRequestModalOpen(true)}
+            className="civic-btn-secondary border-amber-500/60 text-amber-400 hover:bg-amber-400/10 font-semibold px-4 py-2.5 text-xs sm:text-sm"
+          >
+            <MessageSquarePlus className="w-4 h-4" />
+            <span>Request Notice</span>
+          </button>
+          <Link
+            to="/operator/complaints"
+            className="civic-btn-primary bg-brand-600 hover:bg-brand-500 text-white font-semibold px-4 py-2.5 text-xs sm:text-sm shadow-lg shadow-black/20"
+          >
+            <Inbox className="w-4 h-4" />
+            <span>Open Incoming Queue ({stats.totalIncoming})</span>
+          </Link>
+        </div>
       </div>
 
       {/* Metrics Row */}
@@ -186,6 +198,8 @@ export const OperatorDashboard = () => {
           </div>
         )}
       </div>
+
+      <NoticeRequestModal isOpen={requestModalOpen} onClose={() => setRequestModalOpen(false)} />
     </div>
   );
 };
