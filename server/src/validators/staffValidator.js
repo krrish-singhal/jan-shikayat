@@ -6,6 +6,7 @@ export const createStaffSchema = z.object({
   email: z.string().trim().email('Invalid email address'),
   phone: z.string().trim().optional().or(z.literal('')),
   role: z.enum(STAFF_ROLES, { errorMap: () => ({ message: 'Invalid staff role' }) }),
+  password: z.string().min(8, 'Password must be at least 8 characters').max(72).optional(),
   departmentId: z.string().optional().nullable(),
   maxActiveCases: z.coerce.number().min(1).max(50).optional().default(5),
 }).refine((data) => {
@@ -24,4 +25,8 @@ export const updateStaffSchema = z.object({
   departmentId: z.string().optional().nullable(),
   role: z.enum(STAFF_ROLES).optional(),
   maxActiveCases: z.coerce.number().min(1).max(50).optional(),
+});
+
+export const resetStaffPasswordSchema = z.object({
+  newPassword: z.string().min(8, 'Password must be at least 8 characters').max(72).optional(),
 });
