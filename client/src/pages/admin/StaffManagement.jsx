@@ -263,7 +263,7 @@ export const StaffManagement = () => {
       setResetPassword('');
       setResetDialog({ isOpen: false, staff: null });
       setCredentialsModalOpen(true);
-      addToast('Temporary password generated', 'success');
+      addToast('Password generated', 'success');
     } catch (err) {
       addToast(err.response?.data?.error?.message || 'Failed to reset password', 'error');
     } finally {
@@ -273,7 +273,7 @@ export const StaffManagement = () => {
 
   const copyCredentials = () => {
     if (!generatedCredentials) return;
-    const text = `JanShikayat Staff Credentials:\nName: ${generatedCredentials.name}\nStaff ID: ${generatedCredentials.staffId}\nEmail: ${generatedCredentials.email}\nTemporary Password: ${generatedCredentials.temporaryPassword}\n\nPlease change your password on first login.`;
+    const text = `JanShikayat Staff Credentials:\nName: ${generatedCredentials.name}\nStaff ID: ${generatedCredentials.staffId}\nEmail: ${generatedCredentials.email}\n Password: ${generatedCredentials.temporaryPassword}\n\nPlease change your password on first login.`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -775,7 +775,7 @@ export const StaffManagement = () => {
             <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
               <strong className="block font-bold">Important Security Notice</strong>
-              The temporary password is only displayed once and cannot be recovered later. Copy and securely share it with the staff member.
+              The password is only displayed once and cannot be recovered later. Copy and securely share it with the staff member.
             </div>
           </div>
 
