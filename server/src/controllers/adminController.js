@@ -305,7 +305,7 @@ export class AdminController {
    */
   static async createStaff(req, res) {
     try {
-      const { name, email, phone, role, departmentId, maxActiveCases } = req.body;
+      const { name, email, phone, role, departmentId, maxActiveCases, password } = req.body;
 
       const existing = await User.findOne({ email: email.toLowerCase(), isDeleted: false });
       if (existing) {
@@ -321,7 +321,8 @@ export class AdminController {
 
       const staffId = await generateStaffId(role);
       // Generate secure temporary password
-      const tempPassword = `Temp@${crypto.randomBytes(4).toString('hex')}2026`;
+      const tempPassword = password || `Temp@${crypto.randomBytes(4).toString('hex')}2026`;
+
       const passwordHash = await User.hashPassword(tempPassword);
 
       const staff = await User.create({
@@ -347,8 +348,7 @@ export class AdminController {
       });
 
       const responseData = staff.toJSON();
-      // Provide temporary password ONCE upon creation as required by specification
-      responseData.temporaryPassword = tempPassword;
+      if (!password) responseData.temporaryPassword = tempPassword;  // don't echo a manual one
 
       return sendSuccess(res, responseData, 201);
     } catch (err) {
@@ -470,7 +470,8 @@ export class AdminController {
         return sendError(res, { code: 'NOT_FOUND', message: 'Staff member not found' }, 404);
       }
 
-      const tempPassword = `Reset@${crypto.randomBytes(4).toString('hex')}2026`;
+      const { newPassword } = req.body;
+      const tempPassword = newPassword || `Reset@${crypto.randomBytes(4).toString('hex')}2026`;
       staff.passwordHash = await User.hashPassword(tempPassword);
       staff.mustChangePassword = true;
       await staff.save();
@@ -488,8 +489,12 @@ export class AdminController {
       });
 
       return sendSuccess(res, {
-        temporaryPassword: tempPassword,
-        message: 'Password reset successfully. Provide the temporary password to the staff member.',
+        staffId: staff.staffId,
+        email: staff.email,
+        name: staff.name,
+        role: staff.role,
+        ...(newPassword ? {} : { temporaryPassword: tempPassword }),
+        message: 'Password reset successfully.',
       });
     } catch (err) {
       return sendError(res, { code: 'SERVER_ERROR', message: err.message }, 500);
