@@ -69,78 +69,9 @@ export const OperatorProfile = () => {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">Security &amp; Password</span>
-            <span className="text-[11px] text-slate-400 dark:text-slate-500">Update your operator account password</span>
-          </div>
-          <button
-            onClick={() => setPasswordModalOpen(true)}
-            className="civic-btn-secondary text-xs inline-flex items-center gap-1.5 self-start sm:self-auto"
-          >
-            <Lock className="w-3.5 h-3.5" />
-            <span>Change Password</span>
-          </button>
-        </div>
       </div>
 
-      {/* Change Password Modal */}
-      <Modal
-        isOpen={passwordModalOpen}
-        onClose={() => setPasswordModalOpen(false)}
-        title="Update Staff Password"
-        maxWidth="max-w-md"
-      >
-        <form onSubmit={handleChangePassword} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Current Password</label>
-            <input
-              type="password"
-              required
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="civic-input"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">New Password</label>
-            <input
-              type="password"
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Min 8 chars, uppercase, number, symbol"
-              className="civic-input"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm New Password</label>
-            <input
-              type="password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="civic-input"
-            />
-          </div>
-          <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={() => setPasswordModalOpen(false)}
-              className="civic-btn-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="civic-btn-primary"
-            >
-              {loading ? 'Saving...' : 'Update Password'}
-            </button>
-          </div>
-        </form>
-      </Modal>
+
     </div>
   );
 };
