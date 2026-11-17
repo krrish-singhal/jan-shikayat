@@ -22,13 +22,45 @@ import { ConfirmDialog } from '../../components/common/ConfirmDialog.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
 
+const PasswordOption = ({ mode, setMode, password, setPassword }) => (
+  <div className="space-y-2">
+    <label className="block font-semibold text-slate-700">Password</label>
+    <div className="flex gap-4">
+      <label className="inline-flex items-center gap-1.5">
+        <input type="radio" checked={mode === 'GENERATE'} onChange={() => setMode('GENERATE')} />
+        Auto-generate
+      </label>
+      <label className="inline-flex items-center gap-1.5">
+        <input type="radio" checked={mode === 'MANUAL'} onChange={() => setMode('MANUAL')} />
+        Set manually
+      </label>
+    </div>
+    {mode === 'MANUAL' && (
+      <input
+        type="text"
+        required
+        minLength={8}
+        autoComplete="off"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="civic-input"
+        placeholder="Min 8 characters"
+      />
+    )}
+  </div>
+);
+
+
 export const StaffManagement = () => {
   const { addToast } = useToast();
 
   const [staffList, setStaffList] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [passwordMode, setPasswordMode] = useState('GENERATE');
+  const [manualPassword, setManualPassword] = useState('');
+  const [resetMode, setResetMode] = useState('GENERATE');
+  const [resetPassword, setResetPassword] = useState('');
   // Filters & Pagination
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
@@ -115,6 +147,7 @@ export const StaffManagement = () => {
         role: formData.role,
         departmentId: formData.role !== ROLES.ADMIN ? formData.departmentId : null,
         maxActiveCases: formData.role === ROLES.ENGINEER ? Number(formData.maxActiveCases) : 5,
+        ...(passwordMode === 'MANUAL' && { password: manualPassword }),
       };
 
       const res = await api.post('/admin/staff', payload);
@@ -125,9 +158,10 @@ export const StaffManagement = () => {
         staffId: newStaff.staffId,
         email: newStaff.email,
         role: newStaff.role,
-        temporaryPassword: newStaff.temporaryPassword,
+        temporaryPassword: passwordMode === 'MANUAL' ? manualPassword : newStaff.temporaryPassword,
       });
-
+      setPasswordMode('GENERATE');
+      setManualPassword('');
       setCreateModalOpen(false);
       setCredentialsModalOpen(true);
       setFormData({
@@ -217,17 +251,16 @@ export const StaffManagement = () => {
 
     try {
       setSubmitting(true);
-      const res = await api.post(`/admin/staff/${staff._id}/reset-password`);
+      const body = resetMode === 'MANUAL' ? { newPassword: resetPassword } : {};
+      const res = await api.post(`/admin/staff/${staff._id}/reset-password`, body);
       const { temporaryPassword, staffId, email, name, role } = res.data.data;
 
       setGeneratedCredentials({
-        name,
-        staffId,
-        email,
-        role,
-        temporaryPassword,
+        name, staffId, email, role,
+        temporaryPassword: resetMode === 'MANUAL' ? resetPassword : temporaryPassword,
       });
-
+      setResetMode('GENERATE');
+      setResetPassword('');
       setResetDialog({ isOpen: false, staff: null });
       setCredentialsModalOpen(true);
       addToast('Temporary password generated', 'success');
@@ -391,13 +424,12 @@ export const StaffManagement = () => {
                     </td>
                     <td className="py-3 px-4">
                       <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
-                          staff.role === ROLES.ADMIN
-                            ? 'bg-purple-50 text-purple-700 border-purple-200'
-                            : staff.role === ROLES.ENGINEER
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded border ${staff.role === ROLES.ADMIN
+                          ? 'bg-purple-50 text-purple-700 border-purple-200'
+                          : staff.role === ROLES.ENGINEER
                             ? 'bg-amber-50 text-amber-700 border-amber-200'
                             : 'bg-blue-50 text-blue-700 border-blue-200'
-                        }`}
+                          }`}
                       >
                         {ROLE_LABELS[staff.role] || staff.role}
                       </span>
@@ -418,11 +450,10 @@ export const StaffManagement = () => {
                     </td>
                     <td className="py-3 px-4">
                       <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                          staff.isActive
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-rose-50 text-rose-700 border border-rose-200'
-                        }`}
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${staff.isActive
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          }`}
                       >
                         {staff.isActive ? 'Active' : 'Deactivated'}
                       </span>
@@ -446,11 +477,10 @@ export const StaffManagement = () => {
                         <button
                           onClick={() => setStatusDialog({ isOpen: true, staff })}
                           title={staff.isActive ? 'Deactivate' : 'Reactivate'}
-                          className={`p-1 rounded transition-colors ${
-                            staff.isActive
-                              ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
-                              : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'
-                          }`}
+                          className={`p-1 rounded transition-colors ${staff.isActive
+                            ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
+                            : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'
+                            }`}
                         >
                           <Power className="w-3.5 h-3.5" />
                         </button>
@@ -594,7 +624,7 @@ export const StaffManagement = () => {
               </p>
             </div>
           )}
-
+          <PasswordOption mode={passwordMode} setMode={setPasswordMode} password={manualPassword} setPassword={setManualPassword} />
           <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
             <button
               type="button"
@@ -814,16 +844,27 @@ export const StaffManagement = () => {
       />
 
       {/* Reset Password Confirm Dialog */}
-      <ConfirmDialog
+      <Modal
         isOpen={resetDialog.isOpen}
-        onClose={() => setResetDialog({ isOpen: false, staff: null })}
-        onConfirm={handleResetPassword}
+        onClose={() => { setResetDialog({ isOpen: false, staff: null }); setResetMode('GENERATE'); setResetPassword(''); }}
         title="Reset Official Password"
-        message={`Generate a new temporary password for ${resetDialog.staff?.name} (${resetDialog.staff?.staffId})? They will be forced to change it on their next login.`}
-        confirmText="Reset &amp; Generate"
-        type="warning"
-        loading={submitting}
-      />
+        maxWidth="max-w-md"
+      >
+        <form
+          onSubmit={(e) => { e.preventDefault(); handleResetPassword(); }}
+          className="space-y-4 text-xs"
+        >
+          <p>Reset password for {resetDialog.staff?.name} ({resetDialog.staff?.staffId})? They'll be forced to change it on next login.</p>
+          <PasswordOption mode={resetMode} setMode={setResetMode} password={resetPassword} setPassword={setResetPassword} />
+          <div className="flex justify-end gap-2 border-t border-slate-100 pt-2">
+            <button type="button" className="civic-btn-secondary text-xs"
+              onClick={() => setResetDialog({ isOpen: false, staff: null })}>Cancel</button>
+            <button type="submit" disabled={submitting} className="civic-btn-primary text-xs">
+              {submitting ? 'Resetting...' : 'Reset Password'}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };
