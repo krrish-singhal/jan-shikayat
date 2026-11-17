@@ -57,9 +57,7 @@ export const PublicLayout = () => {
             <span className="font-semibold text-[#FF9933]">
               {t('common:bharatSarkar', 'भारत सरकार')}
             </span>
-            <span className="text-slate-400">|</span>
-            <span>{t('common:govIndia', 'Government of India')}</span>
-            <span className="hidden md:inline text-slate-500">•</span>
+            <span className="hidden md:inline text-slate-400">|</span>
             <span className="hidden md:inline text-slate-300 truncate">
               {t('common:appTitle', 'Municipal Grievance Redressal Board')}
             </span>
@@ -171,10 +169,9 @@ export const PublicLayout = () => {
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `px-4 h-full inline-flex items-center text-xs font-bold uppercase tracking-wider transition-colors border-b-[3px] ${
-                    isActive
-                      ? 'text-[#FF9933] border-[#FF9933] gov-nav-active'
-                      : 'text-white/80 border-transparent hover:text-white hover:border-white/30'
+                  `px-4 h-full inline-flex items-center text-xs font-bold uppercase tracking-wider transition-colors border-b-[3px] ${isActive
+                    ? 'text-[#FF9933] border-[#FF9933] gov-nav-active'
+                    : 'text-white/80 border-transparent hover:text-white hover:border-white/30'
                   }`
                 }
               >
@@ -185,10 +182,9 @@ export const PublicLayout = () => {
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
-                  `px-4 h-full inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors border-b-[3px] ${
-                    isActive
-                      ? 'text-[#FF9933] border-[#FF9933]'
-                      : 'text-white/80 border-transparent hover:text-white hover:border-white/30'
+                  `px-4 h-full inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors border-b-[3px] ${isActive
+                    ? 'text-[#FF9933] border-[#FF9933]'
+                    : 'text-white/80 border-transparent hover:text-white hover:border-white/30'
                   }`
                 }
               >
@@ -200,10 +196,9 @@ export const PublicLayout = () => {
               <NavLink
                 to="/staff/login"
                 className={({ isActive }) =>
-                  `px-4 h-full inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors border-b-[3px] ${
-                    isActive
-                      ? 'text-[#FF9933] border-[#FF9933]'
-                      : 'text-white/80 border-transparent hover:text-white hover:border-white/30'
+                  `px-4 h-full inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-colors border-b-[3px] ${isActive
+                    ? 'text-[#FF9933] border-[#FF9933]'
+                    : 'text-white/80 border-transparent hover:text-white hover:border-white/30'
                   }`
                 }
               >
