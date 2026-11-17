@@ -5,37 +5,8 @@ import { useToast } from '../../contexts/ToastContext.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
 
 export const OperatorProfile = () => {
-  const { user, changePassword } = useAuth();
-  const { addToast } = useToast();
-
-  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      addToast('New passwords do not match', 'error');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await changePassword({ currentPassword, newPassword });
-      addToast('Password updated successfully', 'success');
-      setPasswordModalOpen(false);
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (err) {
-      addToast(err.response?.data?.error?.message || err.message, 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const { user } = useAuth();
+  
   return (
     <div className="max-w-2xl mx-auto py-4 space-y-6">
       <div>
