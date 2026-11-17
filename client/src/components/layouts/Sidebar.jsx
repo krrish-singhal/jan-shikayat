@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import api from '../../services/api.js';
 import {
   LayoutDashboard,
   PlusCircle,
@@ -14,6 +15,7 @@ import {
   Users,
   Building2,
   ShieldAlert,
+  BellRing,
   ClipboardList,
   Shield,
   X,
@@ -24,6 +26,19 @@ import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
 export const Sidebar = ({ isOpen, onClose }) => {
   const { t } = useTranslation(['common', 'operator', 'engineer', 'admin']);
   const { user, logout } = useAuth();
+  const [pendingNoticeRequests, setPendingNoticeRequests] = useState(0);
+
+  useEffect(() => {
+    if (user?.role === ROLES.ADMIN) {
+      api
+        .get('/notice-requests/admin/count')
+        .then((res) => {
+          setPendingNoticeRequests(res.data?.data?.count || 0);
+        })
+        .catch(() => { });
+    }
+  }, [user?.role]);
+
   if (!user) return null;
 
   let links = [];
@@ -54,6 +69,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
       { to: '/admin/dashboard', label: t('admin:dashboardTitle', 'Analytics Console'), icon: LayoutDashboard },
       { to: '/admin/staff', label: t('admin:staffGovernance', 'Staff Governance'), icon: Users },
       { to: '/admin/departments', label: t('admin:departmentsTitle', 'Departments'), icon: Building2 },
+      { to: '/admin/notices', label: 'Notice Board', icon: BellRing, badge: pendingNoticeRequests },
       { to: '/admin/complaints', label: t('admin:allCasesTitle', 'All Municipal Cases'), icon: ClipboardList },
       { to: '/admin/citizens', label: t('admin:citizenRegistryTitle', 'Citizen Registry'), icon: User },
       { to: '/admin/audit', label: t('admin:auditLogsTitle', 'Security Audit Trail'), icon: ShieldAlert },
@@ -73,9 +89,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Official Government Aside Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] lg:translate-x-0 ${
-          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] lg:translate-x-0 ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+          }`}
       >
         <div className="flex flex-col h-full overflow-y-auto">
           {/* Header Brand */}
@@ -136,15 +151,19 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   end
                   onClick={() => onClose && onClose()}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold tracking-wide transition-all ${
-                      isActive
-                        ? 'bg-[#0f3b68] text-amber-300 border-l-4 border-amber-400 shadow-sm'
-                        : 'text-slate-300 hover:text-white hover:bg-[#0f3459]'
+                    `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold tracking-wide transition-all ${isActive
+                      ? 'bg-[#0f3b68] text-amber-300 border-l-4 border-amber-400 shadow-sm'
+                      : 'text-slate-300 hover:text-white hover:bg-[#0f3459]'
                     }`
                   }
                 >
                   <Icon className="w-4 h-4 shrink-0" />
-                  <span>{link.label}</span>
+                  <span className="flex-1 truncate">{link.label}</span>
+                  {link.badge > 0 && (
+                    <span className="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black shrink-0">
+                      {link.badge}
+                    </span>
+                  )}
                 </NavLink>
               );
             })}
