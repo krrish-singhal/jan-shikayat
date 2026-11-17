@@ -8,3 +8,5 @@ export { RefreshToken } from './RefreshToken.js';
 export { PasswordReset } from './PasswordReset.js';
 export { Counter } from './Counter.js';
 export { TranslationCache } from './TranslationCache.js';
+export { Notice } from './Notice.js';
+export { NoticeRequest } from './NoticeRequest.js';

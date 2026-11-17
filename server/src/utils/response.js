@@ -1,5 +1,7 @@
-export function sendSuccess(res, data = {}, statusCode = 200) {
-  return res.status(statusCode).json({
+export function sendSuccess(res, data = {}, messageOrStatusCode = 200, statusCode) {
+  // Support both: sendSuccess(res, data, 200) and sendSuccess(res, data, 'msg', 201)
+  const code = typeof messageOrStatusCode === 'number' ? messageOrStatusCode : (statusCode || 200);
+  return res.status(code).json({
     success: true,
     data,
   });

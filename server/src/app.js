@@ -12,6 +12,8 @@ import operatorRoutes from './routes/operatorRoutes.js';
 import engineerRoutes from './routes/engineerRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import translationRoutes from './routes/translationRoutes.js';
+import noticeRoutes from './routes/noticeRoutes.js';
+import noticeRequestRoutes from './routes/noticeRequestRoutes.js';
 import { sendError } from './utils/response.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -82,6 +84,8 @@ app.use('/api/v1/operator', operatorRoutes);
 app.use('/api/v1/engineer', engineerRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1', translationRoutes);
+app.use('/api/v1/notices', noticeRoutes);
+app.use('/api/v1/notice-requests', noticeRequestRoutes);
 
 // Root welcome endpoint
 app.get('/', (req, res) => {
