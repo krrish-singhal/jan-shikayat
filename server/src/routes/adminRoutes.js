@@ -3,7 +3,7 @@ import { AdminController } from '../controllers/adminController.js';
 import { authenticate, requireActiveAccount, authorizeRoles } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { ROLES } from '../constants/roles.js';
-import { createStaffSchema, updateStaffSchema } from '../validators/staffValidator.js';
+import { createStaffSchema, resetStaffPasswordSchema, updateStaffSchema } from '../validators/staffValidator.js';
 import { createDepartmentSchema, updateDepartmentSchema } from '../validators/departmentValidator.js';
 import { adminOverrideSchema, adminReassignSchema } from '../validators/complaintValidator.js';
 
@@ -21,7 +21,7 @@ router.get('/staff/:id', AdminController.getStaffDetail);
 router.post('/staff', validate(createStaffSchema), AdminController.createStaff);
 router.patch('/staff/:id', validate(updateStaffSchema), AdminController.updateStaff);
 router.patch('/staff/:id/status', AdminController.toggleStaffStatus);
-router.post('/staff/:id/reset-password', AdminController.resetStaffPassword);
+router.post('/staff/:id/reset-password', validate(resetStaffPasswordSchema), AdminController.resetStaffPassword);
 
 // 7.3 Department Management
 router.get('/departments', AdminController.getDepartments);
