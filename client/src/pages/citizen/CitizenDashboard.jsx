@@ -278,6 +278,8 @@ export const CitizenDashboard = () => {
                     <img
                       src={getImageUrl(complaint.imageUrl)}
                       alt="Thumbnail"
+                      loading="lazy"
+                      decoding="async"
                       className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100 dark:bg-slate-800"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
