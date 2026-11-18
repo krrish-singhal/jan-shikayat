@@ -218,7 +218,7 @@ export const RegisterComplaint = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-4">
+    <div className="w-full max-w-3xl mx-auto py-4 px-2 sm:px-0">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
           {t('citizen:newComplaintTitle', 'Register New Grievance')}

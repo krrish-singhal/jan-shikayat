@@ -75,7 +75,7 @@ export const CitizenProfile = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-4 space-y-6">
+    <div className="w-full max-w-2xl mx-auto py-4 px-2 sm:px-0 space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">{t('citizen:profileManagementTitle', 'Citizen Profile Management')}</h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('citizen:profileManagementSubtitle', 'Manage your personal contact details, security credentials, and account settings')}</p>
