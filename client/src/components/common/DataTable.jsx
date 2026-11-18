@@ -97,8 +97,8 @@ export const DataTable = ({
 
       {/* Pagination Footer */}
       {totalPages > 1 && onPageChange && (
-        <div className="px-4 py-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500 dark:text-slate-400">
-          <div>
+        <div className="px-4 py-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-center sm:text-left">
             {t('showingPagination', {
               page: formatNumber(page, i18n.language),
               totalPages: formatNumber(totalPages, i18n.language),
@@ -106,7 +106,7 @@ export const DataTable = ({
               defaultValue: `Showing page ${page} of ${totalPages} (${total} total results)`,
             })}
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-center sm:justify-end gap-1.5 w-full sm:w-auto">
             <button
               onClick={() => onPageChange(page - 1)}
               disabled={page <= 1 || loading}
