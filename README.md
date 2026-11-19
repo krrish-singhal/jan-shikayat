@@ -23,8 +23,8 @@
   - Publish public notices and approve staff announcement requests.
   - Immutable audit trail logging for all administrative actions and status overrides.
 ### AI-Powered Multilingual Redressal (AI4Bharat IndicTrans2)
-- Supports **12 Indian Languages + English**:
-  - Hindi (`hi`), Marathi (`mr`), Bengali (`bn`), Punjabi (`pa`), Gujarati (`gu`), Tamil (`ta`), Telugu (`te`), Kannada (`kn`), Malayalam (`ml`), Odia (`or`), Assamese (`as`), and English (`en`).
+- Supports **2 Indian Languages + English**:
+  - Hindi (`hi`) and English (`en`).
 - **Dynamic Translation & Language Detection:** Complaint descriptions, operator notes, field verification remarks, and resolution notes are translated dynamically using an AI4Bharat IndicTrans2 microservice.
 - **Smart Translation Caching:** MongoDB-backed cache minimizes compute overhead and latency.
 - **Graceful Degradation:** If the microservice is offline, the core application continues uninterrupted using the original text.
