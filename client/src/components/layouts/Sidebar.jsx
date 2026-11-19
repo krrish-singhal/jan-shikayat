@@ -82,14 +82,14 @@ export const Sidebar = ({ isOpen, onClose }) => {
       {/* Mobile Backdrop Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm lg:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm transition-opacity"
           onClick={onClose}
         />
       )}
 
       {/* Official Government Aside Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] lg:translate-x-0 ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
           }`}
       >
         <div className="flex flex-col h-full overflow-y-auto">
@@ -109,10 +109,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Mobile close button */}
+            {/* Close button — always visible */}
             <button
               onClick={onClose}
-              className="lg:hidden p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-800"
+              className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-800"
             >
               <X className="w-4 h-4" />
             </button>

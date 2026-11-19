@@ -78,7 +78,7 @@ export const Navbar = ({ onOpenSidebar }) => {
         <div className="flex items-center gap-3">
           <button
             onClick={onOpenSidebar}
-            className="p-2 rounded-md text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden border border-slate-200 dark:border-slate-700"
+            className="p-2 rounded-md text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
             aria-label="Open Municipal Menu"
           >
             <Menu className="w-5 h-5" />
