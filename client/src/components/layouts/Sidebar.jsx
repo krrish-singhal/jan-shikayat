@@ -143,7 +143,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Official Government Aside Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-75 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${
+        className={`fixed top-0 left-0 z-50 h-screen w-90 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${
           isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
         }`}
       >
