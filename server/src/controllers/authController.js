@@ -55,6 +55,7 @@ export class AuthController {
         {
           user: user.toJSON(),
           accessToken,
+          refreshToken: rawRefreshToken,
         },
         201
       );
@@ -101,6 +102,7 @@ export class AuthController {
       return sendSuccess(res, {
         user: user.toJSON(),
         accessToken,
+        refreshToken: rawRefreshToken,
       });
     } catch (err) {
       return sendError(res, { code: 'LOGIN_ERROR', message: err.message }, 500);
@@ -161,6 +163,7 @@ export class AuthController {
       return sendSuccess(res, {
         user: user.toJSON(),
         accessToken,
+        refreshToken: rawRefreshToken,
         mustChangePassword: user.mustChangePassword,
       });
     } catch (err) {
@@ -224,6 +227,7 @@ export class AuthController {
 
       return sendSuccess(res, {
         accessToken,
+        refreshToken: newRawToken,
         user: user.toJSON(),
       });
     } catch (err) {
@@ -236,7 +240,7 @@ export class AuthController {
    */
   static async logout(req, res) {
     try {
-      const rawToken = req.cookies?.refreshToken;
+      const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
       if (rawToken) {
         const tokenHash = hashToken(rawToken);
         await RefreshToken.updateOne({ tokenHash }, { $set: { revokedAt: new Date() } });
@@ -586,7 +590,7 @@ export class AuthController {
 
       setRefreshTokenCookie(res, rawRefreshToken);
 
-      return res.redirect(`${clientUrl}/auth/callback?token=${accessToken}`);
+      return res.redirect(`${clientUrl}/auth/callback?token=${accessToken}&refreshToken=${rawRefreshToken}`);
     } catch (err) {
       console.error('[Google OAuth Callback Exception]', err);
       return res.redirect(`${clientUrl}/auth/callback?error=${encodeURIComponent(err.message)}`);
@@ -682,6 +686,7 @@ export class AuthController {
       return sendSuccess(res, {
         user: user.toJSON(),
         accessToken,
+        refreshToken: rawRefreshToken,
       });
     } catch (err) {
       return sendError(res, { code: 'EXCHANGE_ERROR', message: err.message }, 500);
@@ -769,6 +774,7 @@ export class AuthController {
       return sendSuccess(res, {
         user: user.toJSON(),
         accessToken: jwtAccessToken,
+        refreshToken: rawRefreshToken,
       });
     } catch (err) {
       return sendError(res, { code: 'GOOGLE_AUTH_ERROR', message: err.message }, 500);

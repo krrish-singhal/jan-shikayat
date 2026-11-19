@@ -137,12 +137,22 @@ export const StaffManagement = () => {
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
+    if (/[0-9]/.test(formData.name)) {
+      addToast('Numbers are not allowed in name', 'error');
+      return;
+    }
+    const cleanPhone = formData.phone ? formData.phone.replace(/\D/g, '') : '';
+    if (cleanPhone && cleanPhone.length !== 10) {
+      addToast('Phone number must be exactly 10 digits', 'error');
+      return;
+    }
+
     try {
       setSubmitting(true);
       const payload = {
-        name: formData.name,
+        name: formData.name.trim(),
         email: formData.email,
-        phone: formData.phone,
+        phone: cleanPhone,
         role: formData.role,
         departmentId: formData.role !== ROLES.ADMIN ? formData.departmentId : null,
         maxActiveCases: formData.role === ROLES.ENGINEER ? Number(formData.maxActiveCases) : 5,
@@ -195,11 +205,21 @@ export const StaffManagement = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    if (/[0-9]/.test(formData.name)) {
+      addToast('Numbers are not allowed in name', 'error');
+      return;
+    }
+    const cleanPhone = formData.phone ? formData.phone.replace(/\D/g, '') : '';
+    if (cleanPhone && cleanPhone.length !== 10) {
+      addToast('Phone number must be exactly 10 digits', 'error');
+      return;
+    }
+
     try {
       setSubmitting(true);
       const payload = {
-        name: formData.name,
-        phone: formData.phone,
+        name: formData.name.trim(),
+        phone: cleanPhone,
         role: formData.role,
         departmentId: formData.role !== ROLES.ADMIN ? formData.departmentId : null,
         maxActiveCases: formData.role === ROLES.ENGINEER ? Number(formData.maxActiveCases) : 5,
@@ -551,7 +571,7 @@ export const StaffManagement = () => {
               type="text"
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value.replace(/[0-9]/g, '') })}
               className="civic-input"
               placeholder="e.g. Ramesh Kumar"
             />
@@ -573,10 +593,12 @@ export const StaffManagement = () => {
               <label className="block font-semibold text-slate-700 mb-1">Phone Number</label>
               <input
                 type="tel"
+                inputMode="numeric"
+                maxLength={10}
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                 className="civic-input"
-                placeholder="+91 9876543210"
+                placeholder="9876543210"
               />
             </div>
           </div>
@@ -679,7 +701,7 @@ export const StaffManagement = () => {
               type="text"
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value.replace(/[0-9]/g, '') })}
               className="civic-input"
             />
           </div>
@@ -698,9 +720,12 @@ export const StaffManagement = () => {
               <label className="block font-semibold text-slate-700 mb-1">Phone Number</label>
               <input
                 type="tel"
+                inputMode="numeric"
+                maxLength={10}
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                 className="civic-input"
+                placeholder="9876543210"
               />
             </div>
           </div>

@@ -2,9 +2,21 @@ import { z } from 'zod';
 import { STAFF_ROLES, ROLES } from '../constants/roles.js';
 
 export const createStaffSchema = z.object({
-  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100)
+    .regex(/^[^0-9]*$/, 'Numbers are not allowed in name'),
   email: z.string().trim().email('Invalid email address'),
-  phone: z.string().trim().optional().or(z.literal('')),
+  phone: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(''))
+    .refine((val) => !val || /^\+?\d{10,13}$/.test(val), {
+      message: 'Phone number must contain only numbers (10 digits)',
+    }),
   role: z.enum(STAFF_ROLES, { errorMap: () => ({ message: 'Invalid staff role' }) }),
   password: z.string().min(8, 'Password must be at least 8 characters').max(72).optional(),
   departmentId: z.string().optional().nullable(),
@@ -20,8 +32,21 @@ export const createStaffSchema = z.object({
 });
 
 export const updateStaffSchema = z.object({
-  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100).optional(),
-  phone: z.string().trim().optional(),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100)
+    .regex(/^[^0-9]*$/, 'Numbers are not allowed in name')
+    .optional(),
+  phone: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(''))
+    .refine((val) => !val || /^\+?\d{10,13}$/.test(val), {
+      message: 'Phone number must contain only numbers (10 digits)',
+    }),
   departmentId: z.string().optional().nullable(),
   role: z.enum(STAFF_ROLES).optional(),
   maxActiveCases: z.coerce.number().min(1).max(50).optional(),

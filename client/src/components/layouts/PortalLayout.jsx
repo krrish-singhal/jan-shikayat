@@ -10,7 +10,12 @@ import { useToast } from '../../contexts/ToastContext.jsx';
 
 export const PortalLayout = () => {
   const { t } = useTranslation(['common', 'auth']);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return true;
+  });
   const { user, changePassword } = useAuth();
   const { addToast } = useToast();
 
@@ -45,8 +50,8 @@ export const PortalLayout = () => {
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main Content Area — no left padding; sidebar is an animated drawer overlay */}
-      <div className="flex-1 flex flex-col min-w-0">
+      {/* Main Content Area — shifts when sidebar is open on desktop */}
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-72' : 'lg:pl-0'}`}>
         <Navbar
           sidebarOpen={sidebarOpen}
           onToggleSidebar={() => setSidebarOpen((prev) => !prev)}

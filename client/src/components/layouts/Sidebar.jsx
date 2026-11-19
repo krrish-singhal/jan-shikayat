@@ -132,10 +132,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Backdrop Overlay (closes when clicked outside) */}
+      {/* Backdrop Overlay (closes when clicked outside on mobile) */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-300"
+          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-300 lg:hidden"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -143,7 +143,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Official Government Aside Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-90 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${
+        className={`fixed top-0 left-0 z-50 h-screen w-72 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${
           isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
         }`}
       >
@@ -154,7 +154,11 @@ export const Sidebar = ({ isOpen, onClose }) => {
             {/* Clickable Brand / Homepage Navigation */}
             <NavLink
               to="/"
-              onClick={() => onClose && onClose()}
+              onClick={() => {
+                if (typeof window !== 'undefined' && window.innerWidth < 1024 && onClose) {
+                  onClose();
+                }
+              }}
               className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
             >
               <div className="w-8 h-8 rounded-full border border-amber-400/60 overflow-hidden shadow shrink-0">
@@ -227,7 +231,11 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   key={link.to}
                   to={link.to}
                   end
-                  onClick={() => onClose && onClose()}
+                  onClick={() => {
+                    if (typeof window !== 'undefined' && window.innerWidth < 1024 && onClose) {
+                      onClose();
+                    }
+                  }}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold tracking-wide transition-all ${
                       isActive

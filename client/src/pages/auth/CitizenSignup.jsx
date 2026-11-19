@@ -13,9 +13,20 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d
 
 const signupSchema = z
   .object({
-    name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100),
+    name: z
+      .string()
+      .trim()
+      .min(2, 'Name must be at least 2 characters')
+      .max(100)
+      .regex(/^[^0-9]*$/, 'Numbers are not allowed in name'),
     email: z.string().trim().email('Please enter a valid email address'),
-    phone: z.string().trim().optional(),
+    phone: z
+      .string()
+      .trim()
+      .optional()
+      .refine((val) => !val || /^\d{10}$/.test(val), {
+        message: 'Phone number must be exactly 10 digits without letters or symbols',
+      }),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters')
@@ -273,6 +284,9 @@ export const CitizenSignup = () => {
               <input
                 type="text"
                 {...register('name')}
+                onInput={(e) => {
+                  e.target.value = e.target.value.replace(/[0-9]/g, '');
+                }}
                 placeholder="Aarav Patel"
                 className="civic-input pl-10"
               />
@@ -314,8 +328,13 @@ export const CitizenSignup = () => {
               <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="tel"
+                inputMode="numeric"
+                maxLength={10}
                 {...register('phone')}
-                placeholder="+91 9876543210"
+                onInput={(e) => {
+                  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                }}
+                placeholder="9876543210"
                 className="civic-input pl-10"
               />
             </div>

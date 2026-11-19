@@ -1,44 +1,61 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-// Animated counter hook — counts up from 0 to target value over ~700ms
-function useCountUp(target, duration = 700) {
-  const [display, setDisplay] = useState(null);
+// Animated dialer counter hook — counts up smoothly from 0 (or previous value) to target
+function useCountUp(target, duration = 1000) {
+  const numericTarget = typeof target === 'string'
+    ? Number(target.replace(/[^0-9.]/g, ''))
+    : Number(target);
+
+  const isValidNumber = isFinite(numericTarget) && target !== '—' && target !== null && target !== undefined;
+
+  const prevValueRef = useRef(0);
+  const [displayValue, setDisplayValue] = useState(() => (isValidNumber ? 0 : target));
   const rafRef = useRef(null);
   const startTimeRef = useRef(null);
 
   useEffect(() => {
-    // Only animate numeric-looking values (e.g. '42', '1,234')
-    const numeric = typeof target === 'string'
-      ? Number(target.replace(/[^0-9.]/g, ''))
-      : Number(target);
-
-    if (!isFinite(numeric) || target === '—') {
-      setDisplay(target);
+    if (!isValidNumber) {
+      setDisplayValue(target);
       return;
     }
 
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    const startVal = prevValueRef.current;
+    const endVal = numericTarget;
+
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
     startTimeRef.current = null;
 
     const step = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic
+      // Smooth ease-out cubic for realistic meter / dialer increment
       const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(eased * numeric);
-      // Re-apply the same non-numeric formatting as original
-      setDisplay(typeof target === 'string'
-        ? target.replace(/[0-9,]+/, current.toLocaleString())
-        : current);
-      if (progress < 1) rafRef.current = requestAnimationFrame(step);
+      const current = Math.round(startVal + (endVal - startVal) * eased);
+
+      setDisplayValue(
+        typeof target === 'string'
+          ? target.replace(/[0-9,]+/, current.toLocaleString())
+          : current
+      );
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(step);
+      } else {
+        prevValueRef.current = endVal;
+      }
     };
 
     rafRef.current = requestAnimationFrame(step);
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [target, duration]);
 
-  return display ?? target;
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [numericTarget, duration, isValidNumber, target]);
+
+  return isValidNumber ? displayValue : target;
 }
 
 export const StatCard = ({
@@ -90,7 +107,9 @@ export const StatCard = ({
       <div className="flex items-start justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">{title}</p>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight tabular-nums">{animatedValue}</h3>
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight tabular-nums transition-all">
+            {animatedValue}
+          </h3>
           {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{subtitle}</p>}
         </div>
         {Icon && (
