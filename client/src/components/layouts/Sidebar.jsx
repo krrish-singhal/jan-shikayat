@@ -17,7 +17,6 @@ import {
   ShieldAlert,
   BellRing,
   ClipboardList,
-  ChevronLeft,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
@@ -149,13 +148,13 @@ export const Sidebar = ({ isOpen, onClose }) => {
       >
         <div className="flex flex-col h-full overflow-y-auto">
 
-          {/* Header Brand & Close Button */}
-          <div className="h-16 flex items-center justify-between px-3.5 bg-[#061c33] border-b border-[#082543]">
+          {/* Header Brand */}
+          <div className="h-16 flex items-center px-4 bg-[#061c33] border-b border-[#082543]">
             {/* Clickable Brand / Homepage Navigation */}
             <NavLink
               to="/"
               onClick={() => onClose && onClose()}
-              className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity"
             >
               <div className="w-8 h-8 rounded-full border border-amber-400/60 overflow-hidden shadow shrink-0">
                 <img src="/logo.png" alt="JanShikayat Logo" className="w-full h-full object-cover" />
@@ -170,19 +169,6 @@ export const Sidebar = ({ isOpen, onClose }) => {
                 </span>
               </div>
             </NavLink>
-
-            {/* Close Sidebar Button */}
-            <button
-              onClick={onClose}
-              className="px-2 py-1.5 rounded-lg text-slate-300 hover:text-white bg-[#0f3459]/70 hover:bg-[#0f3b68] border border-[#14426f] flex items-center gap-1 transition-all duration-200 active:scale-95 shadow-sm group shrink-0"
-              aria-label={t('common:closeSidebar', 'Close Sidebar')}
-              title={t('common:closeSidebar', 'Close Sidebar')}
-            >
-              <ChevronLeft className="w-4 h-4 text-amber-300 group-hover:-translate-x-0.5 transition-transform duration-200" />
-              <span className="text-[11px] font-semibold text-slate-200 group-hover:text-white">
-                {t('common:close', 'Close')}
-              </span>
-            </button>
           </div>
 
           {/* User Government Official Identity Card */}
