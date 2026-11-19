@@ -246,30 +246,49 @@ export const StaffManagement = () => {
   };
 
   const handleResetPassword = async () => {
-    const staff = resetDialog.staff;
-    if (!staff) return;
+  const staff = resetDialog.staff;
+  if (!staff) return;
 
-    try {
-      setSubmitting(true);
-      const body = resetMode === 'MANUAL' ? { newPassword: resetPassword } : {};
-      const res = await api.post(`/admin/staff/${staff._id}/reset-password`, body);
-      const { temporaryPassword, staffId, email, name, role } = res.data.data;
+  try {
+    setSubmitting(true);
 
-      setGeneratedCredentials({
-        name, staffId, email, role,
-        temporaryPassword: resetMode === 'MANUAL' ? resetPassword : temporaryPassword,
-      });
-      setResetMode('GENERATE');
-      setResetPassword('');
-      setResetDialog({ isOpen: false, staff: null });
-      setCredentialsModalOpen(true);
-      addToast('Password generated', 'success');
-    } catch (err) {
-      addToast(err.response?.data?.error?.message || 'Failed to reset password', 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    const body = resetMode === 'MANUAL'
+      ? { newPassword: resetPassword }
+      : {};
+
+    const res = await api.post(
+      `/admin/staff/${staff._id}/reset-password`,
+      body
+    );
+
+    const { temporaryPassword, staffId, email, name, role } = res.data.data;
+
+    setGeneratedCredentials({
+      name,
+      staffId,
+      email,
+      role,
+      temporaryPassword: resetMode === 'MANUAL'
+        ? resetPassword
+        : temporaryPassword,
+    });
+
+    setResetMode('GENERATE');
+    setResetPassword('');
+    setResetDialog({ isOpen: false, staff: null });
+    setCredentialsModalOpen(true);
+
+    addToast('Password reset successfully', 'success');
+
+  } catch (err) {
+    addToast(
+      err.response?.data?.error?.message || 'Failed to reset password',
+      'error'
+    );
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const copyCredentials = () => {
     if (!generatedCredentials) return;
