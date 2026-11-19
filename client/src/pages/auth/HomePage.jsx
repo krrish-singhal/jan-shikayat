@@ -282,25 +282,15 @@ export const HomePage = () => {
               )}
             </div>
 
-            {/* Notice items */}
-            <ul className="flex-1 divide-y divide-[#CFD6E4] dark:divide-slate-700 overflow-y-auto max-h-72 lg:max-h-none">
-              {notices.map((n, i) => (
-                <li key={n.id || i} className="px-4 py-2.5 hover:bg-[#F4F6FB] dark:hover:bg-slate-800 transition-colors">
-                  <span className="text-[10px] text-[#FF9933] font-semibold block mb-0.5">{n.date}</span>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">{n.text}</p>
-                </li>
-              ))}
-            </ul>
-
-            {/* Footer link */}
-            <div className="border-t border-[#CFD6E4] dark:border-slate-700 px-4 py-2">
-              <a
-                href="#"
-                className="text-xs text-[#1F3A6E] dark:text-blue-400 font-semibold hover:underline flex items-center gap-1"
-              >
-                View all notices <ArrowRight className="w-3 h-3" aria-hidden="true" />
-              </a>
-            </div>
+              {/* Notice items — scrollable, fills remaining height */}
+              <ul className="flex-1 divide-y divide-[#CFD6E4] dark:divide-slate-700 overflow-y-auto">
+                {notices.map((n, i) => (
+                  <li key={n.id || i} className="px-4 py-2.5 hover:bg-[#F4F6FB] dark:hover:bg-slate-800 transition-colors">
+                    <span className="text-[10px] text-[#FF9933] font-semibold block mb-0.5">{n.date}</span>
+                    <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">{n.text}</p>
+                  </li>
+                ))}
+              </ul>
           </aside>
         </div>
       </div>
