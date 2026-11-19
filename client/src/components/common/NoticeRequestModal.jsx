@@ -56,7 +56,6 @@ export const NoticeRequestModal = ({ isOpen, onClose }) => {
       await api.post('/notice-requests', { title: title.trim(), reason: reason.trim(), category });
       addToast('Notice request submitted! Admin will review shortly.', 'success');
       onClose();
-      fetchMyRequests();
     } catch (err) {
       addToast(err.response?.data?.error?.message || 'Failed to submit request', 'error');
     } finally {
