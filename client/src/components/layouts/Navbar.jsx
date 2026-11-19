@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, Bell, User, LogOut, CheckCheck, Shield, ChevronDown, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
+import { Menu, Bell, User, LogOut, CheckCheck, Shield, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { LanguageSwitcher } from '../common/LanguageSwitcher.jsx';
@@ -74,22 +74,15 @@ export const Navbar = ({ onOpenSidebar, sidebarOpen = false, onToggleSidebar }) 
       <div className="gov-tricolor-strip w-full" />
 
       <div className="h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
-        {/* Mobile Menu & Government Header Title */}
+        {/* Menu & Government Header Title */}
         <div className="flex items-center gap-3">
           <button
             onClick={onToggleSidebar || onOpenSidebar}
-            className="p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition-all duration-200 active:scale-95 shadow-2xs group"
-            aria-label={sidebarOpen ? t('closeSidebar', 'Close Sidebar') : t('openSidebar', 'Open Sidebar')}
-            title={sidebarOpen ? t('closeSidebar', 'Close Sidebar') : t('openSidebar', 'Open Sidebar')}
+            className="p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center transition-all duration-200 active:scale-95 shadow-2xs"
+            aria-label="Toggle Navigation Menu"
+            title="Toggle Navigation Menu"
           >
-            {sidebarOpen ? (
-              <PanelLeftClose className="w-5 h-5 text-[#0f3b68] dark:text-blue-400 group-hover:-translate-x-0.5 transition-transform" />
-            ) : (
-              <PanelLeftOpen className="w-5 h-5 text-[#0f3b68] dark:text-blue-400 group-hover:translate-x-0.5 transition-transform" />
-            )}
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 hidden sm:inline">
-              {sidebarOpen ? t('close', 'Close') : t('menu', 'Menu')}
-            </span>
+            <Menu className="w-5 h-5" />
           </button>
 
           <div className="flex items-center gap-2">
