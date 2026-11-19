@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,6 @@ import {
   BellRing,
   ClipboardList,
   Shield,
-  X,
   ChevronLeft,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
@@ -36,7 +36,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
         .then((res) => {
           setPendingNoticeRequests(res.data?.data?.count || 0);
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }, [user?.role]);
 
@@ -46,6 +46,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
         onClose();
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
@@ -106,12 +107,20 @@ export const Sidebar = ({ isOpen, onClose }) => {
         }`}
       >
         <div className="flex flex-col h-full overflow-y-auto">
-          {/* Header Brand & Close Sign */}
+
+          {/* Header Brand & Close Button */}
           <div className="h-16 flex items-center justify-between px-3.5 bg-[#061c33] border-b border-[#082543]">
-            <div className="flex items-center gap-2 min-w-0">
+
+            {/* Clickable Brand / Homepage Navigation */}
+            <NavLink
+              to="/"
+              onClick={() => onClose && onClose()}
+              className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
+            >
               <div className="w-8 h-8 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-serif font-black shadow shrink-0">
                 <Shield className="w-4 h-4 text-slate-950" />
               </div>
+
               <div className="truncate">
                 <span className="font-bold text-sm tracking-wide text-white leading-tight font-serif block truncate">
                   जन शिकायत
@@ -120,9 +129,9 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   JanShikayat Portal
                 </span>
               </div>
-            </div>
+            </NavLink>
 
-            {/* Prominent Close Sidebar Button / Sign with smooth hover & closing animation */}
+            {/* Close Sidebar Button */}
             <button
               onClick={onClose}
               className="px-2 py-1.5 rounded-lg text-slate-300 hover:text-white bg-[#0f3459]/70 hover:bg-[#0f3b68] border border-[#14426f] flex items-center gap-1 transition-all duration-200 active:scale-95 shadow-sm group shrink-0"
@@ -138,30 +147,41 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
           {/* User Government Official Identity Card */}
           <div className="p-3.5 mx-3 my-3 bg-[#0f3459] rounded-lg border border-[#14426f]">
-            <div className="text-[11px] text-slate-300 font-medium">{t('common:loggedInUser', 'Logged in User')}</div>
-            <div className="text-sm font-bold text-white truncate font-sans">{user.name}</div>
+            <div className="text-[11px] text-slate-300 font-medium">
+              {t('common:loggedInUser', 'Logged in User')}
+            </div>
+
+            <div className="text-sm font-bold text-white truncate font-sans">
+              {user.name}
+            </div>
+
             <div className="mt-1 flex items-center gap-1.5 flex-wrap">
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase tracking-wide">
                 {t(`common:roles.${user.role}`, ROLE_LABELS[user.role] || user.role)}
               </span>
+
               {user.staffId && (
                 <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0a2540] text-slate-200 border border-slate-700">
                   {user.staffId}
                 </span>
               )}
             </div>
+
             {user.departmentId?.name && (
               <div className="mt-2 pt-2 border-t border-[#14426f] text-[11px] text-slate-300 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                <span className="truncate">{t(`common:departments.${user.departmentId.name}`, user.departmentId.name)}</span>
+                <span className="truncate">
+                  {t(`common:departments.${user.departmentId.name}`, user.departmentId.name)}
+                </span>
               </div>
             )}
           </div>
 
-          {/* Navigation Links with Inter Font & Official States */}
+          {/* Navigation Links */}
           <nav className="px-3 py-1 space-y-1 flex-1">
             {links.map((link) => {
               const Icon = link.icon;
+
               return (
                 <NavLink
                   key={link.to}
@@ -169,14 +189,19 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   end
                   onClick={() => onClose && onClose()}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold tracking-wide transition-all ${isActive
-                      ? 'bg-[#0f3b68] text-amber-300 border-l-4 border-amber-400 shadow-sm'
-                      : 'text-slate-300 hover:text-white hover:bg-[#0f3459]'
+                    `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold tracking-wide transition-all ${
+                      isActive
+                        ? 'bg-[#0f3b68] text-amber-300 border-l-4 border-amber-400 shadow-sm'
+                        : 'text-slate-300 hover:text-white hover:bg-[#0f3459]'
                     }`
                   }
                 >
                   <Icon className="w-4 h-4 shrink-0" />
-                  <span className="flex-1 truncate">{link.label}</span>
+
+                  <span className="flex-1 truncate">
+                    {link.label}
+                  </span>
+
                   {link.badge > 0 && (
                     <span className="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black shrink-0">
                       {link.badge}
@@ -197,6 +222,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
               <span>{t('common:signOutAuthority', 'Sign Out')}</span>
             </button>
           </div>
+
         </div>
       </aside>
     </>
