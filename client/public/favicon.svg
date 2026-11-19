@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Navy circle background -->
+  <circle cx="32" cy="32" r="30" fill="#1F3A6E"/>
+  <!-- Orange circle border -->
+  <circle cx="32" cy="32" r="29" fill="none" stroke="#FF9933" stroke-width="3"/>
+  <!-- Orange shield icon (matching lucide Shield) -->
+  <path d="M32 14 L46 20 L46 33 C46 41 40 47 32 50 C24 47 18 41 18 33 L18 20 Z"
+        fill="none" stroke="#FF9933" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

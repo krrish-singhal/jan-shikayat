@@ -17,7 +17,6 @@ import {
   ShieldAlert,
   BellRing,
   ClipboardList,
-  Shield,
   X,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
@@ -96,8 +95,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
           {/* Header Brand */}
           <div className="h-16 flex items-center justify-between px-5 bg-[#061c33] border-b border-[#082543]">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center font-serif font-black shadow">
-                <Shield className="w-4 h-4 text-slate-950" />
+              <div className="w-8 h-8 rounded-full border border-amber-400/60 overflow-hidden shadow shrink-0">
+                <img src="/logo.png" alt="JanShikayat Logo" className="w-full h-full object-cover" />
               </div>
               <div>
                 <span className="font-bold text-sm tracking-wide text-white leading-tight font-serif block">

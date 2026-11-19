@@ -111,10 +111,10 @@ export const PublicLayout = () => {
           {/* Logo + JanShikayat badge */}
           <Link to="/" className="flex items-center gap-3 group" aria-label="JanShikayat Home">
             <div
-              className="w-12 h-12 rounded-full bg-[#1F3A6E] border-2 border-[#FF9933] flex items-center justify-center text-white shadow-md shrink-0"
+              className="w-12 h-12 rounded-full border-2 border-[#FF9933] overflow-hidden shrink-0 shadow-md"
               aria-hidden="true"
             >
-              <Shield className="w-6 h-6 text-[#FF9933]" />
+              <img src="/logo.png" alt="JanShikayat Logo" className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-2 flex-wrap">
