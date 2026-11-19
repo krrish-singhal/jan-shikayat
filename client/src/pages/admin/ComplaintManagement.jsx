@@ -312,18 +312,18 @@ export const ComplaintManagement = () => {
       <div className="civic-card overflow-hidden">
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs min-w-[750px]">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
               <tr>
-                <th className="py-2.5 px-4">Ticket</th>
-                <th className="py-2.5 px-4">Citizen</th>
-                <th className="py-2.5 px-4">Department</th>
-                <th className="py-2.5 px-4">Assigned Engineer</th>
-                <th className="py-2.5 px-4">Status</th>
-                <th className="py-2.5 px-4">Date</th>
-                <th className="py-2.5 px-4 text-right">Administrative Actions</th>
+                <th className="py-3 px-4">Ticket</th>
+                <th className="py-3 px-4">Citizen</th>
+                <th className="py-3 px-4">Department</th>
+                <th className="py-3 px-4">Assigned Engineer</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Date</th>
+                <th className="py-3 px-4 text-right">Administrative Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {loading ? (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-slate-400">
@@ -341,41 +341,41 @@ export const ComplaintManagement = () => {
                 </tr>
               ) : (
                 complaints.map((c) => (
-                  <tr key={c._id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-3 px-4 font-mono font-bold text-brand-600">
+                  <tr key={c._id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-bold text-brand-600 dark:text-blue-400">
                       <Link to={`/admin/complaints/${c._id}`} className="hover:underline">
                         {c.ticketNo}
                       </Link>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <div className="font-semibold text-slate-900 dark:text-slate-100">{c.citizenId?.name || 'Citizen'}</div>
                       <div className="text-[11px] font-mono text-slate-400 dark:text-slate-500">{c.citizenId?.phone || 'No phone'}</div>
                     </td>
-                    <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-medium">
+                    <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300 font-medium">
                       {c.departmentId?.name || 'Unassigned'}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       {c.assignedEngineerId ? (
                         <div>
                           <div className="font-semibold text-slate-800 dark:text-slate-200">{c.assignedEngineerId.name}</div>
-                          <div className="text-[10px] font-mono text-amber-600">{c.assignedEngineerId.staffId}</div>
+                          <div className="text-[10px] font-mono text-amber-600 dark:text-amber-400">{c.assignedEngineerId.staffId}</div>
                         </div>
                       ) : (
                         <span className="text-slate-400 italic">Unassigned</span>
                       )}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <Badge status={c.status} />
                     </td>
-                    <td className="py-3 px-4 text-slate-500">
+                    <td className="py-3.5 px-4 text-slate-500 dark:text-slate-400 whitespace-nowrap">
                       {new Date(c.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <Link
                           to={`/admin/complaints/${c._id}`}
                           title="View Full Case Details"
-                          className="p-1.5 rounded text-slate-500 hover:text-brand-600 hover:bg-slate-100 transition-colors"
+                          className="p-1.5 rounded text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-blue-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </Link>

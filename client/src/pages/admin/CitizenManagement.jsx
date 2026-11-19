@@ -184,17 +184,17 @@ export const CitizenManagement = () => {
       <div className="civic-card overflow-hidden">
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs min-w-[650px]">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
               <tr>
-                <th className="py-2.5 px-4">Resident</th>
-                <th className="py-2.5 px-4">Contact Details</th>
-                <th className="py-2.5 px-4 text-center">Complaints Filed</th>
-                <th className="py-2.5 px-4">Registered Date</th>
-                <th className="py-2.5 px-4">Status</th>
-                <th className="py-2.5 px-4 text-right">Account Actions</th>
+                <th className="py-3 px-4">Resident</th>
+                <th className="py-3 px-4">Contact Details</th>
+                <th className="py-3 px-4 text-center">Complaints Filed</th>
+                <th className="py-3 px-4">Registered Date</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4 text-right">Account Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center text-slate-400">
@@ -212,33 +212,33 @@ export const CitizenManagement = () => {
                 </tr>
               ) : (
                 citizens.map((c) => (
-                  <tr key={c._id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-3 px-4">
+                  <tr key={c._id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="py-3.5 px-4">
                       <div className="font-semibold text-slate-900 dark:text-slate-100">{c.name}</div>
                       {c.isBlocked && c.blockReason && (
-                        <div className="text-[10px] text-rose-600 font-medium">
+                        <div className="text-[10px] text-rose-600 dark:text-rose-400 font-medium">
                           Reason: {c.blockReason}
                         </div>
                       )}
                     </td>
-                    <td className="py-3 px-4 font-mono text-slate-600">
+                    <td className="py-3.5 px-4 font-mono text-slate-700 dark:text-slate-300">
                       <div>{c.email}</div>
-                      <div className="text-[11px] text-slate-400">{c.phone || 'No phone'}</div>
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500">{c.phone || 'No phone'}</div>
                     </td>
-                    <td className="py-3 px-4 text-center">
-                      <span className="font-mono font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded border border-brand-100">
+                    <td className="py-3.5 px-4 text-center">
+                      <span className="font-mono font-bold text-brand-600 dark:text-blue-400 bg-brand-50 dark:bg-brand-950/40 px-2 py-0.5 rounded border border-brand-100 dark:border-brand-900/50">
                         {c.complaintCount || 0}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-400">
+                    <td className="py-3.5 px-4 text-slate-500 dark:text-slate-400 whitespace-nowrap">
                       {new Date(c.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <span
                         className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                           c.isBlocked
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
+                            : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50'
                         }`}
                       >
                         {c.isBlocked ? 'Blocked' : 'Active'}

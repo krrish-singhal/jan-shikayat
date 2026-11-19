@@ -231,14 +231,14 @@ export const AdminDashboard = () => {
         {/* Department Volume Chart */}
         <div className="civic-card p-5 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-800">Complaints by Department</h3>
-            <span className="text-[11px] text-slate-400">Total volume</span>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Complaints by Department</h3>
+            <span className="text-[11px] text-slate-400 dark:text-slate-500">Total volume</span>
           </div>
           <div className="h-64">
             {byDept.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={byDept} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.3} />
                   <XAxis
                     dataKey="name"
                     tick={{ fontSize: 10, fill: '#64748b' }}
@@ -269,8 +269,8 @@ export const AdminDashboard = () => {
         {/* Status Distribution Pie Chart */}
         <div className="civic-card p-5 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-800">Status Distribution</h3>
-            <span className="text-[11px] text-slate-400">Lifecycle spread</span>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Status Distribution</h3>
+            <span className="text-[11px] text-slate-400 dark:text-slate-500">Lifecycle spread</span>
           </div>
           <div className="h-64 flex items-center justify-center">
             {statusPieData.length > 0 ? (
@@ -317,10 +317,10 @@ export const AdminDashboard = () => {
         <div className="civic-card p-5 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-800">Monthly Registration vs Resolution</h3>
-              <p className="text-[11px] text-slate-400">Trend comparison over recent active months</p>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Monthly Registration vs Resolution</h3>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">Trend comparison over recent active months</p>
             </div>
-            <span className="text-xs font-semibold text-brand-600 flex items-center gap-1">
+            <span className="text-xs font-semibold text-brand-600 dark:text-blue-400 flex items-center gap-1">
               <TrendingUp className="w-3.5 h-3.5" /> Real-time Sync
             </span>
           </div>
@@ -328,7 +328,7 @@ export const AdminDashboard = () => {
             {monthly.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthly} margin={{ top: 10, right: 20, left: -20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" opacity={0.3} />
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} />
                   <YAxis tick={{ fontSize: 11, fill: '#64748b' }} />
                   <Tooltip
@@ -369,14 +369,14 @@ export const AdminDashboard = () => {
 
       {/* Department Performance Table */}
       <div className="civic-card overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-800">Department Operational Efficiency</h3>
-            <p className="text-[11px] text-slate-400">Resolution rates across active municipal divisions</p>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Department Operational Efficiency</h3>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500">Resolution rates across active municipal divisions</p>
           </div>
           <Link
             to="/admin/departments"
-            className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1"
+            className="text-xs font-semibold text-brand-600 dark:text-blue-400 hover:text-brand-700 dark:hover:text-blue-300 flex items-center gap-1 transition-colors"
           >
             Manage Departments <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -384,39 +384,39 @@ export const AdminDashboard = () => {
 
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs min-w-[600px]">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
               <tr>
-                <th className="py-2.5 px-4">Department</th>
-                <th className="py-2.5 px-4 text-center">Total Ingested</th>
-                <th className="py-2.5 px-4 text-center">Pending Review</th>
-                <th className="py-2.5 px-4 text-center">In Progress</th>
-                <th className="py-2.5 px-4 text-center">Resolved</th>
-                <th className="py-2.5 px-4 text-right">Resolution Rate</th>
+                <th className="py-3 px-4">Department</th>
+                <th className="py-3 px-4 text-center">Total Ingested</th>
+                <th className="py-3 px-4 text-center">Pending Review</th>
+                <th className="py-3 px-4 text-center">In Progress</th>
+                <th className="py-3 px-4 text-center">Resolved</th>
+                <th className="py-3 px-4 text-right">Resolution Rate</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {deptPerformance.map((dept, idx) => (
-                <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 font-semibold text-slate-800">{dept.name}</td>
-                  <td className="py-3 px-4 text-center font-mono">{dept.total}</td>
-                  <td className="py-3 px-4 text-center">
-                    <span className="font-semibold text-amber-600">{dept.pending}</span>
+                <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 px-4 font-semibold text-slate-900 dark:text-slate-100">{dept.name}</td>
+                  <td className="py-3.5 px-4 text-center font-mono font-bold text-slate-800 dark:text-slate-200">{dept.total}</td>
+                  <td className="py-3.5 px-4 text-center">
+                    <span className="font-semibold text-amber-600 dark:text-amber-400">{dept.pending}</span>
                   </td>
-                  <td className="py-3 px-4 text-center">
-                    <span className="font-semibold text-indigo-600">{dept.inProgress}</span>
+                  <td className="py-3.5 px-4 text-center">
+                    <span className="font-semibold text-indigo-600 dark:text-indigo-400">{dept.inProgress}</span>
                   </td>
-                  <td className="py-3 px-4 text-center">
-                    <span className="font-semibold text-emerald-600">{dept.completed}</span>
+                  <td className="py-3.5 px-4 text-center">
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{dept.completed}</span>
                   </td>
-                  <td className="py-3 px-4 text-right">
+                  <td className="py-3.5 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <div className="w-20 bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                      <div className="w-20 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
                         <div
                           className="bg-emerald-500 h-1.5 rounded-full"
                           style={{ width: `${dept.resolutionRate || 0}%` }}
                         />
                       </div>
-                      <span className="font-mono font-bold text-slate-700 w-9 text-right">
+                      <span className="font-mono font-bold text-slate-800 dark:text-slate-200 w-9 text-right">
                         {dept.resolutionRate || 0}%
                       </span>
                     </div>
@@ -437,14 +437,14 @@ export const AdminDashboard = () => {
 
       {/* Recent Complaints Feed */}
       <div className="civic-card overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-800">Recent Municipal Influx</h3>
-            <p className="text-[11px] text-slate-400">Latest complaints received across all civic wards</p>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100">Recent Municipal Influx</h3>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500">Latest complaints received across all civic wards</p>
           </div>
           <Link
             to="/admin/complaints"
-            className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1"
+            className="text-xs font-semibold text-brand-600 dark:text-blue-400 hover:text-brand-700 dark:hover:text-blue-300 flex items-center gap-1 transition-colors"
           >
             View All Complaints <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -452,34 +452,38 @@ export const AdminDashboard = () => {
 
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs min-w-[650px]">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
               <tr>
-                <th className="py-2.5 px-4">Ticket</th>
-                <th className="py-2.5 px-4">Citizen</th>
-                <th className="py-2.5 px-4">Department</th>
-                <th className="py-2.5 px-4">Description</th>
-                <th className="py-2.5 px-4">Status</th>
-                <th className="py-2.5 px-4">Submitted</th>
-                <th className="py-2.5 px-4 text-right">Action</th>
+                <th className="py-3 px-4">Ticket</th>
+                <th className="py-3 px-4">Citizen</th>
+                <th className="py-3 px-4">Department</th>
+                <th className="py-3 px-4">Description</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Submitted</th>
+                <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {recentComplaints.map((c) => (
-                <tr key={c._id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-brand-600">{c.ticketNo}</td>
-                  <td className="py-3 px-4 font-medium text-slate-800">{c.citizenId?.name || 'Citizen'}</td>
-                  <td className="py-3 px-4 text-slate-600">{c.departmentId?.name || 'Unassigned'}</td>
-                  <td className="py-3 px-4 max-w-xs truncate text-slate-500">{c.description}</td>
-                  <td className="py-3 px-4">
+                <tr key={c._id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3.5 px-4 font-mono font-bold text-brand-600 dark:text-blue-400">
+                    <Link to={`/admin/complaints/${c._id}`} className="hover:underline">
+                      {c.ticketNo}
+                    </Link>
+                  </td>
+                  <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-slate-100">{c.citizenId?.name || 'Citizen'}</td>
+                  <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300 font-medium">{c.departmentId?.name || 'Unassigned'}</td>
+                  <td className="py-3.5 px-4 max-w-xs truncate text-slate-600 dark:text-slate-400" title={c.description}>{c.description}</td>
+                  <td className="py-3.5 px-4">
                     <Badge status={c.status} />
                   </td>
-                  <td className="py-3 px-4 text-slate-400">
+                  <td className="py-3.5 px-4 text-slate-500 dark:text-slate-400 whitespace-nowrap">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="py-3 px-4 text-right">
+                  <td className="py-3.5 px-4 text-right">
                     <Link
                       to={`/admin/complaints/${c._id}`}
-                      className="text-xs font-semibold text-brand-600 hover:text-brand-700 hover:underline"
+                      className="text-xs font-semibold text-brand-600 dark:text-blue-400 hover:text-brand-700 dark:hover:text-blue-300 hover:underline transition-colors"
                     >
                       Audit
                     </Link>

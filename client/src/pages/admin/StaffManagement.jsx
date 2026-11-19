@@ -385,18 +385,18 @@ export const StaffManagement = () => {
       <div className="civic-card overflow-hidden">
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs min-w-[700px]">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
               <tr>
-                <th className="py-2.5 px-4">Staff ID</th>
-                <th className="py-2.5 px-4">Official</th>
-                <th className="py-2.5 px-4">Role</th>
-                <th className="py-2.5 px-4">Department</th>
-                <th className="py-2.5 px-4 text-center">Workload / Cap</th>
-                <th className="py-2.5 px-4">Status</th>
-                <th className="py-2.5 px-4 text-right">Actions</th>
+                <th className="py-3 px-4">Staff ID</th>
+                <th className="py-3 px-4">Official</th>
+                <th className="py-3 px-4">Role</th>
+                <th className="py-3 px-4">Department</th>
+                <th className="py-3 px-4 text-center">Workload / Cap</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {loading ? (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-slate-400">
