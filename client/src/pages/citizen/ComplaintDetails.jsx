@@ -85,6 +85,8 @@ export const ComplaintDetails = () => {
               <img
                 src={getImageUrl(complaint.imageUrl)}
                 alt="Complaint photograph"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
                 onClick={() => window.open(getImageUrl(complaint.imageUrl), '_blank')}
                 onError={(e) => {

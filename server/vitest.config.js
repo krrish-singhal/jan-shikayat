@@ -8,6 +8,12 @@ export default defineConfig({
     hookTimeout: 30000,
     fileParallelism: false,
     maxConcurrency: 1,
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        isolate: true,
+      },
+    },
     sequence: {
       concurrent: false,
     },

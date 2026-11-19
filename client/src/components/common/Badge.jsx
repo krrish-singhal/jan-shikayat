@@ -21,7 +21,7 @@ export const StatusBadge = ({ status, isCitizenView = false }) => {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${config.bg} ${config.text} ${config.border}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border select-none tracking-wide transition-colors duration-150 ${config.bg} ${config.text} ${config.border}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
       {displayLabel}

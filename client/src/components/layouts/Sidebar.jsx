@@ -18,6 +18,7 @@ import {
   BellRing,
   ClipboardList,
   X,
+  ChevronLeft,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
@@ -37,6 +38,16 @@ export const Sidebar = ({ isOpen, onClose }) => {
         .catch(() => { });
     }
   }, [user?.role]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!user) return null;
 
@@ -78,42 +89,49 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Mobile Backdrop Overlay */}
+      {/* Backdrop Overlay (closes when clicked outside) */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-300"
           onClick={onClose}
+          aria-hidden="true"
         />
       )}
 
       {/* Official Government Aside Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
-          }`}
+        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${
+          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        }`}
       >
         <div className="flex flex-col h-full overflow-y-auto">
-          {/* Header Brand */}
-          <div className="h-16 flex items-center justify-between px-5 bg-[#061c33] border-b border-[#082543]">
-            <div className="flex items-center gap-2.5">
+          {/* Header Brand & Close Sign */}
+          <div className="h-16 flex items-center justify-between px-3.5 bg-[#061c33] border-b border-[#082543]">
+            <div className="flex items-center gap-2 min-w-0">
               <div className="w-8 h-8 rounded-full border border-amber-400/60 overflow-hidden shadow shrink-0">
                 <img src="/logo.png" alt="JanShikayat Logo" className="w-full h-full object-cover" />
               </div>
-              <div>
-                <span className="font-bold text-sm tracking-wide text-white leading-tight font-serif block">
+              <div className="truncate">
+                <span className="font-bold text-sm tracking-wide text-white leading-tight font-serif block truncate">
                   जन शिकायत
                 </span>
-                <span className="text-[10px] text-amber-300 font-semibold tracking-wider uppercase block">
+                <span className="text-[10px] text-amber-300 font-semibold tracking-wider uppercase block truncate">
                   JanShikayat Portal
                 </span>
               </div>
             </div>
 
-            {/* Close button — always visible */}
+            {/* Prominent Close Sidebar Button / Sign with smooth hover & closing animation */}
             <button
               onClick={onClose}
-              className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-800"
+              className="px-2 py-1.5 rounded-lg text-slate-300 hover:text-white bg-[#0f3459]/70 hover:bg-[#0f3b68] border border-[#14426f] flex items-center gap-1 transition-all duration-200 active:scale-95 shadow-sm group shrink-0"
+              aria-label={t('common:closeSidebar', 'Close Sidebar')}
+              title={t('common:closeSidebar', 'Close Sidebar')}
             >
-              <X className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 text-amber-300 group-hover:-translate-x-0.5 transition-transform duration-200" />
+              <span className="text-[11px] font-semibold text-slate-200 group-hover:text-white">
+                {t('common:close', 'Close')}
+              </span>
             </button>
           </div>
 

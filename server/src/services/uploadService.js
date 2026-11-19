@@ -39,26 +39,40 @@ export class UploadService {
       throw new Error('No file provided for upload');
     }
 
+    // Try Cloudinary upload if configured
     if (isCloudinaryConfigured) {
-      return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          {
-            folder: `janshikayat/${folder}`,
-            resource_type: 'image',
-          },
-          (error, result) => {
-            if (error) {
-              console.error('[Cloudinary Upload Error]', error);
-              return reject(error);
+      try {
+        const cloudinaryUrl = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            {
+              folder: `janshikayat/${folder}`,
+              resource_type: 'image',
+            },
+            (error, result) => {
+              if (error) {
+                return reject(error);
+              }
+              resolve(result?.secure_url);
             }
-            resolve(result.secure_url);
-          }
+          );
+          stream.end(file.buffer);
+        });
+
+        if (cloudinaryUrl) {
+          return cloudinaryUrl;
+        }
+      } catch (cldError) {
+        console.warn(
+          `[UploadService] Cloudinary upload failed (${cldError.message || cldError.http_code || 'error'}). Falling back safely to local static storage.`
         );
-        stream.end(file.buffer);
-      });
+      }
     }
 
-    // Local file fallback
+    // Local file fallback (guarantees complaint registration never fails due to image host issues)
+    if (!fs.existsSync(uploadsDir)) {
+      await fs.promises.mkdir(uploadsDir, { recursive: true });
+    }
+
     const ext = path.extname(file.originalname) || '.jpg';
     const randomName = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}${ext}`;
     const filePath = path.join(uploadsDir, randomName);

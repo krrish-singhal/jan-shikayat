@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, Bell, User, LogOut, CheckCheck, Shield, ChevronDown } from 'lucide-react';
+import { Menu, Bell, User, LogOut, CheckCheck, Shield, ChevronDown, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { LanguageSwitcher } from '../common/LanguageSwitcher.jsx';
 import { ThemeToggle } from '../common/ThemeToggle.jsx';
 import api from '../../services/api.js';
 
-export const Navbar = ({ onOpenSidebar }) => {
+export const Navbar = ({ onOpenSidebar, sidebarOpen = false, onToggleSidebar }) => {
   const { t } = useTranslation('common');
   const { user, unreadNotifications, refreshNotifications, logout } = useAuth();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -77,11 +77,19 @@ export const Navbar = ({ onOpenSidebar }) => {
         {/* Mobile Menu & Government Header Title */}
         <div className="flex items-center gap-3">
           <button
-            onClick={onOpenSidebar}
-            className="p-2 rounded-md text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
-            aria-label="Open Municipal Menu"
+            onClick={onToggleSidebar || onOpenSidebar}
+            className="p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:text-[#0f3b68] dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition-all duration-200 active:scale-95 shadow-2xs group"
+            aria-label={sidebarOpen ? t('closeSidebar', 'Close Sidebar') : t('openSidebar', 'Open Sidebar')}
+            title={sidebarOpen ? t('closeSidebar', 'Close Sidebar') : t('openSidebar', 'Open Sidebar')}
           >
-            <Menu className="w-5 h-5" />
+            {sidebarOpen ? (
+              <PanelLeftClose className="w-5 h-5 text-[#0f3b68] dark:text-blue-400 group-hover:-translate-x-0.5 transition-transform" />
+            ) : (
+              <PanelLeftOpen className="w-5 h-5 text-[#0f3b68] dark:text-blue-400 group-hover:translate-x-0.5 transition-transform" />
+            )}
+            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 hidden sm:inline">
+              {sidebarOpen ? t('close', 'Close') : t('menu', 'Menu')}
+            </span>
           </button>
 
           <div className="flex items-center gap-2">
