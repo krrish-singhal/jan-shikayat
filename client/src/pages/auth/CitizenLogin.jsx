@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -52,6 +52,13 @@ export const CitizenLogin = () => {
       setLoading(false);
     }
   };
+
+  // Reset googleLoading if page is restored from bfcache or mounted fresh
+  useEffect(() => {
+    const handlePageShow = () => setGoogleLoading(false);
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
 
   const handleGoogleSuccessProfile = async (profile) => {
     try {
@@ -128,10 +135,41 @@ export const CitizenLogin = () => {
     if (googleClientId && window.google?.accounts?.oauth2) {
       try {
         setGoogleLoading(true);
+
+        let resolved = false;
+        let safetyTimer = null;
+        let focusTimer = null;
+
+        const cleanup = () => {
+          resolved = true;
+          if (safetyTimer) clearTimeout(safetyTimer);
+          if (focusTimer) clearTimeout(focusTimer);
+          window.removeEventListener('focus', onFocus);
+        };
+
+        const onFocus = () => {
+          // If user closes popup or switches tabs and returns without completing auth
+          focusTimer = setTimeout(() => {
+            if (!resolved) {
+              setGoogleLoading(false);
+            }
+          }, 1500);
+        };
+
+        window.addEventListener('focus', onFocus);
+
+        // Safety fallback: auto-reset loading after 40 seconds of inactivity
+        safetyTimer = setTimeout(() => {
+          if (!resolved) {
+            setGoogleLoading(false);
+          }
+        }, 40000);
+
         const tokenClient = window.google.accounts.oauth2.initTokenClient({
           client_id: googleClientId,
           scope: 'email profile openid',
           callback: async (tokenResponse) => {
+            cleanup();
             if (tokenResponse.error) {
               setGoogleLoading(false);
               if (tokenResponse.error === 'popup_closed_by_user') {
@@ -158,10 +196,19 @@ export const CitizenLogin = () => {
               addToast(err.response?.data?.error?.message || err.message, 'error');
             }
           },
+          error_callback: (nonOAuthErr) => {
+            cleanup();
+            setGoogleLoading(false);
+            console.warn('[GIS error_callback]', nonOAuthErr);
+            if (nonOAuthErr?.type === 'popup_failed_to_open') {
+              window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}/auth/google`;
+            }
+          },
         });
         tokenClient.requestAccessToken({ prompt: 'select_account' });
         return;
       } catch (err) {
+        setGoogleLoading(false);
         console.warn('[GIS init failed, redirecting to server OAuth]', err);
       }
     }

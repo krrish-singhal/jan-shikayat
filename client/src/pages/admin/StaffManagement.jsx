@@ -19,31 +19,30 @@ import {
 import api from '../../services/api.js';
 import { Modal } from '../../components/common/Modal.jsx';
 import { ConfirmDialog } from '../../components/common/ConfirmDialog.jsx';
+import { PasswordInput } from '../../components/common/PasswordInput.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
 
 const PasswordOption = ({ mode, setMode, password, setPassword }) => (
   <div className="space-y-2">
-    <label className="block font-semibold text-slate-700">Password</label>
+    <label className="block font-semibold text-slate-700 dark:text-slate-300">Password</label>
     <div className="flex gap-4">
-      <label className="inline-flex items-center gap-1.5">
+      <label className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
         <input type="radio" checked={mode === 'GENERATE'} onChange={() => setMode('GENERATE')} />
         Auto-generate
       </label>
-      <label className="inline-flex items-center gap-1.5">
+      <label className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
         <input type="radio" checked={mode === 'MANUAL'} onChange={() => setMode('MANUAL')} />
         Set manually
       </label>
     </div>
     {mode === 'MANUAL' && (
-      <input
-        type="text"
+      <PasswordInput
         required
         minLength={8}
-        autoComplete="off"
+        autoComplete="new-password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="civic-input"
         placeholder="Min 8 characters"
       />
     )}
@@ -138,12 +137,22 @@ export const StaffManagement = () => {
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
+    if (/[0-9]/.test(formData.name)) {
+      addToast('Numbers are not allowed in name', 'error');
+      return;
+    }
+    const cleanPhone = formData.phone ? formData.phone.replace(/\D/g, '') : '';
+    if (cleanPhone && cleanPhone.length !== 10) {
+      addToast('Phone number must be exactly 10 digits', 'error');
+      return;
+    }
+
     try {
       setSubmitting(true);
       const payload = {
-        name: formData.name,
+        name: formData.name.trim(),
         email: formData.email,
-        phone: formData.phone,
+        phone: cleanPhone,
         role: formData.role,
         departmentId: formData.role !== ROLES.ADMIN ? formData.departmentId : null,
         maxActiveCases: formData.role === ROLES.ENGINEER ? Number(formData.maxActiveCases) : 5,
@@ -196,11 +205,21 @@ export const StaffManagement = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    if (/[0-9]/.test(formData.name)) {
+      addToast('Numbers are not allowed in name', 'error');
+      return;
+    }
+    const cleanPhone = formData.phone ? formData.phone.replace(/\D/g, '') : '';
+    if (cleanPhone && cleanPhone.length !== 10) {
+      addToast('Phone number must be exactly 10 digits', 'error');
+      return;
+    }
+
     try {
       setSubmitting(true);
       const payload = {
-        name: formData.name,
-        phone: formData.phone,
+        name: formData.name.trim(),
+        phone: cleanPhone,
         role: formData.role,
         departmentId: formData.role !== ROLES.ADMIN ? formData.departmentId : null,
         maxActiveCases: formData.role === ROLES.ENGINEER ? Number(formData.maxActiveCases) : 5,
@@ -246,30 +265,49 @@ export const StaffManagement = () => {
   };
 
   const handleResetPassword = async () => {
-    const staff = resetDialog.staff;
-    if (!staff) return;
+  const staff = resetDialog.staff;
+  if (!staff) return;
 
-    try {
-      setSubmitting(true);
-      const body = resetMode === 'MANUAL' ? { newPassword: resetPassword } : {};
-      const res = await api.post(`/admin/staff/${staff._id}/reset-password`, body);
-      const { temporaryPassword, staffId, email, name, role } = res.data.data;
+  try {
+    setSubmitting(true);
 
-      setGeneratedCredentials({
-        name, staffId, email, role,
-        temporaryPassword: resetMode === 'MANUAL' ? resetPassword : temporaryPassword,
-      });
-      setResetMode('GENERATE');
-      setResetPassword('');
-      setResetDialog({ isOpen: false, staff: null });
-      setCredentialsModalOpen(true);
-      addToast('Password generated', 'success');
-    } catch (err) {
-      addToast(err.response?.data?.error?.message || 'Failed to reset password', 'error');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    const body = resetMode === 'MANUAL'
+      ? { newPassword: resetPassword }
+      : {};
+
+    const res = await api.post(
+      `/admin/staff/${staff._id}/reset-password`,
+      body
+    );
+
+    const { temporaryPassword, staffId, email, name, role } = res.data.data;
+
+    setGeneratedCredentials({
+      name,
+      staffId,
+      email,
+      role,
+      temporaryPassword: resetMode === 'MANUAL'
+        ? resetPassword
+        : temporaryPassword,
+    });
+
+    setResetMode('GENERATE');
+    setResetPassword('');
+    setResetDialog({ isOpen: false, staff: null });
+    setCredentialsModalOpen(true);
+
+    addToast('Password reset successfully', 'success');
+
+  } catch (err) {
+    addToast(
+      err.response?.data?.error?.message || 'Failed to reset password',
+      'error'
+    );
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const copyCredentials = () => {
     if (!generatedCredentials) return;
@@ -385,18 +423,18 @@ export const StaffManagement = () => {
       <div className="civic-card overflow-hidden">
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs min-w-[700px]">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
               <tr>
-                <th className="py-2.5 px-4">Staff ID</th>
-                <th className="py-2.5 px-4">Official</th>
-                <th className="py-2.5 px-4">Role</th>
-                <th className="py-2.5 px-4">Department</th>
-                <th className="py-2.5 px-4 text-center">Workload / Cap</th>
-                <th className="py-2.5 px-4">Status</th>
-                <th className="py-2.5 px-4 text-right">Actions</th>
+                <th className="py-3 px-4">Staff ID</th>
+                <th className="py-3 px-4">Official</th>
+                <th className="py-3 px-4">Role</th>
+                <th className="py-3 px-4">Department</th>
+                <th className="py-3 px-4 text-center">Workload / Cap</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {loading ? (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-slate-400">
@@ -533,7 +571,7 @@ export const StaffManagement = () => {
               type="text"
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value.replace(/[0-9]/g, '') })}
               className="civic-input"
               placeholder="e.g. Ramesh Kumar"
             />
@@ -555,10 +593,12 @@ export const StaffManagement = () => {
               <label className="block font-semibold text-slate-700 mb-1">Phone Number</label>
               <input
                 type="tel"
+                inputMode="numeric"
+                maxLength={10}
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                 className="civic-input"
-                placeholder="+91 9876543210"
+                placeholder="9876543210"
               />
             </div>
           </div>
@@ -661,7 +701,7 @@ export const StaffManagement = () => {
               type="text"
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value.replace(/[0-9]/g, '') })}
               className="civic-input"
             />
           </div>
@@ -680,9 +720,12 @@ export const StaffManagement = () => {
               <label className="block font-semibold text-slate-700 mb-1">Phone Number</label>
               <input
                 type="tel"
+                inputMode="numeric"
+                maxLength={10}
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
                 className="civic-input"
+                placeholder="9876543210"
               />
             </div>
           </div>

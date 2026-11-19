@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { ConfirmDialog } from '../../components/common/ConfirmDialog.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
+import { PasswordInput } from '../../components/common/PasswordInput.jsx';
 
 export const CitizenProfile = () => {
   const { t } = useTranslation(['citizen', 'common', 'auth']);
@@ -28,9 +29,19 @@ export const CitizenProfile = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
+    if (/[0-9]/.test(name)) {
+      addToast('Numbers are not allowed in name', 'error');
+      return;
+    }
+    const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
+    if (cleanPhone && cleanPhone.length !== 10) {
+      addToast('Phone number must be exactly 10 digits', 'error');
+      return;
+    }
+
     try {
       setUpdating(true);
-      await updateProfile({ name, phone });
+      await updateProfile({ name: name.trim(), phone: cleanPhone });
       addToast(t('citizen:profileUpdated', 'Profile updated successfully'), 'success');
     } catch (err) {
       addToast(err.response?.data?.error?.message || err.message, 'error');
@@ -93,7 +104,7 @@ export const CitizenProfile = () => {
                 type="text"
                 required
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value.replace(/[0-9]/g, ''))}
                 className="civic-input pl-9"
               />
             </div>
@@ -119,9 +130,11 @@ export const CitizenProfile = () => {
               <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="tel"
+                inputMode="numeric"
+                maxLength={10}
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 9876543210"
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                placeholder="9876543210"
                 className="civic-input pl-9"
               />
             </div>
@@ -180,34 +193,32 @@ export const CitizenProfile = () => {
       >
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">{t('auth:currentPassword', 'Current Password')}</label>
-            <input
-              type="password"
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('auth:currentPassword', 'Current Password')}</label>
+            <PasswordInput
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="civic-input"
+              placeholder={t('auth:currentPassword', 'Enter current password')}
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">{t('auth:newPassword', 'New Password')}</label>
-            <input
-              type="password"
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('auth:newPassword', 'New Password')}</label>
+            <PasswordInput
               required
+              minLength={8}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Min 8 chars, uppercase, number, symbol"
-              className="civic-input"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">{t('auth:confirmPassword', 'Confirm New Password')}</label>
-            <input
-              type="password"
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">{t('auth:confirmPassword', 'Confirm New Password')}</label>
+            <PasswordInput
               required
+              minLength={8}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="civic-input"
+              placeholder={t('auth:confirmPassword', 'Repeat new password')}
             />
           </div>
           <div className="flex justify-end gap-2 pt-2">

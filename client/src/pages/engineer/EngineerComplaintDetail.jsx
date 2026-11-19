@@ -62,13 +62,13 @@ export const EngineerComplaintDetail = () => {
   return (
     <div className="max-w-5xl mx-auto py-4 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <Link
-          to="/engineer/my-cases"
+        <button
+          onClick={() => navigate(-1)}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to My Cases</span>
-        </Link>
+          <span>Back</span>
+        </button>
         <div className="flex items-center gap-3">
           <span className="font-mono text-sm font-bold text-slate-700">{complaint.ticketNo}</span>
           <StatusBadge status={complaint.status} />

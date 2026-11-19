@@ -366,15 +366,15 @@ export const AdminComplaintDetail = () => {
 
             <div className="overflow-x-auto w-full">
               <table className="w-full text-left text-xs min-w-[600px]">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+                <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
                   <tr>
-                    <th className="py-2.5 px-4">Action</th>
-                    <th className="py-2.5 px-4">Official / Actor</th>
-                    <th className="py-2.5 px-4">Notes</th>
-                    <th className="py-2.5 px-4">Timestamp</th>
+                    <th className="py-3 px-4">Action</th>
+                    <th className="py-3 px-4">Official / Actor</th>
+                    <th className="py-3 px-4">Notes</th>
+                    <th className="py-3 px-4">Timestamp</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {auditLogs.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="py-6 text-center text-slate-400">
@@ -383,21 +383,21 @@ export const AdminComplaintDetail = () => {
                     </tr>
                   ) : (
                     auditLogs.map((log) => (
-                      <tr key={log._id} className="hover:bg-slate-50/70">
-                        <td className="py-2.5 px-4 font-mono font-semibold text-slate-800">
+                      <tr key={log._id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                        <td className="py-3 px-4 font-mono font-semibold text-slate-900 dark:text-slate-100">
                           {log.action}
                           {log.isAdminOverride && (
-                            <span className="ml-1.5 text-[9px] px-1 py-0.2 bg-rose-100 text-rose-700 font-bold rounded">
+                            <span className="ml-1.5 text-[9px] px-1.5 py-0.2 bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-bold rounded border border-rose-200 dark:border-rose-900">
                               ADMIN OVERRIDE
                             </span>
                           )}
                         </td>
-                        <td className="py-2.5 px-4">
-                          <span className="font-semibold text-slate-800">{log.actorName}</span>
-                          <span className="text-[10px] text-slate-400 block font-mono">{log.actorRole}</span>
+                        <td className="py-3 px-4">
+                          <span className="font-semibold text-slate-900 dark:text-slate-100">{log.actorName}</span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-mono">{log.actorRole}</span>
                         </td>
-                        <td className="py-2.5 px-4 text-slate-600 max-w-xs truncate">{log.notes || '—'}</td>
-                        <td className="py-2.5 px-4 text-slate-400 font-mono text-[11px]">
+                        <td className="py-3 px-4 text-slate-700 dark:text-slate-300 max-w-xs truncate">{log.notes || '—'}</td>
+                        <td className="py-3 px-4 text-slate-500 dark:text-slate-400 font-mono text-[11px] whitespace-nowrap">
                           {new Date(log.createdAt).toLocaleString()}
                         </td>
                       </tr>

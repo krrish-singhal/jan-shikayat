@@ -145,17 +145,17 @@ export const AuditLogs = () => {
       <div className="civic-card overflow-hidden">
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs min-w-[700px]">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
               <tr>
-                <th className="py-2.5 px-4">Action</th>
-                <th className="py-2.5 px-4">Actor / Official</th>
-                <th className="py-2.5 px-4">Target / Ticket</th>
-                <th className="py-2.5 px-4">Notes &amp; Details</th>
-                <th className="py-2.5 px-4">Timestamp</th>
-                <th className="py-2.5 px-4 text-right">Inspect</th>
+                <th className="py-3 px-4">Action</th>
+                <th className="py-3 px-4">Actor / Official</th>
+                <th className="py-3 px-4">Target / Ticket</th>
+                <th className="py-3 px-4">Notes &amp; Details</th>
+                <th className="py-3 px-4">Timestamp</th>
+                <th className="py-3 px-4 text-right">Inspect</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center text-slate-400">
@@ -173,26 +173,26 @@ export const AuditLogs = () => {
                 </tr>
               ) : (
                 logs.map((log) => (
-                  <tr key={log._id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-3 px-4 font-mono font-bold text-slate-800">
+                  <tr key={log._id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900 dark:text-slate-100">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span>{log.action}</span>
                         {log.isAdminOverride && (
-                          <span className="text-[9px] font-sans font-bold px-1.5 py-0.2 bg-rose-100 text-rose-700 border border-rose-200 rounded">
+                          <span className="text-[9px] font-sans font-bold px-1.5 py-0.2 bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 rounded">
                             OVERRIDE
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       <div className="font-semibold text-slate-900 dark:text-slate-100">{log.actorName || 'System'}</div>
                       <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500">{log.actorRole || 'SYSTEM'}</div>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4">
                       {log.complaintId ? (
                         <Link
                           to={`/admin/complaints/${log.complaintId._id || log.complaintId}`}
-                          className="font-mono font-semibold text-brand-600 hover:underline flex items-center gap-1"
+                          className="font-mono font-semibold text-brand-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                         >
                           <span>{log.complaintId.ticketNo || 'Ticket'}</span>
                           <ExternalLink className="w-3 h-3 text-slate-400" />
@@ -201,16 +201,16 @@ export const AuditLogs = () => {
                         <span className="text-slate-400 text-[11px]">—</span>
                       )}
                     </td>
-                    <td className="py-3 px-4 max-w-sm truncate text-slate-600">
+                    <td className="py-3.5 px-4 max-w-sm truncate text-slate-700 dark:text-slate-300">
                       {log.notes || 'No notes attached'}
                     </td>
-                    <td className="py-3 px-4 font-mono text-slate-500 text-[11px]">
+                    <td className="py-3.5 px-4 font-mono text-slate-500 dark:text-slate-400 text-[11px] whitespace-nowrap">
                       {new Date(log.createdAt).toLocaleString()}
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right">
                       <button
                         onClick={() => setSelectedLog(log)}
-                        className="p-1 rounded text-slate-500 hover:text-brand-600 hover:bg-slate-100"
+                        className="p-1.5 rounded text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-blue-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         title="Inspect Log Entry"
                       >
                         <Eye className="w-3.5 h-3.5" />

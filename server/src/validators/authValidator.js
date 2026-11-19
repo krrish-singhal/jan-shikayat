@@ -4,10 +4,22 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d
 const passwordMessage = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.';
 
 export const citizenRegisterSchema = z.object({
-  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name cannot exceed 100 characters'),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name cannot exceed 100 characters')
+    .regex(/^[^0-9]*$/, 'Numbers are not allowed in name'),
   email: z.string().trim().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters').regex(passwordPattern, passwordMessage),
-  phone: z.string().trim().optional().or(z.literal('')),
+  phone: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(''))
+    .refine((val) => !val || /^\+?\d{10,13}$/.test(val), {
+      message: 'Phone number must contain only numbers (10 digits)',
+    }),
 });
 
 export const citizenLoginSchema = z.object({
@@ -26,8 +38,21 @@ export const changePasswordSchema = z.object({
 });
 
 export const updateProfileSchema = z.object({
-  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name cannot exceed 100 characters').optional(),
-  phone: z.string().trim().optional(),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name cannot exceed 100 characters')
+    .regex(/^[^0-9]*$/, 'Numbers are not allowed in name')
+    .optional(),
+  phone: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(''))
+    .refine((val) => !val || /^\+?\d{10,13}$/.test(val), {
+      message: 'Phone number must contain only numbers (10 digits)',
+    }),
 });
 
 export const forgotPasswordSchema = z.object({

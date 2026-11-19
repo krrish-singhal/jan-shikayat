@@ -5,11 +5,17 @@ import { Sidebar } from './Sidebar.jsx';
 import { Navbar } from './Navbar.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { Modal } from '../common/Modal.jsx';
+import { PasswordInput } from '../common/PasswordInput.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 
 export const PortalLayout = () => {
   const { t } = useTranslation(['common', 'auth']);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return true;
+  });
   const { user, changePassword } = useAuth();
   const { addToast } = useToast();
 
@@ -44,8 +50,8 @@ export const PortalLayout = () => {
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main Content Area — no left padding; sidebar is an animated drawer overlay */}
-      <div className="flex-1 flex flex-col min-w-0">
+      {/* Main Content Area — shifts when sidebar is open on desktop */}
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:pl-72' : 'lg:pl-0'}`}>
         <Navbar
           sidebarOpen={sidebarOpen}
           onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
@@ -70,41 +76,37 @@ export const PortalLayout = () => {
           </div>
           <form onSubmit={handleForcePasswordChange} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('auth:currentPassword', 'Temporary Password')}
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="civic-input"
                 placeholder={t('auth:currentPassword', 'Enter current password')}
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('auth:newPassword', 'New Password')}
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 required
+                minLength={8}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="civic-input"
                 placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special char"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {t('auth:confirmPassword', 'Confirm New Password')}
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 required
+                minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="civic-input"
                 placeholder={t('auth:confirmPassword', 'Repeat new password')}
               />
             </div>

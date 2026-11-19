@@ -3,6 +3,7 @@ import { User, Mail, Shield, Building, Lock, Briefcase, Award } from 'lucide-rea
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
+import { PasswordInput } from '../../components/common/PasswordInput.jsx';
 import { CapacityBar } from '../../components/common/CapacityBar.jsx';
 import api from '../../services/api.js';
 
@@ -133,39 +134,33 @@ export const EngineerProfile = () => {
       >
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Current Password</label>
-            <input
-              type="password"
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Current Password</label>
+            <PasswordInput
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="civic-input text-xs"
               placeholder="••••••••"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">New Password</label>
-            <input
-              type="password"
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">New Password</label>
+            <PasswordInput
               required
               minLength={8}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="civic-input text-xs"
               placeholder="Min 8 characters with upper, lower, number, special"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Confirm New Password</label>
-            <input
-              type="password"
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Confirm New Password</label>
+            <PasswordInput
               required
               minLength={8}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="civic-input text-xs"
               placeholder="Confirm new password"
             />
           </div>

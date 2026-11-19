@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { logger } from '../utils/logger.js';
 
 const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
@@ -11,57 +10,156 @@ export const api = axios.create({
   },
 });
 
-let isRefreshing = false;
-let failedQueue = [];
+/**
+ * Safely parse JWT exp field (milliseconds)
+ */
+export function getTokenExpiry(token) {
+  if (!token || typeof token !== 'string') return null;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    const parsed = JSON.parse(jsonPayload);
+    return parsed.exp ? parsed.exp * 1000 : null;
+  } catch {
+    return null;
+  }
+}
 
-const processQueue = (error, token = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
+// Single-flight refresh mutex
+let refreshPromise = null;
+
+/**
+ * Performs token refresh coalescing concurrent calls into a single request
+ */
+export async function performTokenRefresh() {
+  if (refreshPromise) {
+    return refreshPromise;
+  }
+
+  refreshPromise = (async () => {
+    try {
+      const storedRefreshToken = localStorage.getItem('refreshToken');
+      const response = await axios.post(
+        `${baseURL}/auth/refresh`,
+        { refreshToken: storedRefreshToken || undefined },
+        { withCredentials: true }
+      );
+
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken, user } = response.data?.data || {};
+
+      if (newAccessToken) {
+        localStorage.setItem('accessToken', newAccessToken);
+        if (api.defaults.headers.common) {
+          api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+        }
+      }
+
+      if (newRefreshToken) {
+        localStorage.setItem('refreshToken', newRefreshToken);
+      }
+
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+
+      // Notify AuthContext of session update
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('auth:token-refreshed', {
+            detail: { accessToken: newAccessToken, user },
+          })
+        );
+      }
+
+      return newAccessToken;
+    } catch (refreshErr) {
+      const status = refreshErr.response?.status;
+      const errorCode = refreshErr.response?.data?.error?.code;
+
+      // Only clear storage if explicitly rejected as unauthenticated/invalid/revoked
+      // Do NOT clear session on offline / network error / 5xx server issues
+      if (
+        status === 401 ||
+        status === 403 ||
+        errorCode === 'INVALID_TOKEN' ||
+        errorCode === 'TOKEN_EXPIRED' ||
+        errorCode === 'TOKEN_REUSE_DETECTED' ||
+        errorCode === 'ACCOUNT_INVALID'
+      ) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('auth:session-expired'));
+        }
+      }
+      throw refreshErr;
+    } finally {
+      refreshPromise = null;
     }
-  });
-  failedQueue = [];
-};
+  })();
 
-// Request interceptor: attach accessToken and trace requests
+  return refreshPromise;
+}
+
+// Helper to set Authorization header across Axios versions / AxiosHeaders
+function setAuthHeader(headers, token) {
+  if (!headers) return;
+  const val = `Bearer ${token}`;
+  if (typeof headers.set === 'function') {
+    headers.set('Authorization', val);
+  } else {
+    headers.Authorization = val;
+    headers['Authorization'] = val;
+  }
+}
+
+// Request interceptor: proactive refresh if token expires in < 60s
 api.interceptors.request.use(
-  (config) => {
-    config.metadata = { startTime: Date.now() };
-    const method = (config.method || 'GET').toUpperCase();
-    logger.info(`[API Request] ${method} ${config.url}`);
+  async (config) => {
+    const url = config.url || '';
+    const isAuthEndpoint =
+      url.includes('/auth/login') ||
+      url.includes('/auth/staff/login') ||
+      url.includes('/auth/refresh') ||
+      url.includes('/auth/register');
 
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (!isAuthEndpoint) {
+      let token = localStorage.getItem('accessToken');
+      if (token) {
+        const expiry = getTokenExpiry(token);
+        // If token expires in less than 60 seconds (or has expired), refresh before dispatch
+        if (expiry && expiry - Date.now() < 60 * 1000) {
+          try {
+            token = await performTokenRefresh();
+          } catch {
+            // Proactive refresh failed (e.g. offline). Continue with existing token
+            // so we don't break offline/cached requests prematurely
+          }
+        }
+      }
+
+      if (token) {
+        setAuthHeader(config.headers, token);
+      }
     }
     return config;
   },
-  (error) => {
-    logger.error('[API Request Error]', error.message || error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor: automatic token rotation on 401 TOKEN_EXPIRED
+// Response interceptor: automatic token rotation on 401
 api.interceptors.response.use(
-  (response) => {
-    const elapsed = response.config?.metadata?.startTime
-      ? `(${Date.now() - response.config.metadata.startTime}ms)`
-      : '';
-    const method = (response.config?.method || 'GET').toUpperCase();
-    logger.info(`[API Response] ${response.status} ${method} ${response.config?.url} ${elapsed}`);
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const method = (originalRequest?.method || 'GET').toUpperCase();
-    const url = originalRequest?.url || '';
-    const httpStatus = error.response?.status || 'OFFLINE';
-    const errorMsg = error.response?.data?.error?.message || error.message;
-
-    logger.warn(`[API Response Error] ${httpStatus} ${method} ${url}: ${errorMsg}`);
 
     if (!error.response) {
       return Promise.reject(new Error('Network error. Backend server may be offline.'));
@@ -70,48 +168,43 @@ api.interceptors.response.use(
     const { status, data } = error.response;
     const errorCode = data?.error?.code;
 
+    const url = originalRequest?.url || '';
+    const isAuthEndpoint =
+      url.includes('/auth/login') ||
+      url.includes('/auth/staff/login') ||
+      url.includes('/auth/refresh') ||
+      url.includes('/auth/register');
+
     if (
       status === 401 &&
       (errorCode === 'TOKEN_EXPIRED' || errorCode === 'UNAUTHORIZED') &&
       !originalRequest._retry &&
-      !originalRequest.url.includes('/auth/refresh') &&
-      !originalRequest.url.includes('/auth/login') &&
-      !originalRequest.url.includes('/auth/staff/login')
+      !isAuthEndpoint
     ) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return api(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
-
       originalRequest._retry = true;
-      isRefreshing = true;
 
       try {
-        const refreshResponse = await axios.post(
-          `${baseURL}/auth/refresh`,
-          {},
-          { withCredentials: true }
-        );
+        const currentToken = localStorage.getItem('accessToken');
+        const authHeader =
+          originalRequest.headers?.Authorization ||
+          originalRequest.headers?.authorization;
+        const requestToken =
+          typeof authHeader === 'string'
+            ? authHeader.replace(/^Bearer\s+/i, '')
+            : null;
 
-        const newAccessToken = refreshResponse.data.data.accessToken;
-        localStorage.setItem('accessToken', newAccessToken);
-        api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+        let tokenToUse = currentToken;
+        // If the access token hasn't changed since this request was sent, perform a refresh
+        if (!currentToken || currentToken === requestToken) {
+          tokenToUse = await performTokenRefresh();
+        }
 
-        processQueue(null, newAccessToken);
-        return api(originalRequest);
+        if (tokenToUse) {
+          setAuthHeader(originalRequest.headers, tokenToUse);
+          return api(originalRequest);
+        }
       } catch (refreshErr) {
-        processQueue(refreshErr, null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
         return Promise.reject(refreshErr);
-      } finally {
-        isRefreshing = false;
       }
     }
 

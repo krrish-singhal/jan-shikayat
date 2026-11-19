@@ -22,6 +22,9 @@ const uploadsDir = path.resolve(__dirname, '../uploads');
 
 export const app = express();
 
+// Trust reverse proxy (Render, Vercel, Nginx, etc.) for secure cookies and accurate client IP
+app.set('trust proxy', 1);
+
 // Security Headers
 app.use(
   helmet({
@@ -76,7 +79,7 @@ app.use((req, res, next) => {
 // Static file serving for uploads
 app.use('/uploads', express.static(uploadsDir));
 
-// Rate limiting on sensitive auth endpoints
+// Rate limiting on sensitive auth endpoints (excluding internal token refresh and logout)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // 100 requests per 15 min window
@@ -89,7 +92,10 @@ const authLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: () => process.env.NODE_ENV === 'test',
+  skip: (req) =>
+    process.env.NODE_ENV === 'test' ||
+    req.path === '/refresh' ||
+    req.path === '/logout',
 });
 
 // Mount Routes with /api/v1 prefix

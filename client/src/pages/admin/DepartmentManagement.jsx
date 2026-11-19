@@ -172,7 +172,7 @@ export const DepartmentManagement = () => {
             <div
               key={dept._id}
               className={`civic-card p-5 space-y-4 border transition-all ${
-                dept.isActive ? 'hover:border-brand-300' : 'bg-slate-50/70 border-slate-200 opacity-80'
+                dept.isActive ? 'hover:border-brand-300 dark:hover:border-blue-500/40' : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-80'
               }`}
             >
               <div className="flex items-start justify-between gap-2">
@@ -180,8 +180,8 @@ export const DepartmentManagement = () => {
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${
                       dept.isActive
-                        ? 'bg-brand-50 text-brand-700 border border-brand-100'
-                        : 'bg-slate-200 text-slate-500'
+                        ? 'bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-blue-300 border border-brand-100 dark:border-brand-900/50'
+                        : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                     }`}
                   >
                     <Building2 className="w-5 h-5" />
@@ -191,8 +191,8 @@ export const DepartmentManagement = () => {
                     <span
                       className={`text-[10px] font-semibold px-2 py-0.2 rounded-full inline-block mt-0.5 ${
                         dept.isActive
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/50'
+                          : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/50'
                       }`}
                     >
                       {dept.isActive ? 'Active Division' : 'Deactivated'}
@@ -204,17 +204,17 @@ export const DepartmentManagement = () => {
                   <button
                     onClick={() => handleEditClick(dept)}
                     title="Edit Department"
-                    className="p-1 rounded text-slate-400 hover:text-brand-600 hover:bg-slate-100"
+                    className="p-1 rounded text-slate-400 hover:text-brand-600 dark:hover:text-blue-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => setToggleDialog({ isOpen: true, dept })}
                     title={dept.isActive ? 'Deactivate' : 'Reactivate'}
-                    className={`p-1 rounded ${
+                    className={`p-1 rounded transition-colors ${
                       dept.isActive
-                        ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
-                        : 'text-slate-400 hover:text-emerald-600 hover:bg-emerald-50'
+                        ? 'text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40'
+                        : 'text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
                     }`}
                   >
                     <Power className="w-3.5 h-3.5" />
@@ -223,20 +223,20 @@ export const DepartmentManagement = () => {
               </div>
 
               {dept.description && (
-                <p className="text-xs text-slate-500 line-clamp-2">{dept.description}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{dept.description}</p>
               )}
 
-              <div className="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs text-slate-600">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-slate-400" />
                   <span>
-                    <strong className="text-slate-800 font-mono">{dept.complaintCount || 0}</strong> complaints
+                    <strong className="text-slate-800 dark:text-slate-200 font-mono">{dept.complaintCount || 0}</strong> complaints
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5 text-slate-400" />
                   <span>
-                    <strong className="text-slate-800 font-mono">{dept.staffCount || 0}</strong> staff assigned
+                    <strong className="text-slate-800 dark:text-slate-200 font-mono">{dept.staffCount || 0}</strong> staff assigned
                   </span>
                 </div>
               </div>
