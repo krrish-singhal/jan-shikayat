@@ -70,3 +70,4 @@ export const ComplaintImage = ({
     </div>
   );
 };
+
