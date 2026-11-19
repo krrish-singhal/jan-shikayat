@@ -229,7 +229,9 @@ export class AdminController {
    */
   static async getStaffList(req, res) {
     try {
-      const { page = 1, limit = 10, role = '', departmentId = '', search = '', status = '' } = req.query;
+      const { role = '', departmentId = '', search = '', status = '' } = req.query;
+      const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
       const query = { role: { $in: STAFF_ROLES }, isDeleted: false };
 
       if (role && role !== 'ALL') query.role = role;
@@ -635,8 +637,6 @@ export class AdminController {
   static async getAllComplaints(req, res) {
     try {
       const {
-        page = 1,
-        limit = 10,
         status = '',
         departmentId = '',
         engineerId = '',
@@ -645,6 +645,8 @@ export class AdminController {
         startDate = '',
         endDate = '',
       } = req.query;
+      const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
 
       const query = {};
 
