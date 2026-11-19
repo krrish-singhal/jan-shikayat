@@ -125,13 +125,13 @@ export const MyComplaints = () => {
     {
       header: t('common:status', 'Status'),
       key: 'status',
-      className: 'w-45',
+      className: 'w-60',
       render: (row) => <StatusBadge status={row.status} isCitizenView={true} />,
     },
     {
       header: t('common:actions', 'Actions'),
       key: 'actions',
-      className: 'w-55 text-right',
+      className: 'w-75 text-right',
       render: (row) => (
         <button
           onClick={() => navigate(`/citizen/complaints/${row._id}`)}
