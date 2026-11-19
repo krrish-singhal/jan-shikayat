@@ -158,7 +158,9 @@ export async function reviewRequest(req, res) {
       .populate('noticeId', 'title category date')
       .populate('reviewedBy', 'name role');
 
-    return sendSuccess(res, { noticeRequest: updated }, 200);
+    const pendingCount = await NoticeRequest.countDocuments({ status: 'pending' });
+
+    return sendSuccess(res, { noticeRequest: updated, count: pendingCount }, 200);
   } catch (err) {
     return sendError(res, { code: 'SERVER_ERROR', message: err.message }, 500);
   }

@@ -13,6 +13,7 @@ import {
   ArrowRight,
   TrendingUp,
   ShieldAlert,
+  BellRing,
 } from 'lucide-react';
 import {
   BarChart,
@@ -59,6 +60,13 @@ export const AdminDashboard = () => {
       setLoading(true);
       const res = await api.get('/admin/stats');
       setData(res.data.data);
+      if (typeof res.data?.data?.summary?.pendingNoticeRequests === 'number') {
+        window.dispatchEvent(
+          new CustomEvent('notice-requests-updated', {
+            detail: { count: res.data.data.summary.pendingNoticeRequests },
+          })
+        );
+      }
     } catch (err) {
       console.error('Failed to load admin stats:', err);
     } finally {
@@ -171,21 +179,49 @@ export const AdminDashboard = () => {
 
       {/* SLA Alert Banner if any delayed complaints */}
       {delayedComplaints.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 rounded-xl p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h4 className="text-sm font-bold text-amber-900">
+            <h4 className="text-sm font-bold text-amber-900 dark:text-amber-100">
               {delayedComplaints.length} Complaints Pending Beyond SLA Standard
             </h4>
-            <p className="text-xs text-amber-700 mt-0.5">
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5">
               These complaints have remained in initial or unassigned stages for over 7 days. Joint engineers and department desks should be reviewed.
             </p>
           </div>
           <Link
             to="/admin/complaints?status=SUBMITTED"
-            className="text-xs font-semibold text-amber-800 hover:text-amber-900 underline flex-shrink-0 self-center"
+            className="text-xs font-semibold text-amber-800 dark:text-amber-200 hover:underline flex-shrink-0 self-center"
           >
             Review SLA Queue
+          </Link>
+        </div>
+      )}
+
+      {/* Notice Requests Alert Banner if any pending notice requests */}
+      {summary.pendingNoticeRequests > 0 && (
+        <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 rounded-xl p-4 flex items-start justify-between gap-3 shadow-xs">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 shrink-0">
+              <BellRing className="w-4 h-4" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-blue-950 dark:text-blue-100 flex items-center gap-2">
+                <span>Pending Notice Requests Awaiting Review</span>
+                <span className="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black">
+                  {summary.pendingNoticeRequests}
+                </span>
+              </h4>
+              <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">
+                Staff members have submitted announcements for the public notice board that require your review and approval.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/admin/notices"
+            className="civic-btn-primary text-xs shrink-0 self-center"
+          >
+            Review Requests
           </Link>
         </div>
       )}

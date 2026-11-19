@@ -64,8 +64,24 @@ export const NoticeManagement = () => {
   useEffect(() => {
     if (activeTab === 'requests') {
       fetchRequests();
+      fetchPendingCount();
     }
   }, [activeTab, filterStatus]);
+
+  useEffect(() => {
+    const handleNoticeUpdate = (e) => {
+      if (typeof e.detail?.count === 'number') {
+        setPendingCount(e.detail.count);
+      } else {
+        fetchPendingCount();
+      }
+      if (activeTab === 'requests') {
+        fetchRequests();
+      }
+    };
+    window.addEventListener('notice-requests-updated', handleNoticeUpdate);
+    return () => window.removeEventListener('notice-requests-updated', handleNoticeUpdate);
+  }, [activeTab]);
 
   const fetchNotices = async () => {
     try {
@@ -95,20 +111,31 @@ export const NoticeManagement = () => {
   const fetchPendingCount = async () => {
     try {
       const res = await api.get('/notice-requests/admin/count');
-      setPendingCount(res.data?.data?.count ?? 0);
+      const count = res.data?.data?.count ?? 0;
+      setPendingCount(count);
+      window.dispatchEvent(new CustomEvent('notice-requests-updated', { detail: { count } }));
+      return count;
     } catch { }
   };
 
   const handleReview = async (requestId, action, adminNote = '') => {
     try {
-      await api.patch(`/notice-requests/admin/${requestId}`, { action, adminNote });
+      const res = await api.patch(`/notice-requests/admin/${requestId}`, { action, adminNote });
       addToast(
         action === 'approve' ? 'Notice request approved and published!' : 'Notice request rejected.',
         'success'
       );
       setRejectState((prev) => ({ ...prev, [requestId]: { open: false, note: '' } }));
       fetchRequests();
-      fetchPendingCount();
+
+      const serverCount = res.data?.data?.count;
+      if (typeof serverCount === 'number') {
+        setPendingCount(serverCount);
+        window.dispatchEvent(new CustomEvent('notice-requests-updated', { detail: { count: serverCount } }));
+      } else {
+        fetchPendingCount();
+      }
+
       if (action === 'approve') fetchNotices();
     } catch (err) {
       addToast(err.response?.data?.error?.message || 'Failed to review request', 'error');

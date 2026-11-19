@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../../services/api.js';
 import {
@@ -26,18 +25,61 @@ import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
 export const Sidebar = ({ isOpen, onClose }) => {
   const { t } = useTranslation(['common', 'operator', 'engineer', 'admin']);
   const { user, logout } = useAuth();
+  const location = useLocation();
   const [pendingNoticeRequests, setPendingNoticeRequests] = useState(0);
 
-  useEffect(() => {
+  const fetchNoticeCount = useCallback(async () => {
     if (user?.role === ROLES.ADMIN) {
-      api
-        .get('/notice-requests/admin/count')
-        .then((res) => {
-          setPendingNoticeRequests(res.data?.data?.count || 0);
-        })
-        .catch(() => {});
+      try {
+        const res = await api.get('/notice-requests/admin/count');
+        const count = res.data?.data?.count ?? 0;
+        setPendingNoticeRequests(count);
+      } catch {
+        // Silently catch to avoid disrupting navigation
+      }
     }
   }, [user?.role]);
+
+  // Sync on mount and role change
+  useEffect(() => {
+    fetchNoticeCount();
+  }, [fetchNoticeCount]);
+
+  // Sync when route changes or sidebar is opened
+  useEffect(() => {
+    fetchNoticeCount();
+  }, [location.pathname, isOpen, fetchNoticeCount]);
+
+  // Listen for real-time notice updates, tab focus, and background polling
+  useEffect(() => {
+    if (user?.role !== ROLES.ADMIN) return;
+
+    const handleNoticeUpdate = (e) => {
+      if (typeof e.detail?.count === 'number') {
+        setPendingNoticeRequests(e.detail.count);
+      } else {
+        fetchNoticeCount();
+      }
+    };
+
+    const handleVisibility = () => {
+      if (!document.hidden) fetchNoticeCount();
+    };
+
+    window.addEventListener('notice-requests-updated', handleNoticeUpdate);
+    window.addEventListener('focus', fetchNoticeCount);
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    // Background poll every 15s to keep count consistent across multi-tab / multi-user actions
+    const interval = setInterval(fetchNoticeCount, 15000);
+
+    return () => {
+      window.removeEventListener('notice-requests-updated', handleNoticeUpdate);
+      window.removeEventListener('focus', fetchNoticeCount);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      clearInterval(interval);
+    };
+  }, [user?.role, fetchNoticeCount]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -201,8 +243,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   </span>
 
                   {link.badge > 0 && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black shrink-0">
-                      {link.badge}
+                    <span className="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black shrink-0 animate-in fade-in duration-200">
+                      {link.badge > 99 ? '99+' : link.badge}
                     </span>
                   )}
                 </NavLink>
