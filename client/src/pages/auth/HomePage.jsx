@@ -18,13 +18,16 @@ import {
   HeartPulse,
   Zap,
   Phone,
-  HelpCircle,
   Layers,
   TrendingUp,
   Users,
   CheckCheck,
   Timer,
   Edit,
+  Megaphone,
+  AlertTriangle,
+  Pin,
+  Target,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
@@ -178,11 +181,26 @@ export const HomePage = () => {
           {/* Scrolling ticker */}
           <div className="gov-ticker-wrap flex-1 overflow-hidden" role="marquee" aria-live="off">
             <div className="gov-ticker-track text-xs font-medium text-[#1F3A6E] dark:text-blue-200 gap-10">
-              <span className="px-4">📢 New water supply pipeline commissioned in Ward 12 — complaints resolved faster</span>
-              <span className="px-4">⚠️ Scheduled road maintenance: MG Road stretch closed on 22 Nov 2026 (10 AM – 6 PM)</span>
-              <span className="px-4">✅ Citizens can now attach up to 5 photographs per grievance submission</span>
-              <span className="px-4">📌 Public Health drive: Fogging operations in Wards 3, 7, 11 this week</span>
-              <span className="px-4">🎯 Target: 95% grievances resolved within SLA by Q4 2026</span>
+              <span className="inline-flex items-center px-4">
+                <Megaphone className="w-3.5 h-3.5 text-[#FF9933] mr-1.5 shrink-0" aria-hidden="true" />
+                New water supply pipeline commissioned in Ward 12 — complaints resolved faster
+              </span>
+              <span className="inline-flex items-center px-4">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mr-1.5 shrink-0" aria-hidden="true" />
+                Scheduled road maintenance: MG Road stretch closed on 22 Nov 2026 (10 AM – 6 PM)
+              </span>
+              <span className="inline-flex items-center px-4">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-1.5 shrink-0" aria-hidden="true" />
+                Citizens can now attach up to 5 photographs per grievance submission
+              </span>
+              <span className="inline-flex items-center px-4">
+                <Pin className="w-3.5 h-3.5 text-blue-500 mr-1.5 shrink-0" aria-hidden="true" />
+                Public Health drive: Fogging operations in Wards 3, 7, 11 this week
+              </span>
+              <span className="inline-flex items-center px-4">
+                <Target className="w-3.5 h-3.5 text-rose-500 mr-1.5 shrink-0" aria-hidden="true" />
+                Target: 95% grievances resolved within SLA by Q4 2026
+              </span>
             </div>
           </div>
         </div>
@@ -282,15 +300,15 @@ export const HomePage = () => {
               )}
             </div>
 
-              {/* Notice items — scrollable, fills remaining height */}
-              <ul className="flex-1 divide-y divide-[#CFD6E4] dark:divide-slate-700 overflow-y-auto">
-                {notices.map((n, i) => (
-                  <li key={n.id || i} className="px-4 py-2.5 hover:bg-[#F4F6FB] dark:hover:bg-slate-800 transition-colors">
-                    <span className="text-[10px] text-[#FF9933] font-semibold block mb-0.5">{n.date}</span>
-                    <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">{n.text}</p>
-                  </li>
-                ))}
-              </ul>
+            {/* Notice items — scrollable, fills remaining height */}
+            <ul className="flex-1 divide-y divide-[#CFD6E4] dark:divide-slate-700 overflow-y-auto">
+              {notices.map((n, i) => (
+                <li key={n.id || i} className="px-4 py-2.5 hover:bg-[#F4F6FB] dark:hover:bg-slate-800 transition-colors">
+                  <span className="text-[10px] text-[#FF9933] font-semibold block mb-0.5">{n.date}</span>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">{n.text}</p>
+                </li>
+              ))}
+            </ul>
           </aside>
         </div>
       </div>
