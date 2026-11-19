@@ -143,14 +143,14 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Official Government Aside Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-72 bg-[#0a2540] text-slate-100 flex flex-col justify-between transition-transform duration-300 ease-in-out border-r border-[#082038] ${
-          isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
+        className={`fixed top-0 left-0 z-50 h-screen w-72 bg-white dark:bg-[#0a2540] text-slate-800 dark:text-slate-100 flex flex-col justify-between transition-all duration-300 ease-in-out border-r border-slate-200 dark:border-[#082038] ${
+          isOpen ? 'translate-x-0 shadow-xl dark:shadow-2xl' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full overflow-y-auto">
 
           {/* Header Brand & Close Button */}
-          <div className="h-16 flex items-center justify-between px-3.5 bg-[#061c33] border-b border-[#082543]">
+          <div className="h-16 flex items-center justify-between px-3.5 bg-slate-50 dark:bg-[#061c33] border-b border-slate-200 dark:border-[#082543]">
             {/* Clickable Brand / Homepage Navigation */}
             <NavLink
               to="/"
@@ -159,17 +159,17 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   onClose();
                 }
               }}
-              className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
+              className="flex items-center gap-2 min-w-0 hover:opacity-85 transition-opacity"
             >
-              <div className="w-8 h-8 rounded-full border border-amber-400/60 overflow-hidden shadow shrink-0">
+              <div className="w-8 h-8 rounded-full border border-amber-500/80 dark:border-amber-400/60 overflow-hidden shadow-xs shrink-0">
                 <img src="/logo.png" alt="JanShikayat Logo" className="w-full h-full object-cover" />
               </div>
 
               <div className="truncate">
-                <span className="font-bold text-sm tracking-wide text-white leading-tight font-serif block truncate">
+                <span className="font-bold text-sm tracking-wide text-[#0f3b68] dark:text-white leading-tight font-serif block truncate">
                   जन शिकायत
                 </span>
-                <span className="text-[10px] text-amber-300 font-semibold tracking-wider uppercase block truncate">
+                <span className="text-[10px] text-amber-600 dark:text-amber-300 font-semibold tracking-wider uppercase block truncate">
                   JanShikayat Portal
                 </span>
               </div>
@@ -178,43 +178,43 @@ export const Sidebar = ({ isOpen, onClose }) => {
             {/* Close Sidebar Button */}
             <button
               onClick={onClose}
-              className="px-2 py-1.5 rounded-lg text-slate-300 hover:text-white bg-[#0f3459]/70 hover:bg-[#0f3b68] border border-[#14426f] flex items-center gap-1 transition-all duration-200 active:scale-95 shadow-sm group shrink-0"
+              className="px-2 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-[#0f3459]/70 hover:bg-slate-100 dark:hover:bg-[#0f3b68] border border-slate-200 dark:border-[#14426f] flex items-center gap-1 transition-all duration-200 active:scale-95 shadow-2xs group shrink-0"
               aria-label={t('common:closeSidebar', 'Close Sidebar')}
               title={t('common:closeSidebar', 'Close Sidebar')}
             >
-              <ChevronLeft className="w-4 h-4 text-amber-300 group-hover:-translate-x-0.5 transition-transform duration-200" />
-              <span className="text-[11px] font-semibold text-slate-200 group-hover:text-white">
+              <ChevronLeft className="w-4 h-4 text-slate-600 dark:text-amber-300 group-hover:-translate-x-0.5 transition-transform duration-200" />
+              <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">
                 {t('common:close', 'Close')}
               </span>
             </button>
           </div>
 
           {/* User Government Official Identity Card */}
-          <div className="p-3.5 mx-3 my-3 bg-[#0f3459] rounded-lg border border-[#14426f]">
-            <div className="text-[11px] text-slate-300 font-medium">
+          <div className="p-3.5 mx-3 my-3 bg-slate-50 dark:bg-[#0f3459] rounded-lg border border-slate-200 dark:border-[#14426f] shadow-2xs">
+            <div className="text-[11px] text-slate-500 dark:text-slate-300 font-medium">
               {t('common:loggedInUser', 'Logged in User')}
             </div>
 
-            <div className="text-sm font-bold text-white truncate font-sans">
+            <div className="text-sm font-bold text-slate-900 dark:text-white truncate font-sans">
               {user.name}
             </div>
 
             <div className="mt-1 flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase tracking-wide">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 dark:bg-amber-400/20 text-[#0f3b68] dark:text-amber-300 border border-blue-200 dark:border-amber-400/30 uppercase tracking-wide">
                 {t(`common:roles.${user.role}`, ROLE_LABELS[user.role] || user.role)}
               </span>
 
               {user.staffId && (
-                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0a2540] text-slate-200 border border-slate-700">
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-[#0a2540] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700">
                   {user.staffId}
                 </span>
               )}
             </div>
 
             {user.departmentId?.name && (
-              <div className="mt-2 pt-2 border-t border-[#14426f] text-[11px] text-slate-300 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                <span className="truncate">
+              <div className="mt-2 pt-2 border-t border-slate-200 dark:border-[#14426f] text-[11px] text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 shrink-0" />
+                <span className="truncate font-medium">
                   {t(`common:departments.${user.departmentId.name}`, user.departmentId.name)}
                 </span>
               </div>
@@ -239,8 +239,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold tracking-wide transition-all ${
                       isActive
-                        ? 'bg-[#0f3b68] text-amber-300 border-l-4 border-amber-400 shadow-sm'
-                        : 'text-slate-300 hover:text-white hover:bg-[#0f3459]'
+                        ? 'bg-blue-50 dark:bg-[#0f3b68] text-[#0f3b68] dark:text-amber-300 border-l-4 border-[#0f3b68] dark:border-amber-400 shadow-2xs'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#0f3459]'
                     }`
                   }
                 >
@@ -251,7 +251,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   </span>
 
                   {link.badge > 0 && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black shrink-0 animate-in fade-in duration-200">
+                    <span className="px-1.5 py-0.5 rounded-full bg-[#0f3b68] dark:bg-amber-400 text-white dark:text-slate-950 text-[10px] font-black shrink-0 animate-in fade-in duration-200">
                       {link.badge > 99 ? '99+' : link.badge}
                     </span>
                   )}
@@ -261,10 +261,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
           </nav>
 
           {/* Sidebar Footer with Sign Out */}
-          <div className="p-3 border-t border-[#082038] bg-[#061c33]">
+          <div className="p-3 border-t border-slate-200 dark:border-[#082038] bg-slate-50 dark:bg-[#061c33]">
             <button
               onClick={logout}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-xs font-semibold text-rose-300 hover:text-white hover:bg-rose-900/40 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-xs font-semibold text-rose-600 dark:text-rose-300 hover:text-rose-700 dark:hover:text-white hover:bg-rose-100/60 dark:hover:bg-rose-900/40 transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>{t('common:signOutAuthority', 'Sign Out')}</span>
