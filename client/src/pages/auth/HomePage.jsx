@@ -38,11 +38,11 @@ export const HomePage = () => {
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [notices, setNotices] = useState([
-    { date: '15 Nov 2026', text: 'Online grievance submission portal updated with multi-language support.' },
-    { date: '10 Nov 2026', text: 'New SLA: Road & Pothole complaints resolved within 5 working days.' },
-    { date: '05 Nov 2026', text: 'Scheduled maintenance: Water supply disruption on 20 Nov (6–10 AM).' },
-    { date: '01 Nov 2026', text: 'Field engineers to upload geo-tagged photos for all closed complaints.' },
-    { date: '28 Oct 2026', text: 'Citizen charter revised — download the updated PDF from the helpdesk.' },
+    { id: 'default-1', date: '15 Nov 2026', text: 'Online grievance submission portal updated with multi-language support.' },
+    { id: 'default-2', date: '10 Nov 2026', text: 'New SLA: Road & Pothole complaints resolved within 5 working days.' },
+    { id: 'default-3', date: '05 Nov 2026', text: 'Scheduled maintenance: Water supply disruption on 20 Nov (6–10 AM).' },
+    { id: 'default-4', date: '01 Nov 2026', text: 'Field engineers to upload geo-tagged photos for all closed complaints.' },
+    { id: 'default-5', date: '28 Oct 2026', text: 'Citizen charter revised — download the updated PDF from the helpdesk.' },
   ]);
 
   useEffect(() => {
@@ -52,6 +52,7 @@ export const HomePage = () => {
         if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
           setNotices(
             res.data.data.map((item) => ({
+              id: item._id,
               date: item.date || new Date(item.createdAt).toLocaleDateString(),
               text: item.title,
             }))
@@ -284,7 +285,7 @@ export const HomePage = () => {
             {/* Notice items */}
             <ul className="flex-1 divide-y divide-[#CFD6E4] dark:divide-slate-700 overflow-y-auto max-h-72 lg:max-h-none">
               {notices.map((n, i) => (
-                <li key={i} className="px-4 py-2.5 hover:bg-[#F4F6FB] dark:hover:bg-slate-800 transition-colors">
+                <li key={n.id || i} className="px-4 py-2.5 hover:bg-[#F4F6FB] dark:hover:bg-slate-800 transition-colors">
                   <span className="text-[10px] text-[#FF9933] font-semibold block mb-0.5">{n.date}</span>
                   <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">{n.text}</p>
                 </li>
