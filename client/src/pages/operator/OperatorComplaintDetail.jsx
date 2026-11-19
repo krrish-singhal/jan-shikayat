@@ -18,6 +18,7 @@ import api from '../../services/api.js';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
 import { ConfirmDialog } from '../../components/common/ConfirmDialog.jsx';
+import { ComplaintImage } from '../../components/common/ComplaintImage.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { getImageUrl } from '../../utils/formatters.js';
 
@@ -214,19 +215,17 @@ export const OperatorComplaintDetail = () => {
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
               Submitted Photo Evidence
             </h4>
-            <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-              <img
-                src={getImageUrl(complaint.imageUrl)}
-                alt="Complaint photograph"
-                className="w-full h-56 object-cover cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => window.open(getImageUrl(complaint.imageUrl), '_blank')}
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/uploads/sample-road.svg';
-                }}
-              />
-            </div>
-            <p className="text-[10px] text-slate-400 text-center mt-2">Click to open high-res original</p>
+            <ComplaintImage
+              src={complaint.imageUrl}
+              alt="Complaint photograph"
+              className="w-full h-56 rounded-xl"
+              iconSize="w-8 h-8"
+              fallbackText="No citizen photograph attached"
+              onClick={() => complaint.imageUrl && window.open(getImageUrl(complaint.imageUrl), '_blank')}
+            />
+            {complaint.imageUrl && (
+              <p className="text-[10px] text-slate-400 text-center mt-2">Click to open high-res original</p>
+            )}
           </div>
 
           <div className="civic-card p-5 space-y-4 text-xs">

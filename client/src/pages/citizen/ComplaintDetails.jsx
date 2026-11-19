@@ -15,6 +15,7 @@ import api from '../../services/api.js';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { Timeline } from '../../components/common/Timeline.jsx';
 import { TranslatedContent } from '../../components/common/TranslatedContent.jsx';
+import { ComplaintImage } from '../../components/common/ComplaintImage.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { getImageUrl, formatDateTime } from '../../utils/formatters.js';
 
@@ -81,21 +82,17 @@ export const ComplaintDetails = () => {
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
               {t('common:photoEvidence', 'Photo Evidence')}
             </h4>
-            <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-              <img
-                src={getImageUrl(complaint.imageUrl)}
-                alt="Complaint photograph"
-                loading="lazy"
-                decoding="async"
-                className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
-                onClick={() => window.open(getImageUrl(complaint.imageUrl), '_blank')}
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/uploads/sample-road.svg';
-                }}
-              />
-            </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center mt-2">{t('citizen:clickToViewFull', 'Click image to view full size')}</p>
+            <ComplaintImage
+              src={complaint.imageUrl}
+              alt="Complaint photograph"
+              className="w-full h-48 rounded-xl"
+              iconSize="w-8 h-8"
+              fallbackText={t('common:noPhotoEvidence', 'No photographic evidence provided')}
+              onClick={() => complaint.imageUrl && window.open(getImageUrl(complaint.imageUrl), '_blank')}
+            />
+            {complaint.imageUrl && (
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center mt-2">{t('citizen:clickToViewFull', 'Click image to view full size')}</p>
+            )}
           </div>
 
           {/* Department & Location Meta Card */}

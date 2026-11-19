@@ -21,6 +21,7 @@ import { Timeline } from '../../components/common/Timeline.jsx';
 import { Modal } from '../../components/common/Modal.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { COMPLAINT_STATUS, STATUS_LABELS } from '../../constants/complaintStatus.js';
+import { ComplaintImage } from '../../components/common/ComplaintImage.jsx';
 import { getImageUrl } from '../../utils/formatters.js';
 
 export const AdminComplaintDetail = () => {
@@ -269,17 +270,14 @@ export const AdminComplaintDetail = () => {
 
             {/* Complaint Image */}
             {complaint.imageUrl && (
-              <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-900/5 dark:bg-slate-800 max-h-96 flex items-center justify-center">
-                <img
-                  src={getImageUrl(complaint.imageUrl)}
-                  alt="Ground complaint condition"
-                  className="w-full h-full object-cover max-h-96"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = '/uploads/sample-road.svg';
-                  }}
-                />
-              </div>
+              <ComplaintImage
+                src={complaint.imageUrl}
+                alt="Ground complaint condition"
+                className="w-full h-80 rounded-xl"
+                iconSize="w-8 h-8"
+                fallbackText="Ground evidence image unavailable"
+                onClick={() => window.open(getImageUrl(complaint.imageUrl), '_blank')}
+              />
             )}
 
             <div>
@@ -318,17 +316,14 @@ export const AdminComplaintDetail = () => {
                   Resolution Completion Dossier
                 </div>
                 {complaint.completionImageUrl && (
-                  <div className="rounded-lg overflow-hidden border border-emerald-200 dark:border-emerald-800 max-h-64">
-                    <img
-                      src={getImageUrl(complaint.completionImageUrl)}
-                      alt="Work Completion Verification"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = '/uploads/sample-completed.svg';
-                      }}
-                    />
-                  </div>
+                  <ComplaintImage
+                    src={complaint.completionImageUrl}
+                    alt="Work Completion Verification"
+                    className="w-full h-64 rounded-lg"
+                    iconSize="w-8 h-8"
+                    fallbackText="Completion verification image unavailable"
+                    onClick={() => window.open(getImageUrl(complaint.completionImageUrl), '_blank')}
+                  />
                 )}
                 <div>
                   <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-300 block mb-1">

@@ -23,6 +23,7 @@ import api from '../../services/api.js';
 import { StatCard } from '../../components/common/StatCard.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { TranslatedContent } from '../../components/common/TranslatedContent.jsx';
+import { ComplaintImage } from '../../components/common/ComplaintImage.jsx';
 import { formatNumber, formatDate, getImageUrl } from '../../utils/formatters.js';
 
 // Returns time-aware greeting + icon
@@ -274,23 +275,12 @@ export const CitizenDashboard = () => {
                 className="py-3.5 px-3 -mx-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors flex items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3.5 min-w-0">
-                  {complaint.imageUrl ? (
-                    <img
-                      src={getImageUrl(complaint.imageUrl)}
-                      alt="Thumbnail"
-                      loading="lazy"
-                      decoding="async"
-                      className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100 dark:bg-slate-800"
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = '/uploads/sample-road.svg';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                      <FileText className="w-5 h-5" />
-                    </div>
-                  )}
+                  <ComplaintImage
+                    src={complaint.imageUrl}
+                    alt={complaint.ticketNo || 'Thumbnail'}
+                    className="w-12 h-12 rounded-lg"
+                    iconSize="w-5 h-5"
+                  />
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs font-bold text-slate-900 dark:text-slate-100">

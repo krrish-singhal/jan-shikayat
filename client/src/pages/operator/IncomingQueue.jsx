@@ -6,6 +6,7 @@ import { DataTable } from '../../components/common/DataTable.jsx';
 import { StatusBadge } from '../../components/common/Badge.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { ComplaintImage } from '../../components/common/ComplaintImage.jsx';
 import { getImageUrl } from '../../utils/formatters.js';
 
 export const IncomingQueue = () => {
@@ -63,22 +64,14 @@ export const IncomingQueue = () => {
       header: 'Evidence',
       key: 'imageUrl',
       className: 'w-16',
-      render: (row) =>
-        row.imageUrl ? (
-          <img
-            src={getImageUrl(row.imageUrl)}
-            alt="Evidence"
-            className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = '/uploads/sample-road.svg';
-            }}
-          />
-        ) : (
-          <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
-            <FileText className="w-4 h-4" />
-          </div>
-        ),
+      render: (row) => (
+        <ComplaintImage
+          src={row.imageUrl}
+          alt={row.ticketNo || 'Evidence'}
+          className="w-10 h-10 rounded-lg"
+          iconSize="w-4 h-4"
+        />
+      ),
     },
     {
       header: 'Citizen Info',

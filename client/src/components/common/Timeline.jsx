@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { formatDateTime, getImageUrl } from '../../utils/formatters.js';
 import { TranslatedContent } from './TranslatedContent.jsx';
+import { ComplaintImage } from './ComplaintImage.jsx';
 
 export const Timeline = ({
   events = [],
@@ -111,14 +112,13 @@ export const Timeline = ({
                         <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide block mb-1.5">
                           {t('citizen:verificationPhoto', 'Verification Photograph')}
                         </span>
-                        <img
-                          src={getImageUrl(completionImageUrl)}
+                        <ComplaintImage
+                          src={completionImageUrl}
                           alt="Work Completion Verification"
-                          className="w-full max-w-sm h-48 object-cover rounded-lg border border-emerald-300 shadow-sm bg-emerald-100"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = '/uploads/sample-completed.svg';
-                          }}
+                          className="w-full max-w-sm h-48 rounded-lg"
+                          iconSize="w-8 h-8"
+                          fallbackText="Completion verification image unavailable"
+                          onClick={() => completionImageUrl && window.open(getImageUrl(completionImageUrl), '_blank')}
                         />
                       </div>
                     )}

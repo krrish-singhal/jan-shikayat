@@ -17,6 +17,7 @@ import { StatusBadge } from '../../components/common/Badge.jsx';
 import { CapacityBar } from '../../components/common/CapacityBar.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import { ComplaintImage } from '../../components/common/ComplaintImage.jsx';
 import { getImageUrl } from '../../utils/formatters.js';
 
 export const EngineerComplaintDetail = () => {
@@ -82,19 +83,17 @@ export const EngineerComplaintDetail = () => {
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
               Citizen Photo Evidence
             </h4>
-            <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-              <img
-                src={getImageUrl(complaint.imageUrl)}
-                alt="Complaint photograph"
-                className="w-full h-56 object-cover cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => window.open(getImageUrl(complaint.imageUrl), '_blank')}
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/uploads/sample-road.svg';
-                }}
-              />
-            </div>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center mt-2">Click to open high-res original</p>
+            <ComplaintImage
+              src={complaint.imageUrl}
+              alt="Complaint photograph"
+              className="w-full h-56 rounded-xl"
+              iconSize="w-8 h-8"
+              fallbackText="No citizen photograph attached"
+              onClick={() => complaint.imageUrl && window.open(getImageUrl(complaint.imageUrl), '_blank')}
+            />
+            {complaint.imageUrl && (
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center mt-2">Click to open high-res original</p>
+            )}
           </div>
 
           {complaint.completionImageUrl && (
@@ -102,17 +101,14 @@ export const EngineerComplaintDetail = () => {
               <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 mb-3">
                 Completion Evidence Photo
               </h4>
-              <div className="rounded-xl overflow-hidden border border-emerald-300 dark:border-emerald-700 bg-slate-900">
-                <img
-                  src={getImageUrl(complaint.completionImageUrl)}
-                  alt="Work completion photograph"
-                  className="w-full h-48 object-cover"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = '/uploads/sample-completed.svg';
-                  }}
-                />
-              </div>
+              <ComplaintImage
+                src={complaint.completionImageUrl}
+                alt="Work completion photograph"
+                className="w-full h-48 rounded-xl"
+                iconSize="w-8 h-8"
+                fallbackText="Completion photograph unavailable"
+                onClick={() => window.open(getImageUrl(complaint.completionImageUrl), '_blank')}
+              />
             </div>
           )}
 
