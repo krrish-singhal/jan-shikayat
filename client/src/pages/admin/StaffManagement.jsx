@@ -19,31 +19,30 @@ import {
 import api from '../../services/api.js';
 import { Modal } from '../../components/common/Modal.jsx';
 import { ConfirmDialog } from '../../components/common/ConfirmDialog.jsx';
+import { PasswordInput } from '../../components/common/PasswordInput.jsx';
 import { useToast } from '../../contexts/ToastContext.jsx';
 import { ROLES, ROLE_LABELS } from '../../constants/roles.js';
 
 const PasswordOption = ({ mode, setMode, password, setPassword }) => (
   <div className="space-y-2">
-    <label className="block font-semibold text-slate-700">Password</label>
+    <label className="block font-semibold text-slate-700 dark:text-slate-300">Password</label>
     <div className="flex gap-4">
-      <label className="inline-flex items-center gap-1.5">
+      <label className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
         <input type="radio" checked={mode === 'GENERATE'} onChange={() => setMode('GENERATE')} />
         Auto-generate
       </label>
-      <label className="inline-flex items-center gap-1.5">
+      <label className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
         <input type="radio" checked={mode === 'MANUAL'} onChange={() => setMode('MANUAL')} />
         Set manually
       </label>
     </div>
     {mode === 'MANUAL' && (
-      <input
-        type="text"
+      <PasswordInput
         required
         minLength={8}
-        autoComplete="off"
+        autoComplete="new-password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="civic-input"
         placeholder="Min 8 characters"
       />
     )}
