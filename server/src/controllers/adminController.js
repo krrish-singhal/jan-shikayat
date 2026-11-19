@@ -6,6 +6,8 @@ import { Complaint } from '../models/Complaint.js';
 import { ComplaintEvent } from '../models/ComplaintEvent.js';
 import { AuditLog } from '../models/AuditLog.js';
 import { RefreshToken } from '../models/RefreshToken.js';
+import { NoticeRequest } from '../models/NoticeRequest.js';
+import { Notice } from '../models/Notice.js';
 import { ROLES, STAFF_ROLES } from '../constants/roles.js';
 import { COMPLAINT_STATUS, COMPLAINT_ACTIONS, ENGINEER_ACTIVE_STATUSES } from '../constants/complaintStatus.js';
 import { generateStaffId } from '../utils/staffIdGenerator.js';
@@ -32,6 +34,8 @@ export class AdminController {
         recentComplaints,
         recentCitizens,
         recentStaff,
+        pendingNoticeRequests,
+        totalNotices,
       ] = await Promise.all([
         Complaint.countDocuments(),
         User.countDocuments({ role: ROLES.CITIZEN, isDeleted: false }),
@@ -89,6 +93,12 @@ export class AdminController {
           .select('name email phone role staffId departmentId isActive createdAt')
           .sort({ createdAt: -1 })
           .limit(5),
+
+        // Notice requests pending review
+        NoticeRequest.countDocuments({ status: 'pending' }),
+
+        // Published active notices count
+        Notice.countDocuments(),
       ]);
 
       // Monthly trends aggregation (last 6 months)
@@ -209,6 +219,8 @@ export class AdminController {
           inProgress: inProgressCount,
           completed: completedCount,
           rejected: rejectedCount,
+          pendingNoticeRequests: pendingNoticeRequests || 0,
+          totalNotices: totalNotices || 0,
         },
         byStatus: byStatusRaw.map((s) => ({ status: s._id, count: s.count })),
         byDepartment: byDeptRaw,

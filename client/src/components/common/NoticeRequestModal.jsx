@@ -54,6 +54,7 @@ export const NoticeRequestModal = ({ isOpen, onClose }) => {
     try {
       setSubmitting(true);
       await api.post('/notice-requests', { title: title.trim(), reason: reason.trim(), category });
+      window.dispatchEvent(new CustomEvent('notice-requests-updated'));
       addToast('Notice request submitted! Admin will review shortly.', 'success');
       onClose();
     } catch (err) {
