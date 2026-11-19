@@ -61,6 +61,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
+// HTTP Request Logger Middleware (Active in development & production)
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'test') return next();
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+    console.log(`[Server HTTP] ${req.method} ${req.originalUrl} ${res.statusCode} (${duration}ms) [${ip}]`);
+  });
+  next();
+});
+
 // Static file serving for uploads
 app.use('/uploads', express.static(uploadsDir));
 

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Complaint } from '../models/Complaint.js';
 import { Department } from '../models/Department.js';
 import { ComplaintEvent } from '../models/ComplaintEvent.js';
@@ -55,6 +56,10 @@ export class CitizenController {
           return sendError(res, { code: 'INVALID_LONGITUDE', message: 'Provide correct value of the longitude' }, 400);
 
         }
+      }
+
+      if (!departmentId || !mongoose.Types.ObjectId.isValid(departmentId)) {
+        return sendError(res, { code: 'INVALID_DEPARTMENT', message: 'Selected department is invalid or inactive.' }, 400);
       }
 
       const department = await Department.findOne({ _id: departmentId, isActive: true });
