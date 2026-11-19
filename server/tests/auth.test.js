@@ -215,4 +215,37 @@ describe('Authentication & Authorization Suite', () => {
     expect(logoutRes.status).toBe(200);
     expect(logoutRes.body.success).toBe(true);
   });
+
+  it('should support refresh token via request body for cross-origin and cookie-restricted clients', async () => {
+    const regRes = await request(app)
+      .post('/api/v1/auth/register')
+      .send({
+        name: 'Body Token Test',
+        email: 'bodytoken@example.com',
+        password: 'Password@123!',
+      });
+
+    expect(regRes.status).toBe(201);
+    expect(regRes.body.data.refreshToken).toBeDefined();
+    const initialRefreshToken = regRes.body.data.refreshToken;
+
+    // Refresh using body refreshToken without sending cookies
+    const refreshRes = await request(app)
+      .post('/api/v1/auth/refresh')
+      .send({ refreshToken: initialRefreshToken });
+
+    expect(refreshRes.status).toBe(200);
+    expect(refreshRes.body.success).toBe(true);
+    expect(refreshRes.body.data.accessToken).toBeDefined();
+    expect(refreshRes.body.data.refreshToken).toBeDefined();
+    const rotatedRefreshToken = refreshRes.body.data.refreshToken;
+
+    // Logout using rotated refreshToken in body without cookies
+    const logoutRes = await request(app)
+      .post('/api/v1/auth/logout')
+      .send({ refreshToken: rotatedRefreshToken });
+
+    expect(logoutRes.status).toBe(200);
+    expect(logoutRes.body.success).toBe(true);
+  });
 });

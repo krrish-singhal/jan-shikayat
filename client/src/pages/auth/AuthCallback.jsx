@@ -15,6 +15,7 @@ export const AuthCallback = () => {
   useEffect(() => {
     const handleCallback = async () => {
       const token = searchParams.get('token');
+      const refreshToken = searchParams.get('refreshToken');
       const code = searchParams.get('code');
       const error = searchParams.get('error');
 
@@ -27,6 +28,9 @@ export const AuthCallback = () => {
       if (token) {
         try {
           localStorage.setItem('accessToken', token);
+          if (refreshToken) {
+            localStorage.setItem('refreshToken', refreshToken);
+          }
           const res = await api.get('/me');
           if (res.data?.success) {
             const userData = res.data.data.user;
@@ -47,8 +51,11 @@ export const AuthCallback = () => {
         try {
           const res = await api.post('/auth/google/exchange-code', { code });
           if (res.data?.success) {
-            const { user: userData, accessToken } = res.data.data;
+            const { user: userData, accessToken, refreshToken: newRefreshToken } = res.data.data;
             localStorage.setItem('accessToken', accessToken);
+            if (newRefreshToken) {
+              localStorage.setItem('refreshToken', newRefreshToken);
+            }
             localStorage.setItem('user', JSON.stringify(userData));
             if (userData?.preferredLanguage) {
               i18n.changeLanguage(userData.preferredLanguage);
