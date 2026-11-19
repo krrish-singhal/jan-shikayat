@@ -77,7 +77,7 @@ export const NoticeController = {
       }
 
       if (title !== undefined) notice.title = title.trim();
-      if (date !== undefined) notice.date = date.trim();
+      if (date !== undefined) notice.date = date ? date.trim() : '';
       if (category !== undefined) notice.category = category;
       if (priority !== undefined) notice.priority = Number(priority);
       if (isActive !== undefined) notice.isActive = Boolean(isActive);

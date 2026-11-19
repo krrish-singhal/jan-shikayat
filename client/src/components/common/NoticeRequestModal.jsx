@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, ChevronDown, ChevronUp, MessageSquarePlus } from 'lucide-react';
 import api from '../../services/api.js';
 import { useToast } from '../../contexts/ToastContext.jsx';
@@ -23,7 +23,7 @@ export const NoticeRequestModal = ({ isOpen, onClose }) => {
   const [loadingRequests, setLoadingRequests] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
 
-  const fetchMyRequests = async () => {
+  const fetchMyRequests = useCallback(async () => {
     try {
       setLoadingRequests(true);
       const res = await api.get('/notice-requests/my');
@@ -36,7 +36,7 @@ export const NoticeRequestModal = ({ isOpen, onClose }) => {
     } finally {
       setLoadingRequests(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -46,7 +46,7 @@ export const NoticeRequestModal = ({ isOpen, onClose }) => {
       setHistoryOpen(false);
       fetchMyRequests();
     }
-  }, [isOpen]);
+  }, [isOpen, fetchMyRequests]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,7 +56,6 @@ export const NoticeRequestModal = ({ isOpen, onClose }) => {
       await api.post('/notice-requests', { title: title.trim(), reason: reason.trim(), category });
       addToast('Notice request submitted! Admin will review shortly.', 'success');
       onClose();
-      fetchMyRequests();
     } catch (err) {
       addToast(err.response?.data?.error?.message || 'Failed to submit request', 'error');
     } finally {

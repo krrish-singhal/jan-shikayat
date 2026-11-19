@@ -229,7 +229,9 @@ export class AdminController {
    */
   static async getStaffList(req, res) {
     try {
-      const { page = 1, limit = 10, role = '', departmentId = '', search = '', status = '' } = req.query;
+      const { role = '', departmentId = '', search = '', status = '' } = req.query;
+      const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
       const query = { role: { $in: STAFF_ROLES }, isDeleted: false };
 
       if (role && role !== 'ALL') query.role = role;
@@ -507,17 +509,26 @@ export class AdminController {
   static async getDepartments(req, res) {
     try {
       const departments = await Department.find().sort({ name: 1 });
-      const stats = await Promise.all(
-        departments.map(async (dept) => {
-          const complaintCount = await Complaint.countDocuments({ departmentId: dept._id });
-          const staffCount = await User.countDocuments({ departmentId: dept._id, isDeleted: false });
-          return {
-            ...dept.toObject(),
-            complaintCount,
-            staffCount,
-          };
-        })
-      );
+
+      const [complaintCounts, staffCounts] = await Promise.all([
+        Complaint.aggregate([
+          { $group: { _id: '$departmentId', count: { $sum: 1 } } },
+        ]),
+        User.aggregate([
+          { $match: { isDeleted: false, departmentId: { $ne: null } } },
+          { $group: { _id: '$departmentId', count: { $sum: 1 } } },
+        ]),
+      ]);
+
+      const complaintMap = Object.fromEntries(complaintCounts.map((c) => [String(c._id), c.count]));
+      const staffMap = Object.fromEntries(staffCounts.map((s) => [String(s._id), s.count]));
+
+      const stats = departments.map((dept) => ({
+        ...dept.toObject(),
+        complaintCount: complaintMap[String(dept._id)] || 0,
+        staffCount: staffMap[String(dept._id)] || 0,
+      }));
+
       return sendSuccess(res, stats);
     } catch (err) {
       return sendError(res, { code: 'SERVER_ERROR', message: err.message }, 500);
@@ -635,8 +646,6 @@ export class AdminController {
   static async getAllComplaints(req, res) {
     try {
       const {
-        page = 1,
-        limit = 10,
         status = '',
         departmentId = '',
         engineerId = '',
@@ -645,6 +654,8 @@ export class AdminController {
         startDate = '',
         endDate = '',
       } = req.query;
+      const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
 
       const query = {};
 
