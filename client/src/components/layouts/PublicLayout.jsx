@@ -12,7 +12,6 @@ import {
   X,
   Sun,
   Moon,
-  Contrast,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { LanguageSwitcher } from '../common/LanguageSwitcher.jsx';
@@ -92,16 +91,6 @@ export const PublicLayout = () => {
                 A+
               </button>
             </div>
-
-            {/* Contrast icon — static UI element */}
-            <button
-              type="button"
-              aria-label="High contrast (decorative)"
-              className="gov-text-size-btn"
-              title="High contrast mode (coming soon)"
-            >
-              <Contrast className="w-3 h-3" />
-            </button>
 
             <span className="text-slate-600 hidden sm:inline" aria-hidden="true">|</span>
 
