@@ -28,6 +28,9 @@ import {
   AlertTriangle,
   Pin,
   Target,
+  Inbox,
+  HardHat,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import api from '../../services/api.js';
@@ -98,10 +101,11 @@ export const HomePage = () => {
     {
       role: t('auth:citizenLoginTitle', 'Citizen Grievance Portal'),
       desc: t('citizen:dashboardSubtitle', 'Lodge civic grievances with photograph evidence and GPS location. Monitor resolution milestones on a real-time vertical timeline.'),
-      icon: PlusCircle,
+      icon: Users,
       link: user?.role === 'CITIZEN' ? '/citizen/dashboard' : '/login',
       chipBg: 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-200',
       iconBg: 'bg-[#1F3A6E] dark:bg-blue-700',
+      iconColor: 'text-white',
       borderAccent: 'border-l-4 border-l-[#1F3A6E]',
       badgeText: t('common:roles.CITIZEN', 'Citizen'),
       actionText: t('auth:loginButton', 'Enter Citizen Portal'),
@@ -109,10 +113,11 @@ export const HomePage = () => {
     {
       role: t('operator:dashboardTitle', 'Department Operator Desk'),
       desc: t('operator:dashboardSubtitle', 'Process incoming departmental queues (FIFO oldest first), inspect citizen evidence, reject invalid complaints, or accept for field inspection.'),
-      icon: Building2,
+      icon: Inbox,
       link: user?.role === 'OPERATOR' ? '/operator/dashboard' : '/staff/login',
       chipBg: 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200',
       iconBg: 'bg-amber-600 dark:bg-amber-700',
+      iconColor: 'text-white',
       borderAccent: 'border-l-4 border-l-amber-500',
       badgeText: t('common:roles.OPERATOR', 'Operator'),
       actionText: t('operator:incomingQueueCount', 'Access Desk Queue'),
@@ -120,10 +125,11 @@ export const HomePage = () => {
     {
       role: t('engineer:dashboardTitle', 'Joint Engineer Field Console'),
       desc: t('engineer:dashboardSubtitle', 'Pick up complaints with atomic capacity controls, perform on-site verification, start repair work, and submit completion photographs.'),
-      icon: Wrench,
+      icon: HardHat,
       link: user?.role === 'ENGINEER' ? '/engineer/dashboard' : '/staff/login',
       chipBg: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-200',
       iconBg: 'bg-[#138808] dark:bg-emerald-700',
+      iconColor: 'text-white',
       borderAccent: 'border-l-4 border-l-[#138808]',
       badgeText: t('common:roles.ENGINEER', 'Field Engineer'),
       actionText: t('engineer:queueTitle', 'Open Field Console'),
@@ -131,10 +137,11 @@ export const HomePage = () => {
     {
       role: t('admin:dashboardTitle', 'Municipal Admin Command Center'),
       desc: t('admin:dashboardSubtitle', 'Platform-wide governance, real-time analytics, staff provisioning with auto-generated IDs, department management, and immutable audit logs.'),
-      icon: Shield,
+      icon: ShieldCheck,
       link: user?.role === 'ADMIN' ? '/admin/dashboard' : '/staff/login',
       chipBg: 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-200',
       iconBg: 'bg-purple-700 dark:bg-purple-800',
+      iconColor: 'text-white',
       borderAccent: 'border-l-4 border-l-purple-600',
       badgeText: t('common:roles.ADMIN', 'Administrator'),
       actionText: t('admin:dashboardTitle', 'Launch Admin Console'),
@@ -345,10 +352,10 @@ export const HomePage = () => {
                   {/* Icon + role chip */}
                   <div className="flex items-center justify-between">
                     <div
-                      className={`w-9 h-9 rounded-sm ${portal.iconBg} text-white flex items-center justify-center`}
+                      className={`w-9 h-9 rounded-sm ${portal.iconBg} flex items-center justify-center shadow-xs`}
                       aria-hidden="true"
                     >
-                      <Icon className="w-5 h-5 text-[#FF9933]" />
+                      <Icon className={`w-5 h-5 ${portal.iconColor || 'text-white'}`} />
                     </div>
                     {/* label chip */}
                     <span className={`gov-role-chip ${portal.chipBg}`}>
