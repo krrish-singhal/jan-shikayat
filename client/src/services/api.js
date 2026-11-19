@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { logger } from '../utils/logger.js';
 
 const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
@@ -25,43 +24,23 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Request interceptor: attach accessToken and trace requests
+// Request interceptor: attach accessToken
 api.interceptors.request.use(
   (config) => {
-    config.metadata = { startTime: Date.now() };
-    const method = (config.method || 'GET').toUpperCase();
-    logger.info(`[API Request] ${method} ${config.url}`);
-
     const token = localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    logger.error('[API Request Error]', error.message || error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor: automatic token rotation on 401 TOKEN_EXPIRED
 api.interceptors.response.use(
-  (response) => {
-    const elapsed = response.config?.metadata?.startTime
-      ? `(${Date.now() - response.config.metadata.startTime}ms)`
-      : '';
-    const method = (response.config?.method || 'GET').toUpperCase();
-    logger.info(`[API Response] ${response.status} ${method} ${response.config?.url} ${elapsed}`);
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const method = (originalRequest?.method || 'GET').toUpperCase();
-    const url = originalRequest?.url || '';
-    const httpStatus = error.response?.status || 'OFFLINE';
-    const errorMsg = error.response?.data?.error?.message || error.message;
-
-    logger.warn(`[API Response Error] ${httpStatus} ${method} ${url}: ${errorMsg}`);
 
     if (!error.response) {
       return Promise.reject(new Error('Network error. Backend server may be offline.'));
